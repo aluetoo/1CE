@@ -116,6 +116,41 @@
       #appview .content{width:100%;min-width:0}
     }
 
+
+    /* Mode plein écran réel : la rubrique occupe toute la fenêtre */
+    body:has(#appview:not(.hidden)){overflow:hidden}
+    .shell:has(#appview:not(.hidden)){max-width:none;width:100%;margin:0;padding:0}
+    .shell:has(#appview:not(.hidden)) > .top{
+      position:fixed;z-index:1002;top:0;left:0;right:0;
+      margin:0;padding:12px 22px;background:rgba(12,19,32,.97);
+      border-bottom:1px solid var(--line);backdrop-filter:blur(12px)
+    }
+    #appview:not(.hidden){
+      position:fixed!important;inset:0!important;z-index:900!important;
+      display:block!important;width:100vw!important;height:100dvh!important;
+      min-height:100dvh!important;max-width:none!important;margin:0!important;
+      padding:86px 24px 24px!important;overflow-y:auto!important;overflow-x:hidden!important;
+      background:var(--bg)!important;border:0!important;border-radius:0!important;
+    }
+    #appview.hidden{display:none!important}
+    #appview .content{display:block!important;width:100%!important;max-width:none!important;min-width:0!important;margin:0!important}
+    #appview .content > div:not(.hidden){width:100%!important;max-width:none!important}
+    #appview.page-fullscreen .content{min-height:calc(100dvh - 110px)}
+    #page-chat .discord-shell{
+      width:100%!important;max-width:none!important;
+      height:calc(100dvh - 120px)!important;min-height:0!important;
+      border-radius:0!important
+    }
+    #page-chat .discord-main{min-height:0}
+    #page-chat .discord-main .chatlist{flex:1;min-height:0;overflow-y:auto}
+    #sidebarToggle{position:relative;z-index:1003}
+    @media(max-width:720px){
+      .shell:has(#appview:not(.hidden)) > .top{padding:10px 12px}
+      #appview:not(.hidden){padding:72px 12px 12px!important}
+      #appview.page-fullscreen .content{min-height:calc(100dvh - 84px)}
+      #page-chat .discord-shell{height:calc(100dvh - 84px)!important;min-height:0!important}
+    }
+
   </style>
 </head>
 <body>
