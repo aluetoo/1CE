@@ -151,6 +151,43 @@
       #page-chat .discord-shell{height:calc(100dvh - 84px)!important;min-height:0!important}
     }
 
+
+    /* Pleine largeur bord à bord sous l’en-tête fixe */
+    #appview:not(.hidden){
+      position:fixed!important;inset:0!important;
+      width:100vw!important;height:100vh!important;height:100dvh!important;
+      max-width:none!important;min-height:0!important;margin:0!important;
+      padding:70px 0 0!important;overflow-x:hidden!important;overflow-y:auto!important;
+      display:block!important;border:0!important;border-radius:0!important;
+    }
+    #appview .content,
+    #appview .content > div:not(.hidden){
+      display:block!important;width:100%!important;max-width:none!important;
+      min-width:0!important;margin:0!important;
+    }
+    #appview #page-home,
+    #appview #page-photos,
+    #appview #page-posts,
+    #appview #page-chat{padding:0!important}
+    #appview #page-posts{max-width:none!important}
+    #appview #page-chat .discord-shell{
+      width:100%!important;max-width:none!important;margin:0!important;
+      height:calc(100dvh - 70px)!important;min-height:0!important;
+      border:0!important;border-radius:0!important;
+    }
+    #appview #page-chat .discord-main{min-height:0!important}
+    #appview #page-chat .discord-main .chatlist{flex:1!important;min-height:0!important;max-height:none!important;overflow-y:auto!important}
+    @media(max-width:720px){
+      #appview:not(.hidden){padding:62px 0 0!important}
+      #appview #page-chat .discord-shell{height:calc(100dvh - 62px)!important}
+      #appview #page-home .hero{border-radius:0!important;margin:0 0 14px!important}
+      #appview #page-home .sectionhead,
+      #appview #page-home .grid,
+      #appview #page-photos > *,
+      #appview #page-posts > *{margin-left:12px!important;margin-right:12px!important}
+      #appview #page-chat .discord-shell{height:calc(100dvh - 62px)!important}
+    }
+
   </style>
 </head>
 <body>
