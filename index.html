@@ -23,7 +23,34 @@
   <div class="shell">
     <header class="top"><div class="brand"><div class="logo">1CE</div><div><h1>Notre classe</h1><p>L’espace privé de la 1CE</p></div></div><div class="topnote" id="topnote">Un endroit à nous, pour nos souvenirs.</div><button class="mutedbtn hidden" id="logout">Déconnexion</button></header>
     <section class="hero"><div class="eyebrow">Bienvenue dans notre espace</div><h2>Les souvenirs de la 1CE, tous ensemble.</h2><p>Retrouve les photos, les nouvelles et les discussions de la classe dans un espace réservé aux membres.</p></section>
-    <section id="loginview" class="card login"><div class="eyebrow">Accès membres</div><h3 style="font:800 24px Manrope;margin:8px 0">Connexion à la 1CE</h3><p style="color:var(--muted);font-size:13px;line-height:1.5">Connecte-toi avec les identifiants qui t’ont été fournis par la personne responsable du site.</p><form id="loginform"><label for="email">Adresse e-mail</label><input id="email" type="email" autocomplete="username" required><label for="password">Mot de passe</label><input id="password" type="password" autocomplete="current-password" required><div style="margin-top:18px"><button class="primary" type="submit">Se connecter</button></div><div class="status" id="loginstatus" role="status"></div></form></section>
+    <section id="loginview" class="card login">
+      <div class="eyebrow">Accès membres</div><h3 style="font:800 24px Manrope;margin:8px 0">Bienvenue dans la 1CE</h3>
+      <p style="color:var(--muted);font-size:13px;line-height:1.5">Tu peux créer ton compte directement ici, puis rejoindre l’espace avec le code de la classe.</p>
+      <div id="authchoices" style="display:flex;gap:8px;margin:18px 0">
+        <button class="primary" id="showlogin" type="button">Se connecter</button>
+        <button class="mutedbtn" id="showsignup" type="button">Créer un compte</button>
+      </div>
+      <form id="loginform">
+        <label for="email">Adresse e-mail</label><input id="email" type="email" autocomplete="username" required>
+        <label for="password">Mot de passe</label><input id="password" type="password" autocomplete="current-password" required>
+        <div style="margin-top:18px"><button class="primary" type="submit">Se connecter</button></div>
+      </form>
+      <form id="signupform" class="hidden">
+        <label for="signupname">Ton prénom ou nom d’affichage</label><input id="signupname" maxlength="60" autocomplete="nickname" required>
+        <label for="signupemail">Adresse e-mail</label><input id="signupemail" type="email" autocomplete="email" required>
+        <label for="signuppassword">Choisis un mot de passe (8 caractères minimum)</label><input id="signuppassword" type="password" minlength="8" autocomplete="new-password" required>
+        <label for="signupcode">Code d’accès de la classe</label><input id="signupcode" autocomplete="off" required>
+        <div style="margin-top:18px"><button class="primary" type="submit">Créer mon compte</button></div>
+      </form>
+      <form id="joinform" class="hidden">
+        <h3 style="font:800 21px Manrope;margin:8px 0">Rejoindre la classe</h3>
+        <p style="color:var(--muted);font-size:13px">Ton compte est créé. Indique ton nom d’affichage et le code transmis par la classe.</p>
+        <label for="joinname">Nom d’affichage</label><input id="joinname" maxlength="60" required>
+        <label for="joincode">Code d’accès de la classe</label><input id="joincode" autocomplete="off" required>
+        <div style="margin-top:18px"><button class="primary" type="submit">Rejoindre la 1CE</button></div>
+      </form>
+      <div class="status" id="loginstatus" role="status"></div>
+    </section>
     <section id="appview" class="layout hidden">
       <aside class="side"><small>Explorer</small><button class="nav active" data-page="home">⌂ &nbsp; Accueil</button><button class="nav" data-page="photos">▧ &nbsp; Photos & souvenirs</button><button class="nav" data-page="posts">▤ &nbsp; Publications</button><button class="nav" data-page="chat">◌ &nbsp; Discussions</button></aside>
       <main class="content">
@@ -85,23 +112,85 @@
         .select("display_name,role").eq("user_id", s.user.id).maybeSingle();
       if (error || !data) {
         showState(false);
-        statusEl.textContent = "Compte connecté, mais pas encore autorisé dans la 1CE. Demande à la personne responsable d’ajouter ton compte.";
+        document.getElementById("loginform").classList.add("hidden");
+        document.getElementById("signupform").classList.add("hidden");
+        document.getElementById("authchoices").classList.add("hidden");
+        document.getElementById("joinform").classList.remove("hidden");
+        document.getElementById("joinname").value = s.user.user_metadata?.display_name || "";
+        statusEl.textContent = "Compte créé : dernière étape, rejoindre la classe.";
         return;
       }
+      document.getElementById("joinform").classList.add("hidden");
       member = data;
       showState(true);
       await Promise.all([loadPosts(), loadMessages(), loadPhotos()]);
     }
 
-    document.getElementById("loginform").addEventListener("submit", async e => {
+    const loginForm = document.getElementById("loginform");
+    const signupForm = document.getElementById("signupform");
+    document.getElementById("showlogin").addEventListener("click", () => {
+      loginForm.classList.remove("hidden"); signupForm.classList.add("hidden");
+      document.getElementById("showlogin").className = "primary";
+      document.getElementById("showsignup").className = "mutedbtn";
+      statusEl.textContent = "";
+    });
+    document.getElementById("showsignup").addEventListener("click", () => {
+      loginForm.classList.add("hidden"); signupForm.classList.remove("hidden");
+      document.getElementById("showlogin").className = "mutedbtn";
+      document.getElementById("showsignup").className = "primary";
+      statusEl.textContent = "";
+    });
+
+    loginForm.addEventListener("submit", async e => {
       e.preventDefault();
       statusEl.textContent = "Connexion…";
       const {data,error} = await client.auth.signInWithPassword({
         email: document.getElementById("email").value.trim(),
         password: document.getElementById("password").value
       });
-      if (error) { statusEl.textContent = "Connexion impossible. Vérifie tes identifiants."; return; }
+      if (error) { statusEl.textContent = "Connexion impossible. Vérifie ton e-mail et ton mot de passe."; return; }
       await enter(data.session);
+    });
+
+    signupForm.addEventListener("submit", async e => {
+      e.preventDefault();
+      statusEl.textContent = "Création du compte…";
+      const displayName = document.getElementById("signupname").value.trim();
+      const email = document.getElementById("signupemail").value.trim();
+      const password = document.getElementById("signuppassword").value;
+      const code = document.getElementById("signupcode").value.trim();
+      const {data,error} = await client.auth.signUp({
+        email, password,
+        options: { data: { display_name: displayName }, emailRedirectTo: window.location.origin + window.location.pathname }
+      });
+      if (error) { statusEl.textContent = "Création impossible : " + error.message; return; }
+      if (!data.session) {
+        statusEl.textContent = "Compte créé ! Vérifie ta boîte e-mail et confirme ton adresse. Ensuite, connecte-toi pour rejoindre la classe.";
+        return;
+      }
+      const {error:joinError} = await client.rpc("join_class",{p_display_name:displayName,p_access_code:code});
+      if (joinError) {
+        document.getElementById("loginform").classList.add("hidden");
+        signupForm.classList.add("hidden");
+        document.getElementById("authchoices").classList.add("hidden");
+        document.getElementById("joinform").classList.remove("hidden");
+        document.getElementById("joinname").value = displayName;
+        statusEl.textContent = "Compte créé, mais le code de classe doit être vérifié.";
+        return;
+      }
+      await enter(data.session);
+    });
+
+    document.getElementById("joinform").addEventListener("submit", async e => {
+      e.preventDefault();
+      statusEl.textContent = "Vérification du code…";
+      const {error} = await client.rpc("join_class",{
+        p_display_name:document.getElementById("joinname").value.trim(),
+        p_access_code:document.getElementById("joincode").value.trim()
+      });
+      if (error) { statusEl.textContent = "Impossible de rejoindre la classe : vérifie le code."; return; }
+      statusEl.textContent = "Bienvenue dans la 1CE !";
+      await enter(session);
     });
 
     logout.addEventListener("click", async () => {
