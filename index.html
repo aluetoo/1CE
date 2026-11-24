@@ -76,7 +76,7 @@
 </head>
 <body>
   <div class="shell">
-    <header class="top"><button class="mutedbtn menu-toggle hidden" id="sidebarToggle" type="button" aria-label="Ouvrir le menu">☰</button><div class="brand"><div class="logo">1CE</div><div><h1>Notre classe</h1><p>L’espace privé de la 1CE</p></div></div><div class="topnote" id="topnote">Un endroit à nous, pour nos souvenirs.</div><button class="mutedbtn hidden" id="logout">Déconnexion</button></header>
+    <header class="top"><button class="mutedbtn menu-toggle" id="sidebarToggle" type="button" aria-label="Ouvrir le menu">☰</button><div class="brand"><div class="logo">1CE</div><div><h1>Notre classe</h1><p>L’espace privé de la 1CE</p></div></div><div class="topnote" id="topnote">Un endroit à nous, pour nos souvenirs.</div><button class="mutedbtn hidden" id="logout">Déconnexion</button></header>
     <section class="hero"><div class="eyebrow">Bienvenue dans notre espace</div><h2>Les souvenirs de la 1CE, tous ensemble.</h2><p>Retrouve les photos, les nouvelles et les discussions de la classe dans un espace réservé aux membres.</p></section>
     <section id="loginview" class="card login">
       <div class="eyebrow">Accès membres</div><h3 style="font:800 24px Manrope;margin:8px 0">Bienvenue dans la 1CE</h3>
@@ -410,7 +410,7 @@
 
     async function loadPhotos() {
       const root = document.getElementById("photogrid");
-      const {data,error} = await client.from("photos").select("id,object_path,caption,created_at").order("created_at",{ascending:false}).limit(60);
+      const {data,error} = await client.from("photos").select("id,object_path,caption,created_at,uploader_id").order("created_at",{ascending:false}).limit(60);
       if (error) { root.innerHTML = '<div class="empty">Impossible de charger la galerie.</div>'; return; }
       if (!data?.length) { root.innerHTML = '<div class="empty">Pas encore de photo partagée.</div>'; return; }
       const uploaderIds = [...new Set(data.map(p => p.uploader_id).filter(Boolean))];
