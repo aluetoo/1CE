@@ -165,9 +165,19 @@
       const {error} = await client.auth.resetPasswordForEmail(email, {
         redirectTo: window.location.origin + window.location.pathname
       });
-      statusEl.textContent = error
-        ? "Impossible d’envoyer le lien pour le moment. Réessaie plus tard."
-        : "Si un compte correspond à cette adresse, un e-mail de réinitialisation vient d’être envoyé. Vérifie aussi tes courriers indésirables.";
+      if (error) {
+        const code = error.code || "";
+        const message = error.message || "";
+        if (code === "over_email_send_rate_limit" || message.toLowerCase().includes("rate limit")) {
+          statusEl.textContent = "La limite d’envoi d’e-mails de Supabase est atteinte. Attends que la limite se réinitialise, ou demande à la personne responsable de configurer un service e-mail dédié.";
+        } else if (code === "email_address_not_authorized") {
+          statusEl.textContent = "L’envoi d’e-mails est limité aux adresses autorisées du projet. Un service e-mail dédié doit être configuré pour envoyer aux élèves.";
+        } else {
+          statusEl.textContent = "Erreur d’envoi : " + message + (code ? " (" + code + ")" : "");
+        }
+      } else {
+        statusEl.textContent = "Si un compte correspond à cette adresse, un e-mail de réinitialisation vient d’être envoyé. Vérifie aussi tes courriers indésirables.";
+      }
     });
 
     newPasswordForm.addEventListener("submit", async e => {
