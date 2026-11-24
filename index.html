@@ -558,7 +558,7 @@
             setTimeout(()=>{typingMembers.delete(payload.user_id);renderTypingPeople();},3500);
           }else{typingMembers.delete(payload.user_id);renderTypingPeople();}
         })
-        .on("postgres_changes",{event:"INSERT",schema:"public",table:"messages"},()=>loadMessages())
+        .on("broadcast",{event:"new-message"},()=>loadMessages())
         .subscribe(async status=>{
           if(status==="SUBSCRIBED")await channel.track({user_id:myId,display_name:member.display_name,online_at:new Date().toISOString()});
         });
@@ -592,7 +592,11 @@
       if (!content) return;
       const {error} = await client.from("messages").insert({author_id:session.user.id,author_name:member.display_name,content});
       status.textContent = error ? "Message non envoyé." : "";
-      if (!error) { input.value = ""; await loadMessages(); }
+      if (!error) {
+        input.value = "";
+        if (chatRealtimeChannel) await chatRealtimeChannel.send({type:"broadcast",event:"new-message",payload:{sent_at:new Date().toISOString()}});
+        await loadMessages();
+      }
     });
 
     async function loadPhotos() {
