@@ -72,6 +72,36 @@
     }
 
     @media(max-width:720px){.shell{padding:16px}.layout{grid-template-columns:1fr}.side{position:static;display:flex;overflow:auto;gap:4px}.side small{display:none}.nav{white-space:nowrap;width:auto}.grid{grid-template-columns:1fr}.hero{padding:25px}.topnote{display:none}.wide{grid-column:auto}}
+
+    /* Vrai tiroir latéral pleine hauteur : même comportement desktop et mobile */
+    .layout{display:block!important;position:relative}
+    #mainSidebar.side{
+      position:fixed!important;z-index:1001!important;left:0!important;top:0!important;bottom:0!important;
+      width:min(340px,86vw)!important;height:100dvh!important;max-height:none!important;
+      overflow-y:auto!important;overflow-x:hidden!important;border-radius:0 22px 22px 0!important;
+      padding:22px 16px!important;background:#111c2d!important;
+      box-shadow:18px 0 60px #0008!important;transform:translateX(-110%)!important;
+      opacity:1!important;pointer-events:none!important;transition:transform .28s cubic-bezier(.2,.8,.2,1)!important;
+    }
+    #appview.sidebar-open #mainSidebar.side{transform:translateX(0)!important;pointer-events:auto!important}
+    #appview .sidebar-backdrop{
+      display:block;position:fixed;inset:0;z-index:1000;background:rgba(3,8,16,.68);
+      opacity:0;visibility:hidden;pointer-events:none;transition:opacity .25s ease,visibility .25s ease;
+      backdrop-filter:blur(3px);
+    }
+    #appview.sidebar-open .sidebar-backdrop{opacity:1;visibility:visible;pointer-events:auto}
+    .sidebrand{display:flex!important;align-items:center;justify-content:space-between;gap:10px;padding:6px 4px 20px!important;margin-bottom:16px!important}
+    .sidebrand-mark{display:flex;align-items:center;gap:10px}
+    .sidebar-close{width:38px;height:38px;border:1px solid var(--line);border-radius:11px;background:#1a273a;color:#eef4fb;font-size:17px;cursor:pointer}
+    #mainSidebar .nav{display:block;width:100%;padding:15px 14px;margin:5px 0;font-size:14px}
+    #mainSidebar small{padding:10px 14px 8px}
+    #sidebarToggle{display:inline-flex!important;align-items:center;justify-content:center;min-width:46px;min-height:42px;font-size:20px}
+    body.sidebar-lock{overflow:hidden}
+    @media(max-width:720px){
+      #mainSidebar.side{width:min(320px,88vw)!important}
+      #appview .content{width:100%;min-width:0}
+    }
+
   </style>
 </head>
 <body>
@@ -120,7 +150,8 @@
       <div class="status" id="loginstatus" role="status"></div>
     </section>
     <section id="appview" class="layout hidden">
-      <aside class="side" id="mainSidebar"><div class="sidebrand"><strong>1CE</strong><span>Espace de classe</span></div><small>Explorer</small><button class="nav active" data-page="home">⌂ &nbsp; Accueil</button><button class="nav" data-page="photos">▧ &nbsp; Photos & souvenirs</button><button class="nav" data-page="posts">▤ &nbsp; Publications</button><button class="nav" data-page="chat">◌ &nbsp; Discussions</button></aside>
+      <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+      <aside class="side" id="mainSidebar"><div class="sidebrand"><div class="sidebrand-mark"><strong>1CE</strong><span>Espace de classe</span></div><button class="sidebar-close" id="sidebarClose" type="button" aria-label="Fermer le menu">✕</button></div><small>Explorer</small><button class="nav active" data-page="home">⌂ &nbsp; Accueil</button><button class="nav" data-page="photos">▧ &nbsp; Photos & souvenirs</button><button class="nav" data-page="posts">▤ &nbsp; Publications</button><button class="nav" data-page="chat">◌ &nbsp; Discussions</button></aside>
       <main class="content">
         <div id="page-home"><div class="sectionhead"><h3>Le coin de la classe</h3><span>Bienvenue 👋</span></div><div class="grid"><article class="card tile"><div class="symbol">📸</div><div><h4>Nos souvenirs</h4><p>Les moments et photos partagés par la classe.</p></div></article><article class="card tile"><div class="symbol">💬</div><div><h4>Le fil de la 1CE</h4><p>Les nouvelles et les discussions du groupe.</p></div></article><article class="card wide"><h4>À la une</h4><p>Les publications de la classe apparaîtront ici une fois l’espace connecté.</p></article></div></div>
         <div id="page-photos" class="hidden">
@@ -327,16 +358,16 @@
 
     const sidebarToggle = document.getElementById("sidebarToggle");
     const sidebarLayout = document.getElementById("appview");
-    sidebarToggle.addEventListener("click", () => {
-      if (window.matchMedia("(max-width:720px)").matches) sidebarLayout.classList.toggle("mobile-sidebar-open");
-      else sidebarLayout.classList.toggle("sidebar-collapsed");
-    });
-    document.addEventListener("click", e => {
-      if (window.matchMedia("(max-width:720px)").matches && sidebarLayout.classList.contains("mobile-sidebar-open") &&
-          !e.target.closest("#mainSidebar") && !e.target.closest("#sidebarToggle")) sidebarLayout.classList.remove("mobile-sidebar-open");
-    });
+    const sidebarBackdrop = document.getElementById("sidebarBackdrop");
+    const sidebarClose = document.getElementById("sidebarClose");
+    function openSidebar(){ sidebarLayout.classList.add("sidebar-open"); document.body.classList.add("sidebar-lock"); sidebarToggle.setAttribute("aria-expanded","true"); }
+    function closeSidebar(){ sidebarLayout.classList.remove("sidebar-open"); document.body.classList.remove("sidebar-lock"); sidebarToggle.setAttribute("aria-expanded","false"); }
+    sidebarToggle.addEventListener("click", () => sidebarLayout.classList.contains("sidebar-open") ? closeSidebar() : openSidebar());
+    sidebarClose.addEventListener("click", closeSidebar);
+    sidebarBackdrop.addEventListener("click", closeSidebar);
+    document.addEventListener("keydown", e => { if(e.key === "Escape") closeSidebar(); });
     document.querySelectorAll(".nav").forEach(btn => btn.addEventListener("click", () => {
-      sidebarLayout.classList.remove("mobile-sidebar-open");
+      closeSidebar();
       document.querySelectorAll(".nav").forEach(x => x.classList.toggle("active", x === btn));
       ["home","photos","posts","chat"].forEach(p => document.getElementById("page-"+p).classList.toggle("hidden", p !== btn.dataset.page));
     }));
