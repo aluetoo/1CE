@@ -34,6 +34,19 @@
         <label for="email">Adresse e-mail</label><input id="email" type="email" autocomplete="username" required>
         <label for="password">Mot de passe</label><input id="password" type="password" autocomplete="current-password" required>
         <div style="margin-top:18px"><button class="primary" type="submit">Se connecter</button></div>
+        <button class="mutedbtn" id="forgotpassword" type="button" style="margin-top:12px">Mot de passe oublié ?</button>
+      </form>
+      <form id="resetrequestform" class="hidden">
+        <h3 style="font:800 20px Manrope;margin:8px 0">Réinitialiser le mot de passe</h3>
+        <p style="color:var(--muted);font-size:13px;line-height:1.5">Entre ton adresse e-mail. Nous t’enverrons un lien pour choisir un nouveau mot de passe.</p>
+        <label for="resetemail">Adresse e-mail</label><input id="resetemail" type="email" autocomplete="email" required>
+        <div style="margin-top:18px"><button class="primary" type="submit">Envoyer le lien</button> <button class="mutedbtn" id="cancelreset" type="button">Retour</button></div>
+      </form>
+      <form id="newpasswordform" class="hidden">
+        <h3 style="font:800 20px Manrope;margin:8px 0">Choisir un nouveau mot de passe</h3>
+        <label for="newpassword">Nouveau mot de passe</label><input id="newpassword" type="password" minlength="8" autocomplete="new-password" required>
+        <label for="newpasswordconfirm">Confirmer le mot de passe</label><input id="newpasswordconfirm" type="password" minlength="8" autocomplete="new-password" required>
+        <div style="margin-top:18px"><button class="primary" type="submit">Enregistrer le nouveau mot de passe</button></div>
       </form>
       <form id="signupform" class="hidden">
         <label for="signupname">Ton prénom ou nom d’affichage</label><input id="signupname" maxlength="60" autocomplete="nickname" required>
@@ -128,6 +141,59 @@
 
     const loginForm = document.getElementById("loginform");
     const signupForm = document.getElementById("signupform");
+    const resetRequestForm = document.getElementById("resetrequestform");
+    const newPasswordForm = document.getElementById("newpasswordform");
+    let passwordRecoveryMode = false;
+
+    function showAuthForm(form) {
+      [loginForm, signupForm, document.getElementById("joinform"), resetRequestForm, newPasswordForm]
+        .forEach(item => item.classList.toggle("hidden", item !== form));
+      document.getElementById("authchoices").classList.toggle("hidden", form === resetRequestForm || form === newPasswordForm || form === document.getElementById("joinform"));
+      statusEl.textContent = "";
+    }
+
+    document.getElementById("forgotpassword").addEventListener("click", () => {
+      document.getElementById("resetemail").value = document.getElementById("email").value.trim();
+      showAuthForm(resetRequestForm);
+    });
+    document.getElementById("cancelreset").addEventListener("click", () => showAuthForm(loginForm));
+
+    resetRequestForm.addEventListener("submit", async e => {
+      e.preventDefault();
+      statusEl.textContent = "Envoi du lien…";
+      const email = document.getElementById("resetemail").value.trim();
+      const {error} = await client.auth.resetPasswordForEmail(email, {
+        redirectTo: window.location.origin + window.location.pathname
+      });
+      statusEl.textContent = error
+        ? "Impossible d’envoyer le lien pour le moment. Réessaie plus tard."
+        : "Si un compte correspond à cette adresse, un e-mail de réinitialisation vient d’être envoyé. Vérifie aussi tes courriers indésirables.";
+    });
+
+    newPasswordForm.addEventListener("submit", async e => {
+      e.preventDefault();
+      const password = document.getElementById("newpassword").value;
+      const confirmation = document.getElementById("newpasswordconfirm").value;
+      if (password.length < 8) { statusEl.textContent = "Le mot de passe doit contenir au moins 8 caractères."; return; }
+      if (password !== confirmation) { statusEl.textContent = "Les deux mots de passe ne correspondent pas."; return; }
+      statusEl.textContent = "Enregistrement…";
+      const {error} = await client.auth.updateUser({password});
+      if (error) { statusEl.textContent = "Impossible de modifier le mot de passe. Demande un nouveau lien et réessaie."; return; }
+      passwordRecoveryMode = false;
+      await client.auth.signOut();
+      session = null; member = null;
+      showState(false);
+      showAuthForm(loginForm);
+      statusEl.textContent = "Ton mot de passe a été modifié. Tu peux maintenant te connecter.";
+      newPasswordForm.reset();
+    });
+
+    function showPasswordRecovery() {
+      passwordRecoveryMode = true;
+      showState(false);
+      showAuthForm(newPasswordForm);
+      statusEl.textContent = "Choisis un nouveau mot de passe pour ton compte.";
+    }
     document.getElementById("showlogin").addEventListener("click", () => {
       loginForm.classList.remove("hidden"); signupForm.classList.add("hidden");
       document.getElementById("showlogin").className = "primary";
@@ -300,8 +366,15 @@
       await loadPhotos();
     });
 
-    client.auth.getSession().then(({data}) => enter(data.session));
-    client.auth.onAuthStateChange((_event,s) => { if (!s) { session=null; member=null; showState(false); } else { enter(s); } });
+    client.auth.getSession().then(({data}) => {
+      if (window.location.hash.includes("type=recovery")) showPasswordRecovery();
+      else enter(data.session);
+    });
+    client.auth.onAuthStateChange((event,s) => {
+      if (event === "PASSWORD_RECOVERY") { session=s; showPasswordRecovery(); return; }
+      if (!s) { session=null; member=null; if (!passwordRecoveryMode) showState(false); }
+      else if (event !== "INITIAL_SESSION" || !passwordRecoveryMode) enter(s);
+    });
   </script>
 </body>
 </html>
