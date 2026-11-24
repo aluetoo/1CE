@@ -188,7 +188,16 @@
       #appview #page-chat .discord-shell{height:calc(100dvh - 62px)!important}
     }
 
-  </style>
+
+    .online-pill{border:1px solid var(--line)!important;background:#1a273a!important;color:#dce6f2!important;border-radius:999px;padding:8px 12px;cursor:pointer;font:600 12px "DM Sans",sans-serif}
+    .online-pill:hover{background:#26364d!important}
+    .typing-indicator{min-height:22px;padding:0 18px;color:#aebdd0;font-size:12px}
+    .online-panel{position:absolute;z-index:20;right:18px;top:58px;min-width:220px;max-width:min(320px,80vw);padding:14px;background:#172438;border:1px solid var(--line);border-radius:14px;box-shadow:0 12px 34px #0008;color:var(--text)}
+    .discord-main{position:relative}
+    .online-panel strong{display:block;margin-bottom:10px;font-size:13px}
+    .online-member{padding:7px 0;border-top:1px solid #293950;color:#dce6f2;font-size:12px}
+    .online-empty{color:var(--muted);font-size:12px}
+\n  </style>
 </head>
 <body>
   <div class="shell">
@@ -256,7 +265,7 @@
     <form id="postform" class="card formcard"><h4>Écrire une publication</h4><textarea class="field" id="postcontent" rows="3" maxlength="3000" placeholder="Quoi de neuf dans la 1CE ?" required></textarea><button class="primary" type="submit">Publier</button><div class="status" id="poststatus" role="status"></div></form>
     <div class="feed" id="posts"><div class="empty">Chargement des publications…</div></div>
   </div>
-        <div id="page-chat" class="hidden"><div class="discord-shell"><aside class="channelrail"><div class="rail-title">SALONS TEXTUELS</div><div class="channel active"># <span>général</span></div><div class="rail-hint">Un salon commun pour toute la 1CE</div><div class="rail-bottom"><span class="online-dot"></span> Espace privé</div></aside><section class="discord-main"><div class="discord-head"><div><strong># général</strong><small>Les discussions de la classe</small></div><span class="online-pill">● Membres</span></div><div class="chatlist" id="chatlist"><div class="empty">Les messages apparaîtront ici.</div></div><form id="chatform" class="discord-compose"><input class="field" id="chatcontent" maxlength="1000" placeholder="Écrire dans #général…" required><button class="primary" type="submit" aria-label="Envoyer">➤</button></form><div class="status" id="chatstatus" role="status"></div></section></div></div>
+        <div id="page-chat" class="hidden"><div class="discord-shell"><aside class="channelrail"><div class="rail-title">SALONS TEXTUELS</div><div class="channel active"># <span>général</span></div><div class="rail-hint">Un salon commun pour toute la 1CE</div><div class="rail-bottom">Salon de la classe</div></aside><section class="discord-main"><div class="discord-head"><div><strong># général</strong><small>Les discussions de la classe</small></div><button class="online-pill" id="onlineToggle" type="button" aria-expanded="false">Membres en ligne · <span id="onlineCount">0</span></button></div><div class="chatlist" id="chatlist"><div class="empty">Les messages apparaîtront ici.</div></div><div id="typingIndicator" class="typing-indicator" aria-live="polite"></div><div id="onlinePanel" class="online-panel hidden"><strong>Membres connectés</strong><div id="onlineList"></div></div><form id="chatform" class="discord-compose"><input class="field" id="chatcontent" maxlength="1000" placeholder="Écrire dans #général…" required><button class="primary" type="submit" aria-label="Envoyer">➤</button></form><div class="status" id="chatstatus" role="status"></div></section></div></div>
       </main>
     </section>
     <footer class="footer">1CE · Espace privé de classe · Partage uniquement avec l’accord des personnes concernées</footer>
@@ -304,7 +313,7 @@
       document.getElementById("joinform").classList.add("hidden");
       member = data;
       showState(true);
-      await Promise.all([loadPosts(), loadMessages(), loadPhotos()]);
+      await Promise.all([loadPosts(), loadMessages(), loadPhotos()]);\n      await startChatRealtime();
     }
 
     const loginForm = document.getElementById("loginform");
@@ -439,7 +448,7 @@
 
     logout.addEventListener("click", async () => {
       await client.auth.signOut();
-      session = null; member = null; statusEl.textContent = ""; showState(false);
+      session = null; member = null; await stopChatRealtime(); statusEl.textContent = ""; showState(false);
     });
 
     const sidebarToggle = document.getElementById("sidebarToggle");
@@ -507,7 +516,67 @@
       if (!error) { document.getElementById("postcontent").value = ""; await loadPosts(); }
     });
 
-    async function loadMessages() {
+
+    let chatRealtimeChannel = null;
+    let typingStopTimer = null;
+    const typingMembers = new Map();
+    let onlinePeople = [];
+    function renderOnlinePeople(){
+      const count=document.getElementById("onlineCount"),list=document.getElementById("onlineList");
+      if(count)count.textContent=String(onlinePeople.length);
+      if(list)list.innerHTML=onlinePeople.length
+        ?onlinePeople.map(p=>'<div class="online-member">'+esc(p.display_name||"Membre")+(p.user_id===session?.user?.id?' (toi)':'')+'</div>').join("")
+        :'<div class="online-empty">Personne de connecté pour le moment.</div>';
+    }
+    function renderTypingPeople(){
+      const el=document.getElementById("typingIndicator");if(!el)return;
+      const names=[...typingMembers.values()].filter(p=>p.user_id!==session?.user?.id).map(p=>p.display_name||"Un membre");
+      el.textContent=names.length?(names.length===1?names[0]+" écrit…":names.join(", ")+" écrivent…"):"";
+    }
+    async function stopChatRealtime(){
+      if(typingStopTimer)clearTimeout(typingStopTimer);typingStopTimer=null;
+      if(chatRealtimeChannel){const old=chatRealtimeChannel;chatRealtimeChannel=null;await client.removeChannel(old);}
+      onlinePeople=[];typingMembers.clear();renderOnlinePeople();renderTypingPeople();
+    }
+    async function startChatRealtime(){
+      await stopChatRealtime();if(!session||!member)return;
+      const myId=session.user.id;
+      const channel=client.channel("class-1ce-chat",{config:{private:true,presence:{key:myId}}});
+      chatRealtimeChannel=channel;
+      channel
+        .on("presence",{event:"sync"},()=>{
+          const people=[];
+          Object.values(channel.presenceState()).forEach(entries=>(entries||[]).forEach(p=>{
+            if(p.user_id&&!people.some(x=>x.user_id===p.user_id))people.push(p);
+          }));
+          onlinePeople=people;renderOnlinePeople();
+        })
+        .on("broadcast",{event:"typing"},({payload})=>{
+          if(!payload?.user_id||payload.user_id===myId)return;
+          if(payload.is_typing){
+            typingMembers.set(payload.user_id,{user_id:payload.user_id,display_name:payload.display_name});renderTypingPeople();
+            setTimeout(()=>{typingMembers.delete(payload.user_id);renderTypingPeople();},3500);
+          }else{typingMembers.delete(payload.user_id);renderTypingPeople();}
+        })
+        .on("postgres_changes",{event:"INSERT",schema:"public",table:"messages"},()=>loadMessages())
+        .subscribe(async status=>{
+          if(status==="SUBSCRIBED")await channel.track({user_id:myId,display_name:member.display_name,online_at:new Date().toISOString()});
+        });
+    }
+    async function broadcastTyping(isTyping){
+      if(!chatRealtimeChannel||!member||!session)return;
+      await chatRealtimeChannel.send({type:"broadcast",event:"typing",payload:{user_id:session.user.id,display_name:member.display_name,is_typing:isTyping}});
+    }
+    document.getElementById("onlineToggle").addEventListener("click",()=>{
+      const panel=document.getElementById("onlinePanel"),button=document.getElementById("onlineToggle");
+      const opening=panel.classList.contains("hidden");panel.classList.toggle("hidden",!opening);
+      button.setAttribute("aria-expanded",String(opening));renderOnlinePeople();
+    });
+    document.getElementById("chatcontent").addEventListener("input",()=>{
+      broadcastTyping(true);if(typingStopTimer)clearTimeout(typingStopTimer);
+      typingStopTimer=setTimeout(()=>broadcastTyping(false),1400);
+    });
+\n    async function loadMessages() {
       const root = document.getElementById("chatlist");
       const {data,error} = await client.from("messages").select("id,author_id,author_name,content,created_at").order("created_at",{ascending:false}).limit(80);
       if (error) { root.innerHTML = '<div class="empty">Impossible de charger les discussions.</div>'; return; }
@@ -567,7 +636,7 @@
     });
     client.auth.onAuthStateChange((event,s) => {
       if (event === "PASSWORD_RECOVERY") { session=s; showPasswordRecovery(); return; }
-      if (!s) { session=null; member=null; if (!passwordRecoveryMode) showState(false); }
+      if (!s) { session=null; member=null; stopChatRealtime(); if (!passwordRecoveryMode) showState(false); }
       else if (event !== "INITIAL_SESSION" || !passwordRecoveryMode) enter(s);
     });
   </script>
