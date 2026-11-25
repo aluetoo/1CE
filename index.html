@@ -174,6 +174,45 @@
     body:not(.glass-ui) #tab-general .alu-composer-wrap,body:not(.glass-ui) #tab-dms .alu-composer-wrap{background:#f7f5f0!important;backdrop-filter:none;-webkit-backdrop-filter:none}
     body:not(.glass-ui) .alu-composer{background:#fff!important;backdrop-filter:none;-webkit-backdrop-filter:none}
     @media(max-width:767px){#tab-general .alu-composer-wrap{transform:translateY(-45px)!important}.general-call-dock{margin:4px auto 10px;gap:7px}.general-call-dock button{min-height:38px;padding:8px 12px;border-radius:13px!important}}
+
+    /* Correction visuelle mobile : aucun panneau derrière les commandes */
+    #tab-general .general-call-dock{
+      background:transparent!important;border:0!important;box-shadow:none!important;
+      outline:0!important;padding:0!important;border-radius:0!important;
+      backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+    }
+    #tab-general .general-call-dock button{
+      border:0!important;outline:0!important;border-radius:9999px!important;
+      min-height:44px;padding:10px 19px!important;
+      background:rgba(59,130,246,.16)!important;color:#78a6ff!important;
+      box-shadow:inset 0 0 0 1px rgba(96,165,250,.16),0 4px 14px rgba(0,0,0,.10)!important;
+    }
+    #tab-general .general-call-dock button:focus{outline:none!important}
+    #tab-general .alu-composer-wrap{
+      background:transparent!important;border:0!important;border-top:0!important;
+      box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+      padding-left:10px!important;padding-right:10px!important;
+    }
+    #tab-general .alu-composer{
+      background:rgba(255,255,255,.13)!important;
+      border:1px solid rgba(255,255,255,.20)!important;
+      border-radius:28px!important;
+      box-shadow:0 10px 32px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.16)!important;
+      backdrop-filter:blur(28px) saturate(1.65)!important;
+      -webkit-backdrop-filter:blur(28px) saturate(1.65)!important;
+    }
+    #tab-general .alu-textarea{color:#f4f4f5!important}
+    #tab-general .alu-textarea::placeholder{color:rgba(255,255,255,.66)!important}
+    body:not(.glass-ui) #tab-general .alu-composer{
+      background:#292b2e!important;border:1px solid rgba(255,255,255,.10)!important;
+      box-shadow:0 6px 18px rgba(0,0,0,.18)!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+    }
+    body:not(.glass-ui) #tab-general .alu-composer-wrap{background:transparent!important;border:0!important}
+    @media(max-width:767px){
+      #tab-general .general-call-dock button{border-radius:9999px!important;min-height:44px;padding:10px 17px!important}
+      #tab-general .alu-composer-wrap{background:transparent!important;padding-left:10px!important;padding-right:10px!important}
+      #tab-general .alu-composer{border-radius:28px!important}
+    }
   </style>
 </head>
 <body class="bg-[#f8f9ff] text-slate-800 antialiased h-screen flex flex-col overflow-hidden">
