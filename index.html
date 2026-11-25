@@ -95,6 +95,54 @@
       header{position:relative}
     }
 
+
+    /* Interface de discussion inspirée des messageries modernes */
+    #tab-general>div:first-child,#tab-dms>div:last-child{background:#efeae2!important;padding:0!important;min-height:0}
+    #tab-general .max-w-4xl,#tab-dms>div:last-child>.max-w-4xl{max-width:none!important;width:100%!important;height:100%;min-height:0;display:flex;flex-direction:column;gap:0!important}
+    #tab-general .max-w-4xl>div:first-child,#dm-active-user-header{flex-shrink:0;border:0!important;border-bottom:1px solid rgba(0,0,0,.06)!important;border-radius:0!important;box-shadow:0 1px 3px rgba(0,0,0,.06)!important;background:rgba(255,255,255,.88)!important;backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+    #tab-general .max-w-4xl>div:first-child{padding:12px 18px!important;flex-direction:row!important;align-items:center!important}
+    #tab-general .max-w-4xl>div:first-child h2{font-size:16px!important;margin-top:3px}
+    #tab-general .max-w-4xl>div:first-child p{font-size:11px}
+    #general-video-room{min-height:0!important;padding:8px 12px!important;border-radius:0!important;box-shadow:none!important}
+    #general-video-room:not(.call-active){max-height:82px}
+    #general-video-room:not(.call-active) p{display:none}
+    #general-video-room:not(.call-active) .mb-3{display:none}
+    #general-messages-list,#dm-messages-list{flex:1;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:18px clamp(12px,3vw,34px)!important;display:flex;flex-direction:column;gap:10px!important;background-color:#efeae2;background-image:radial-gradient(rgba(110,98,78,.10) .7px,transparent .7px);background-size:18px 18px}
+    .wa-message-row{display:flex;align-items:flex-end;gap:7px;width:100%;min-width:0}
+    .wa-message-out{justify-content:flex-end}
+    .wa-message-in{justify-content:flex-start}
+    .wa-bubble{position:relative;max-width:min(78%,620px);min-width:70px;padding:8px 10px 6px;border-radius:13px;box-shadow:0 1px 1px rgba(0,0,0,.10);font-size:13px;line-height:1.45;overflow-wrap:anywhere}
+    .wa-bubble-in{background:#fff;color:#1f2937;border-top-left-radius:4px}
+    .wa-bubble-out{background:#d9fdd3;color:#172b20;border-top-right-radius:4px}
+    .wa-author{font-size:11px;font-weight:700;color:#16836b;margin-bottom:3px}
+    .wa-time{display:flex;justify-content:flex-end;align-items:center;gap:4px;font-size:9px;color:#66756b;margin:3px 0 0 12px;white-space:nowrap}
+    .wa-bubble-out .wa-time span{color:#53a6d8;font-size:10px;font-weight:700}
+    #tab-general .alu-composer-wrap,#tab-dms .alu-composer-wrap{position:sticky!important;bottom:0!important;z-index:5;margin:0!important;padding:10px clamp(10px,2vw,24px) calc(10px + env(safe-area-inset-bottom,0px))!important;background:rgba(247,245,240,.88);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-top:1px solid rgba(0,0,0,.05)}
+    .alu-composer{max-width:100%!important;border:1px solid rgba(0,0,0,.08)!important;border-radius:24px!important;background:#fff!important;box-shadow:0 2px 8px rgba(0,0,0,.07)!important;padding:5px 7px 5px 14px!important}
+    .alu-textarea{font-size:14px!important;color:#25312d!important;max-height:120px}
+    .alu-textarea::placeholder{color:#87918c}
+    .alu-send-btn:not(:disabled){background:#00a884!important;color:white!important;border-radius:50%!important;width:38px!important;height:38px!important}
+    #tab-dms>div:first-child{background:#fff!important;border-right:1px solid #e5e7eb}
+    #dm-users-list button{padding:12px 14px!important;border-bottom:1px solid #f0f2f2!important}
+    #dm-users-list button:hover{background:#f5f7f6!important}
+    @media(max-width:767px){
+      #tab-general>div:first-child,#tab-dms>div:last-child{padding:0!important}
+      #tab-general .max-w-4xl>div:first-child{padding:10px 12px!important}
+      #tab-general .max-w-4xl>div:first-child>div:last-child{display:flex!important;width:auto!important}
+      #tab-general .max-w-4xl>div:first-child>div:last-child button{padding:8px!important;font-size:0!important}
+      #tab-general .max-w-4xl>div:first-child>div:last-child button svg{width:18px;height:18px}
+      #general-messages-list,#dm-messages-list{padding:12px 9px!important}
+      .wa-bubble{max-width:84%;font-size:13px}
+      #tab-dms>div:first-child{width:38%!important;min-width:118px!important}
+      #tab-dms>div:last-child>.max-w-4xl{padding:0!important}
+      #dm-active-user-header{padding:10px!important;flex-direction:row!important;align-items:center!important}
+      #tab-dms #dm-active-user-header>div:last-child{width:auto!important}
+      #tab-dms #dm-active-user-header button{font-size:0!important;padding:8px!important}
+      #tab-dms #dm-active-user-header button svg{width:18px;height:18px}
+      #tab-general .alu-composer-wrap,#tab-dms .alu-composer-wrap{padding:8px 8px calc(8px + env(safe-area-inset-bottom,0px))!important}
+    }
+    @media(prefers-reduced-motion:reduce){#general-messages-list,#dm-messages-list{scroll-behavior:auto}}
+
   </style>
 </head>
 <body class="bg-[#f8f9ff] text-slate-800 antialiased h-screen flex flex-col overflow-hidden">
@@ -831,16 +879,17 @@
         const profileById = new Map((profiles || []).map(profile => [profile.id, profile]));
         container.innerHTML = data.map(msg => {
           const authorName = msg.author_name || 'Élève 1CE';
+          const isMe = msg.author_id === currentUser?.id;
+          const time = new Date(msg.created_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
           return `
-            <div class="flex items-start gap-3 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm">
-              ${profileAvatarMarkup(profileById.get(msg.author_id), authorName, 'w-10 h-10')}
-              <div class="flex-1 min-w-0">
-                <div class="flex items-center gap-2 flex-wrap">
-                  <span class="font-bold text-slate-900 text-sm">${escapeMessageHtml(authorName)}</span>
-                  <span class="text-xs text-slate-400">${new Date(msg.created_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}</span>
-                </div>
-                <p class="text-sm text-slate-700 mt-1 whitespace-pre-wrap break-words">${escapeMessageHtml(msg.content || '')}</p>
+            <div class="wa-message-row ${isMe ? 'wa-message-out' : 'wa-message-in'}">
+              ${isMe ? '' : profileAvatarMarkup(profileById.get(msg.author_id), authorName, 'w-8 h-8')}
+              <div class="wa-bubble ${isMe ? 'wa-bubble-out' : 'wa-bubble-in'}">
+                ${isMe ? '' : `<div class="wa-author">${escapeMessageHtml(authorName)}</div>`}
+                <p class="whitespace-pre-wrap break-words">${escapeMessageHtml(msg.content || '')}</p>
+                <span class="wa-time">${time} ${isMe ? '<span aria-label="Envoyé">✓✓</span>' : ''}</span>
               </div>
+              ${isMe ? profileAvatarMarkup(profileById.get(msg.author_id), authorName, 'w-7 h-7') : ''}
             </div>
           `;
         }).join('');
@@ -946,14 +995,16 @@
           const isMe = msg.sender_id === currentUser.id;
           const senderProfile = profileById.get(msg.sender_id);
           const senderName = isMe ? (senderProfile?.full_name || currentUser.user_metadata?.full_name || 'Moi') : (senderProfile?.full_name || 'Participant');
+          const time = new Date(msg.created_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
           return `
-            <div class="flex items-start gap-2.5 ${isMe ? 'justify-end' : ''}">
-              ${isMe ? '' : profileAvatarMarkup(senderProfile, senderName, 'w-9 h-9')}
-              <div class="${isMe ? 'bg-indigo-600 text-white rounded-tr-sm' : 'bg-white text-slate-800 border border-slate-200 rounded-tl-sm'} p-3 rounded-2xl text-xs shadow-sm max-w-md min-w-0 break-words">
-                <div class="font-semibold text-[10px] mb-1 ${isMe ? 'text-indigo-100' : 'text-slate-500'}">${escapeMessageHtml(senderName)}</div>
-                <div class="whitespace-pre-wrap">${escapeMessageHtml(msg.content || '')}</div>
+            <div class="wa-message-row ${isMe ? 'wa-message-out' : 'wa-message-in'}">
+              ${isMe ? '' : profileAvatarMarkup(senderProfile, senderName, 'w-8 h-8')}
+              <div class="wa-bubble ${isMe ? 'wa-bubble-out' : 'wa-bubble-in'}">
+                ${isMe ? '' : `<div class="wa-author">${escapeMessageHtml(senderName)}</div>`}
+                <p class="whitespace-pre-wrap break-words">${escapeMessageHtml(msg.content || '')}</p>
+                <span class="wa-time">${time} ${isMe ? '<span aria-label="Envoyé">✓✓</span>' : ''}</span>
               </div>
-              ${isMe ? profileAvatarMarkup(senderProfile, senderName, 'w-9 h-9') : ''}
+              ${isMe ? profileAvatarMarkup(senderProfile, senderName, 'w-7 h-7') : ''}
             </div>
           `;
         }).join('');
