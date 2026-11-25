@@ -337,10 +337,6 @@
 <!-- Center Chat & Stream -->
 <div class="flex-1 flex flex-col bg-[#f8f9ff] overflow-y-auto custom-scrollbar p-6">
 <div class="max-w-4xl w-full mx-auto space-y-6">
-<!-- En-tête compact de la discussion -->
-<div class="general-chat-heading">
-  <div class="min-w-0"><h2 class="text-sm font-bold text-slate-800">Discussion de classe</h2><p class="text-xs text-slate-500">Toute la classe 1CE</p></div>
-</div>
 <!-- Commandes d'appel flottantes -->
 <div class="general-call-dock" aria-label="Démarrer un appel">
   <button type="button" id="general-voice-btn" aria-label="Appel vocal" title="Appel vocal">
@@ -352,13 +348,7 @@
   <span id="general-session-status" class="general-call-status" aria-live="polite"></span>
 </div>
 <!-- Active Video Room Live Panel (Empty State ready for dynamic call) -->
-<div class="bg-slate-900 rounded-3xl p-8 text-white shadow-xl overflow-hidden flex flex-col items-center justify-center text-center min-h-[200px]" id="general-video-room">
-<div class="w-12 h-12 rounded-2xl bg-slate-800 flex items-center justify-center text-indigo-400 mb-3">
-<svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
-</div>
-<h3 class="font-bold text-sm text-white">Aucun appel vidéo en cours</h3>
-<p class="text-xs text-slate-400 mt-1 max-w-md">Démarrez un appel vocal ou vidéo pour partager votre écran et réviser en direct avec vos camarades de 1CE.</p>
-</div>
+<div id="general-video-room" class="hidden"></div>
 <!-- Messages stream -->
 <div class="space-y-4" id="general-messages-list">
 <div class="bg-white p-8 rounded-2xl border border-slate-200 text-center text-sm text-slate-500">
