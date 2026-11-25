@@ -63,6 +63,7 @@
     <div id="auth-signup-panel" class="hidden space-y-3">
       <h2 class="font-bold text-slate-900">Créer ton compte</h2>
       <input id="auth-signup-name" type="text" maxlength="60" autocomplete="name" placeholder="Prénom et nom" class="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm"/>
+      <input id="auth-signup-username" type="text" maxlength="30" autocomplete="nickname" placeholder="Nom de profil (pseudo)" class="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm"/>
       <input id="auth-signup-email" type="email" autocomplete="email" placeholder="Adresse e-mail" class="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm"/>
       <input id="auth-signup-code" type="password" autocomplete="off" placeholder="Code de classe" class="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm"/>
       <input id="auth-signup-password" type="password" minlength="8" autocomplete="new-password" placeholder="Créer un mot de passe (8 caractères minimum)" class="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm"/>
@@ -622,11 +623,17 @@
     async function redeemPendingInvite() {
       const pending = sessionStorage.getItem('1ce_pending_class_code');
       const displayName = sessionStorage.getItem('1ce_pending_display_name') || currentUser?.user_metadata?.full_name || currentUser?.email?.split('@')[0] || 'Élève 1CE';
+      const profileName = sessionStorage.getItem('1ce_pending_username') || currentUser?.user_metadata?.username || '';
       if(!pending || !currentUser) return false;
       const {data,error}=await supabaseClient.functions.invoke('redeem-class-invite',{body:{class_code:pending,display_name:displayName}});
       if(error || !data?.success) throw new Error(data?.error || error?.message || 'Activation de la classe impossible.');
+      if(profileName){
+        const {error:profileError}=await supabaseClient.functions.invoke('update-own-profile',{body:{full_name:displayName,username:profileName.replace(/^@/,'')}});
+        if(profileError) throw new Error(profileError.message || 'Enregistrement du nom de profil impossible.');
+      }
       sessionStorage.removeItem('1ce_pending_class_code');
       sessionStorage.removeItem('1ce_pending_display_name');
+      sessionStorage.removeItem('1ce_pending_username');
       return true;
     }
     async function startAuthenticatedApp() {
@@ -771,15 +778,18 @@
         }
 
         document.getElementById('dm-users-count').textContent = `${data.length} élève(s)`;
-        dmList.innerHTML = data.map(user => `
-          <div onclick="selectDmUser('${user.user_id}', '${user.display_name}')" class="p-3.5 hover:bg-slate-50 flex items-center gap-3 cursor-pointer">
-            <div class="w-11 h-11 rounded-full bg-indigo-100 flex items-center justify-center font-bold text-indigo-700">1C</div>
-            <div class="flex-1 min-w-0">
-              <h4 class="font-bold text-slate-900 text-xs truncate">${user.display_name}</h4>
-              <p class="text-xs text-slate-400 truncate">${user.role || 'Élève'}</p>
-            </div>
-          </div>
-        `).join('');
+        dmList.innerHTML = data.map(user => {
+          const officialName = user.display_name || 'Élève 1CE';
+          const safeId = String(user.user_id).replace(/[^a-zA-Z0-9-]/g, '');
+          return `
+            <button type="button" onclick="selectDmUser('${safeId}', ${JSON.stringify(officialName).replace(/</g, '\\u003c')})" class="w-full text-left p-3.5 hover:bg-slate-50 flex items-center gap-3 cursor-pointer">
+              <div class="w-11 h-11 rounded-full bg-indigo-100 flex items-center justify-center font-bold text-indigo-700">1C</div>
+              <div class="flex-1 min-w-0">
+                <h4 class="font-bold text-slate-900 text-xs truncate">${officialName}</h4>
+              </div>
+            </button>
+          `;
+        }).join('');
       } catch (err) {
         console.error('Erreur loadClassmates:', err.message);
       }
@@ -1077,20 +1087,23 @@
             const code=document.getElementById('auth-login-code').value.trim();
             if(!code)throw new Error('Ce compte doit encore être activé. Saisis le code de classe dans le champ prévu puis reconnecte-toi.');
             const displayName=currentUser.user_metadata?.full_name||currentUser.email?.split('@')[0]||'Élève 1CE';
+            const profileName=currentUser.user_metadata?.username||'';
             const {data,error}=await supabaseClient.functions.invoke('redeem-class-invite',{body:{class_code:code,display_name:displayName}});
             if(error||!data?.success)throw new Error(data?.error||error?.message||'Activation impossible.');
+            if(profileName){const {error:profileError}=await supabaseClient.functions.invoke('update-own-profile',{body:{full_name:displayName,username:profileName}});if(profileError)throw new Error(profileError.message||'Enregistrement du nom de profil impossible.');}
           }
           await startAuthenticatedApp();authMessage('');
         }catch(err){await supabaseClient.auth.signOut();currentUser=null;authMessage(err.message||'Connexion impossible.',true);}
       });
       document.getElementById('auth-signup-submit')?.addEventListener('click',async()=>{
-        const name=document.getElementById('auth-signup-name').value.trim(),email=document.getElementById('auth-signup-email').value.trim(),code=document.getElementById('auth-signup-code').value.trim(),password=document.getElementById('auth-signup-password').value,confirmPassword=document.getElementById('auth-signup-confirm').value;
-        if(!name||!email||!code||!password){authMessage('Complète tous les champs.',true);return;}
+        const name=document.getElementById('auth-signup-name').value.trim(),username=document.getElementById('auth-signup-username').value.trim().replace(/^@/,''),email=document.getElementById('auth-signup-email').value.trim(),code=document.getElementById('auth-signup-code').value.trim(),password=document.getElementById('auth-signup-password').value,confirmPassword=document.getElementById('auth-signup-confirm').value;
+        if(!name||!username||!email||!code||!password){authMessage('Complète tous les champs, y compris le nom officiel et le nom de profil.',true);return;}
         if(password.length<8){authMessage('Le mot de passe doit contenir au moins 8 caractères.',true);return;}
         if(password!==confirmPassword){authMessage('Les deux mots de passe ne correspondent pas.',true);return;}
+        if(!/^[a-zA-Z0-9_.-]{3,30}$/.test(username)){authMessage('Le nom de profil doit contenir 3 à 30 caractères (lettres, chiffres, point, tiret ou underscore).',true);return;}
         try{
-          sessionStorage.setItem('1ce_pending_class_code',code);sessionStorage.setItem('1ce_pending_display_name',name);
-          const {data,error}=await supabaseClient.auth.signUp({email,password,options:{data:{full_name:name},emailRedirectTo:location.origin}});
+          sessionStorage.setItem('1ce_pending_class_code',code);sessionStorage.setItem('1ce_pending_display_name',name);sessionStorage.setItem('1ce_pending_username',username);
+          const {data,error}=await supabaseClient.auth.signUp({email,password,options:{data:{full_name:name,username},emailRedirectTo:location.origin}});
           if(error)throw error;
           if(data.session){currentUser=data.user;await redeemPendingInvite();await startAuthenticatedApp();authMessage('Compte créé et accès à la classe activé.');}
           else{authMessage('Compte créé. Vérifie ton e-mail, confirme ton adresse puis reviens sur cette page pour terminer ton inscription.');}
