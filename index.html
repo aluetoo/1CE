@@ -907,6 +907,7 @@
       setInterval(updateHeaderClock, 60000);
 
       await getCurrentUser();
+      window.initCallInbox?.();
       await loadOwnProfile();
       loadGeneralMessages();
       subscribeToGeneralMessages();
@@ -915,8 +916,8 @@
       loadPosts();
       document.getElementById('notifications-button')?.addEventListener('click', () => alert('Tu es à jour : aucune notification non lue.'));
       document.getElementById('dm-new-conversation')?.addEventListener('click', () => { switchTab('dms'); document.getElementById('dm-search-input')?.focus(); });
-      document.getElementById('dm-audio-call')?.addEventListener('click', () => alert(activeDmUserId ? 'Les appels privés entre deux comptes ne sont pas encore configurés.' : 'Sélectionne d’abord un camarade.'));
-      document.getElementById('dm-video-call')?.addEventListener('click', () => alert(activeDmUserId ? 'Les appels vidéo privés entre deux comptes ne sont pas encore configurés.' : 'Sélectionne d’abord un camarade.'));
+      document.getElementById('dm-audio-call')?.addEventListener('click', () => window.startDirectCall?.(false));
+      document.getElementById('dm-video-call')?.addEventListener('click', () => window.startDirectCall?.(true));
       document.getElementById('sidebar-mic-toggle')?.addEventListener('click', () => { if(window.toggleClassMic) window.toggleClassMic(); else alert('Démarre d’abord un appel vocal.'); });
       document.getElementById('remove-avatar-button')?.addEventListener('click', async () => {
         if(!currentUser || !confirm('Retirer ta photo de profil ?')) return;
@@ -936,59 +937,274 @@
     });
 </script>
 <script>
-  // Appels audio/vidéo 1CE : WebRTC + Supabase Realtime pour la signalisation.
+  // Appels audio/vidéo : WebRTC, présence et signalisation Supabase Realtime.
   (() => {
-    let callChannel = null, callPeer = null, callStream = null;
-    const callRoom = 'class-1ce-call';
-    const room = document.getElementById('general-video-room');
-    const setCallMessage = (text) => { if (room) room.innerHTML = '<div class="text-sm">' + text + '</div>'; };
-    const showLocalVideo = (stream, videoEnabled) => {
-      if (!room) return;
-      room.innerHTML = '<video id="local-call-video" autoplay muted playsinline class="w-full max-w-xl rounded-2xl ' + (videoEnabled ? '' : 'hidden') + '"></video><div id="call-status" class="text-sm mt-3">Appel en cours…</div>';
-      const video = document.getElementById('local-call-video'); if (video) video.srcObject = stream;
+    let call = null;
+    let inbox = null;
+    const $ = id => document.getElementById(id);
+    const statusText = (text) => {
+      const el = $('general-session-status');
+      if (el) el.textContent = text;
+      const dm = $('dm-active-user-status');
+      if (call?.kind === 'direct' && dm) dm.textContent = text;
     };
-    const sendSignal = payload => callChannel?.send({ type: 'broadcast', event: 'signal', payload: { ...payload, from: currentUser?.id } });
-    const makePeer = (initiator, videoEnabled) => {
-      const peer = new RTCPeerConnection({ iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] });
-      callPeer = peer;
-      callStream.getTracks().forEach(track => peer.addTrack(track, callStream));
-      peer.ontrack = event => {
-        let remote = document.getElementById('remote-call-video');
-        if (!remote) { remote = document.createElement('video'); remote.id = 'remote-call-video'; remote.autoplay = true; remote.playsInline = true; remote.className = 'w-full max-w-xl rounded-2xl mt-3'; room.appendChild(remote); }
-        remote.srcObject = event.streams[0];
+    const containerFor = kind => $(kind === 'direct' ? 'dm-video-container' : 'general-video-room');
+    const setRoomIdle = (kind, text) => {
+      const el = containerFor(kind);
+      if (!el) return;
+      if (kind === 'direct') {
+        el.classList.add('hidden');
+        el.innerHTML = '';
+      } else {
+        el.innerHTML = '<div class="text-sm text-slate-300">' + text + '</div>';
+      }
+    };
+    const sendSignal = async payload => {
+      if (!call?.channel) return;
+      return call.channel.send({ type:'broadcast', event:'signal', payload:{ ...payload, from:currentUser.id, to:call.remoteId || null } });
+    };
+    const renderControls = () => {
+      const el = containerFor(call.kind);
+      if (!el) return;
+      if (call.kind === 'direct') el.classList.remove('hidden');
+      el.className = (call.kind === 'direct'
+        ? 'relative bg-slate-900 rounded-3xl overflow-hidden shadow-xl min-h-[220px] p-3'
+        : 'bg-slate-900 rounded-3xl p-4 text-white shadow-xl overflow-hidden flex flex-col items-center justify-center text-center min-h-[200px]');
+      el.innerHTML = `
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full">
+          <div class="relative min-h-[120px] bg-slate-800 rounded-xl overflow-hidden flex items-center justify-center">
+            <video id="local-call-video" autoplay muted playsinline class="w-full h-full object-cover ${call.video ? '' : 'hidden'}"></video>
+            <span class="text-xs text-slate-300 ${call.video ? 'hidden' : ''}" id="local-audio-label">Ton micro</span>
+            <span class="absolute bottom-2 left-2 text-xs bg-black/50 rounded px-2 py-1">Toi</span>
+          </div>
+          <div class="relative min-h-[120px] bg-slate-800 rounded-xl overflow-hidden flex items-center justify-center">
+            <video id="remote-call-video" autoplay playsinline class="w-full h-full object-cover ${call.video ? '' : 'hidden'}"></video>
+            <audio id="remote-call-audio" autoplay class="${call.video ? 'hidden' : ''}"></audio>
+            <span class="text-xs text-slate-300" id="remote-audio-label">En attente du camarade…</span>
+            <span class="absolute bottom-2 left-2 text-xs bg-black/50 rounded px-2 py-1">Camarade</span>
+          </div>
+        </div>
+        <div class="flex flex-wrap items-center justify-center gap-2 mt-3">
+          <button type="button" id="call-mute-btn" class="px-3 py-2 rounded-full bg-slate-700 text-white text-xs font-semibold">Micro : activé</button>
+          <button type="button" id="call-camera-btn" class="px-3 py-2 rounded-full bg-slate-700 text-white text-xs font-semibold" ${call.video ? '' : 'disabled'}>Caméra : activée</button>
+          <button type="button" id="call-hangup-btn" class="px-4 py-2 rounded-full bg-red-600 hover:bg-red-700 text-white text-xs font-bold">Raccrocher</button>
+        </div>
+        <p id="call-live-status" class="text-xs text-slate-300 mt-2">Connexion à l’appel…</p>`;
+      const local = $('local-call-video');
+      if (local) local.srcObject = call.stream;
+      $('call-mute-btn')?.addEventListener('click', toggleMute);
+      $('call-camera-btn')?.addEventListener('click', toggleCamera);
+      $('call-hangup-btn')?.addEventListener('click', () => endCall(true));
+    };
+    const liveStatus = text => {
+      const el = $('call-live-status');
+      if (el) el.textContent = text;
+      statusText(text);
+    };
+    const toggleMute = () => {
+      if (!call) return;
+      call.muted = !call.muted;
+      call.stream.getAudioTracks().forEach(track => track.enabled = !call.muted);
+      const btn = $('call-mute-btn');
+      if (btn) btn.textContent = call.muted ? 'Micro : coupé' : 'Micro : activé';
+      const sidebar = $('sidebar-mic-toggle');
+      if (sidebar) sidebar.title = call.muted ? 'Réactiver le micro' : 'Couper le micro';
+    };
+    const toggleCamera = () => {
+      if (!call) return;
+      const tracks = call.stream.getVideoTracks();
+      if (!tracks.length) return;
+      call.cameraOff = !call.cameraOff;
+      tracks.forEach(track => track.enabled = !call.cameraOff);
+      const btn = $('call-camera-btn');
+      if (btn) btn.textContent = call.cameraOff ? 'Caméra : éteinte' : 'Caméra : activée';
+      const video = $('local-call-video');
+      if (video) video.classList.toggle('hidden', call.cameraOff);
+    };
+    const attachRemote = stream => {
+      if (!call) return;
+      const video = $('remote-call-video');
+      const audio = $('remote-call-audio');
+      const label = $('remote-audio-label');
+      if (call.video && video) {
+        video.srcObject = stream;
+        video.classList.remove('hidden');
+        if (audio) audio.classList.add('hidden');
+      } else if (audio) {
+        audio.srcObject = stream;
+        audio.classList.remove('hidden');
+      }
+      if (label) label.textContent = 'Connecté';
+      liveStatus('Appel connecté');
+    };
+    const flushIce = async () => {
+      if (!call?.peer?.remoteDescription) return;
+      const pending = call.pendingIce.splice(0);
+      for (const candidate of pending) await call.peer.addIceCandidate(candidate);
+    };
+    const makePeer = () => {
+      if (!call || call.peer) return call?.peer;
+      const peer = new RTCPeerConnection({ iceServers:[{urls:'stun:stun.l.google.com:19302'}] });
+      call.peer = peer;
+      call.stream.getTracks().forEach(track => peer.addTrack(track, call.stream));
+      peer.ontrack = event => attachRemote(event.streams[0]);
+      peer.onicecandidate = event => { if (event.candidate) sendSignal({kind:'ice', candidate:event.candidate}); };
+      peer.onconnectionstatechange = () => {
+        if (!call) return;
+        if (peer.connectionState === 'connected') liveStatus('Appel connecté');
+        if (peer.connectionState === 'failed') liveStatus('Connexion impossible. Réessaie sur un autre réseau.');
+        if (peer.connectionState === 'disconnected') liveStatus('Connexion interrompue…');
       };
-      peer.onicecandidate = event => { if (event.candidate) sendSignal({ kind: 'ice', candidate: event.candidate }); };
-      if (initiator) peer.createOffer().then(offer => peer.setLocalDescription(offer).then(() => sendSignal({ kind: 'offer', offer })))
-        .catch(() => setCallMessage('Impossible de démarrer l’appel.'));
       return peer;
     };
-    const startCall = async videoEnabled => {
-      if (!window.supabase || !currentUser) { setCallMessage('Connecte-toi à ton compte avant de lancer un appel.'); return; }
+    const maybeOffer = async () => {
+      if (!call || call.offerSent || !call.remoteId || currentUser.id.localeCompare(call.remoteId) >= 0) return;
+      call.offerSent = true;
       try {
-        callStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: videoEnabled });
-        showLocalVideo(callStream, videoEnabled);
-        callChannel = supabaseClient.channel(callRoom).on('broadcast', { event: 'signal' }, async ({ payload }) => {
-          if (payload.from === currentUser.id) return;
-          if (payload.kind === 'offer') {
-            callPeer = makePeer(false, videoEnabled); await callPeer.setRemoteDescription(payload.offer);
-            const answer = await callPeer.createAnswer(); await callPeer.setLocalDescription(answer); await sendSignal({ kind: 'answer', answer });
-          } else if (payload.kind === 'answer' && callPeer) await callPeer.setRemoteDescription(payload.answer);
-          else if (payload.kind === 'ice' && callPeer) await callPeer.addIceCandidate(payload.candidate);
-        }).subscribe(status => { if (status === 'SUBSCRIBED') { callPeer = makePeer(true, videoEnabled); } });
-      } catch (error) { setCallMessage('Autorise le micro ou la caméra pour utiliser cet appel.'); }
+        const peer = makePeer();
+        const offer = await peer.createOffer();
+        await peer.setLocalDescription(offer);
+        await sendSignal({kind:'offer', offer});
+        liveStatus('Appel envoyé, connexion en cours…');
+      } catch (error) {
+        liveStatus('Impossible de créer la connexion audio/vidéo.');
+      }
     };
-    const stopCall = () => { callStream?.getTracks().forEach(track => track.stop()); callPeer?.close(); if (callChannel) supabaseClient.removeChannel(callChannel); callStream = null; callPeer = null; callChannel = null; setCallMessage('Aucun appel en cours.'); };
-    window.startClassCall = startCall;
+    const handleSignal = async payload => {
+      if (!call || payload.from === currentUser.id || (payload.to && payload.to !== currentUser.id)) return;
+      if (payload.kind === 'offer') {
+        try {
+          call.remoteId = payload.from;
+          const peer = makePeer();
+          await peer.setRemoteDescription(payload.offer);
+          await flushIce();
+          const answer = await peer.createAnswer();
+          await peer.setLocalDescription(answer);
+          await sendSignal({kind:'answer', answer});
+          liveStatus('Connexion en cours…');
+        } catch (error) { liveStatus('Impossible de répondre à cet appel.'); }
+      } else if (payload.kind === 'answer' && call.peer) {
+        try { await call.peer.setRemoteDescription(payload.answer); await flushIce(); }
+        catch (error) { liveStatus('Réponse d’appel invalide.'); }
+      } else if (payload.kind === 'ice' && call.peer) {
+        try {
+          if (call.peer.remoteDescription) await call.peer.addIceCandidate(payload.candidate);
+          else call.pendingIce.push(payload.candidate);
+        } catch (error) { console.warn('ICE candidate ignoré', error); }
+      } else if (payload.kind === 'hangup') {
+        await endCall(false, 'L’autre personne a raccroché.');
+      } else if (payload.kind === 'decline') {
+        await endCall(false, 'L’appel a été refusé.');
+      }
+    };
+    const joinCall = async ({kind, roomName, targetId=null, video=false, sendInvite=false}) => {
+      if (call) await endCall(false, 'Nouvel appel.');
+      if (!currentUser) { alert('Connecte-toi pour passer un appel.'); return; }
+      if (!navigator.mediaDevices?.getUserMedia || !window.RTCPeerConnection) {
+        alert('Les appels nécessitent un navigateur compatible et une connexion HTTPS.');
+        return;
+      }
+      let stream;
+      try { stream = await navigator.mediaDevices.getUserMedia({audio:true, video:!!video}); }
+      catch (error) {
+        alert('Autorise le micro' + (video ? ' et la caméra' : '') + ' dans ton navigateur, puis réessaie.');
+        return;
+      }
+      call = {kind, roomName, targetId, remoteId:targetId, video:!!video, stream, channel:null, peer:null, muted:false, cameraOff:false, pendingIce:[], offerSent:false};
+      renderControls();
+      liveStatus(sendInvite ? 'Appel lancé : invitation envoyée…' : 'Recherche de l’autre participant…');
+      const channel = supabaseClient.channel(roomName, {config:{presence:{key:currentUser.id}}});
+      call.channel = channel;
+      channel.on('broadcast', {event:'signal'}, ({payload}) => { handleSignal(payload); });
+      channel.on('presence', {event:'sync'}, () => {
+        if (!call || call.channel !== channel) return;
+        const keys = Object.keys(channel.presenceState()).filter(key => key !== currentUser.id);
+        if (kind === 'class' && keys.length > 1) {
+          liveStatus('Cet appel est limité à deux participants pour le moment.');
+          return;
+        }
+        if (keys.length) {
+          call.remoteId = targetId || keys[0];
+          maybeOffer();
+          if ($('remote-audio-label')) $('remote-audio-label').textContent = 'Participant présent, connexion…';
+        }
+      });
+      await new Promise((resolve, reject) => {
+        channel.subscribe(async status => {
+          if (status === 'SUBSCRIBED') {
+            try {
+              await channel.track({userId:currentUser.id, joined_at:new Date().toISOString()});
+              resolve();
+            } catch (error) { reject(error); }
+          } else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') reject(new Error('Realtime indisponible'));
+        });
+      }).catch(async error => {
+        await endCall(false);
+        alert('Le service d’appel est indisponible pour le moment. Réessaie plus tard.');
+        throw error;
+      });
+      if (sendInvite && targetId) {
+        const inviteChannel = supabaseClient.channel('call-inbox-' + targetId);
+        await new Promise((resolve, reject) => inviteChannel.subscribe(status => {
+          if (status === 'SUBSCRIBED') resolve();
+          else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') reject(new Error('Invitation indisponible'));
+        }));
+        await inviteChannel.send({type:'broadcast',event:'incoming-call',payload:{from:currentUser.id,fromName:currentUser.email?.split('@')[0]||'Un camarade',roomName,video:!!video}});
+        supabaseClient.removeChannel(inviteChannel);
+        liveStatus('Invitation envoyée. En attente de réponse…');
+      }
+    };
+    const endCall = async (notify=true, message='Appel terminé.') => {
+      if (!call) return;
+      const old = call;
+      call = null;
+      if (notify && old.channel) {
+        try { await old.channel.send({type:'broadcast',event:'signal',payload:{kind:'hangup',from:currentUser?.id,to:old.remoteId||null}}); } catch (_) {}
+      }
+      old.stream?.getTracks().forEach(track => track.stop());
+      old.peer?.close();
+      if (old.channel) await supabaseClient.removeChannel(old.channel);
+      setRoomIdle(old.kind, message);
+      statusText(message);
+    };
+    const startClassCall = video => joinCall({kind:'class',roomName:'class-1ce-call',video});
+    const startDirectCall = video => {
+      if (!activeDmUserId) { alert('Sélectionne d’abord un camarade dans tes conversations.'); return; }
+      if (activeDmUserId === currentUser?.id) { alert('Tu ne peux pas t’appeler toi-même.'); return; }
+      const ids=[currentUser.id,activeDmUserId].sort();
+      return joinCall({kind:'direct',roomName:'dm-call-'+ids.join('-'),targetId:activeDmUserId,video,sendInvite:true});
+    };
+    const initCallInbox = () => {
+      if (!currentUser || inbox) return;
+      inbox = supabaseClient.channel('call-inbox-'+currentUser.id)
+        .on('broadcast',{event:'incoming-call'},async ({payload}) => {
+          if (call) {
+            const busy = supabaseClient.channel('call-inbox-'+payload.from);
+            await new Promise(resolve => busy.subscribe(status => { if(status==='SUBSCRIBED') resolve(); }));
+            await busy.send({type:'broadcast',event:'incoming-call-response',payload:{kind:'busy',from:currentUser.id}});
+            supabaseClient.removeChannel(busy);
+            return;
+          }
+          const accepted = confirm((payload.fromName || 'Un camarade') + ' t’appelle en ' + (payload.video ? 'vidéo' : 'audio') + '. Accepter l’appel ?');
+          if (accepted) await joinCall({kind:'direct',roomName:payload.roomName,targetId:payload.from,video:payload.video});
+          else {
+            const reply=supabaseClient.channel('call-inbox-'+payload.from);
+            await new Promise(resolve=>reply.subscribe(status=>{if(status==='SUBSCRIBED')resolve();}));
+            await reply.send({type:'broadcast',event:'signal',payload:{kind:'decline',from:currentUser.id,to:payload.from}});
+            supabaseClient.removeChannel(reply);
+          }
+        }).subscribe();
+    };
+    window.initCallInbox = initCallInbox;
+    window.startClassCall = startClassCall;
+    window.startDirectCall = startDirectCall;
     window.toggleClassMic = () => {
-      const track=callStream?.getAudioTracks()?.[0];
-      if(!track){alert('Aucun micro actif : démarre d’abord un appel vocal.');return;}
-      track.enabled=!track.enabled;
-      const button=document.getElementById('sidebar-mic-toggle'); if(button)button.title=track.enabled?'Couper le micro':'Réactiver le micro';
-      const status=document.getElementById('general-session-status'); if(status)status.textContent=track.enabled?'Micro actif':'Micro coupé';
+      if (!call) { alert('Aucun appel en cours.'); return; }
+      toggleMute();
     };
-    document.getElementById('general-voice-btn')?.addEventListener('click', () => startCall(false));
-    document.getElementById('general-visio-btn')?.addEventListener('click', () => startCall(true));
-    window.addEventListener('beforeunload', stopCall);
+    document.getElementById('general-voice-btn')?.addEventListener('click', () => startClassCall(false));
+    document.getElementById('general-visio-btn')?.addEventListener('click', () => startClassCall(true));
+    window.addEventListener('beforeunload', () => { if (call) { call.stream?.getTracks().forEach(track=>track.stop()); call.peer?.close(); } });
   })();
 </script>
 </body></html>
