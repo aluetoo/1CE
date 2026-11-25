@@ -318,7 +318,26 @@
     body.glass-ui #tab-general .w-72{
       border-radius:22px;
     }
-  </style>
+  
+    /* Clavier mobile : garder l'en-tête fixe et ne déplacer que le composer */
+    @media(max-width:767px){
+      #tab-general>div:first-child,#tab-dms>div:last-child{
+        height:calc(var(--app-visual-height, 100dvh) - 60px)!important;
+        max-height:calc(var(--app-visual-height, 100dvh) - 60px)!important;
+        overflow:hidden!important;
+      }
+      #tab-general .alu-composer-wrap,#tab-dms .alu-composer-wrap{
+        position:fixed!important;
+        left:0!important;right:0!important;
+        bottom:var(--app-keyboard-inset, 0px)!important;
+        z-index:40!important;
+        width:100%!important;
+        margin:0!important;
+      }
+      #general-messages-list,#dm-messages-list{padding-bottom:110px!important}
+    }
+
+</style>
 </head>
 <body class="bg-[#f8f9ff] text-slate-800 antialiased h-screen flex flex-col overflow-hidden">
 <!-- Authentification obligatoire -->
@@ -1799,4 +1818,32 @@
     window.addEventListener('beforeunload', () => { if (call) { call.stream?.getTracks().forEach(track=>track.stop()); call.peer?.close(); } });
   })();
 </script>
+
+<script>
+  // Ajuste uniquement la zone de saisie à la hauteur visible lorsque le clavier mobile apparaît.
+  (() => {
+    const viewport = window.visualViewport;
+    if (!viewport) return;
+    const updateKeyboardLayout = () => {
+      const keyboardInset = Math.max(0, window.innerHeight - viewport.height - viewport.offsetTop);
+      document.documentElement.style.setProperty('--app-visual-height', viewport.height + 'px');
+      document.documentElement.style.setProperty('--app-keyboard-inset', keyboardInset + 'px');
+    };
+    viewport.addEventListener('resize', updateKeyboardLayout);
+    viewport.addEventListener('scroll', updateKeyboardLayout);
+    window.addEventListener('resize', updateKeyboardLayout);
+    document.addEventListener('focusin', event => {
+      if (event.target.matches('#general-message-input, #dm-message-input')) {
+        updateKeyboardLayout();
+      }
+    });
+    document.addEventListener('focusout', event => {
+      if (event.target.matches('#general-message-input, #dm-message-input')) {
+        setTimeout(updateKeyboardLayout, 120);
+      }
+    });
+    updateKeyboardLayout();
+  })();
+</script>
+
 </body></html>
