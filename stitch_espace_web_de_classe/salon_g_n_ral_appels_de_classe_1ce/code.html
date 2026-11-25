@@ -836,8 +836,8 @@
       if (!currentUser) return;
       try {
         const { error } = await supabaseClient
-          .from('profiles')
-          .upsert({ id: currentUser.id, full_name: fullName, username: username });
+          .from('class_members')
+          .upsert({ user_id: currentUser.id, display_name: fullName || username || 'Élève 1CE' });
         if (error) throw error;
         alert('Profil mis à jour avec succès !');
       } catch (err) {
@@ -871,6 +871,54 @@
       loadPlanningSessions();
       loadPosts();
     });
-  </script>
+</script>
+<script>
+  // Appels audio/vidéo 1CE : WebRTC + Supabase Realtime pour la signalisation.
+  (() => {
+    let callChannel = null, callPeer = null, callStream = null;
+    const callRoom = 'class-1ce-call';
+    const room = document.getElementById('general-video-room');
+    const setCallMessage = (text) => { if (room) room.innerHTML = '<div class="text-sm">' + text + '</div>'; };
+    const showLocalVideo = (stream, videoEnabled) => {
+      if (!room) return;
+      room.innerHTML = '<video id="local-call-video" autoplay muted playsinline class="w-full max-w-xl rounded-2xl ' + (videoEnabled ? '' : 'hidden') + '"></video><div id="call-status" class="text-sm mt-3">Appel en cours…</div>';
+      const video = document.getElementById('local-call-video'); if (video) video.srcObject = stream;
+    };
+    const sendSignal = payload => callChannel?.send({ type: 'broadcast', event: 'signal', payload: { ...payload, from: currentUser?.id } });
+    const makePeer = (initiator, videoEnabled) => {
+      const peer = new RTCPeerConnection({ iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] });
+      callPeer = peer;
+      callStream.getTracks().forEach(track => peer.addTrack(track, callStream));
+      peer.ontrack = event => {
+        let remote = document.getElementById('remote-call-video');
+        if (!remote) { remote = document.createElement('video'); remote.id = 'remote-call-video'; remote.autoplay = true; remote.playsInline = true; remote.className = 'w-full max-w-xl rounded-2xl mt-3'; room.appendChild(remote); }
+        remote.srcObject = event.streams[0];
+      };
+      peer.onicecandidate = event => { if (event.candidate) sendSignal({ kind: 'ice', candidate: event.candidate }); };
+      if (initiator) peer.createOffer().then(offer => peer.setLocalDescription(offer).then(() => sendSignal({ kind: 'offer', offer })))
+        .catch(() => setCallMessage('Impossible de démarrer l’appel.'));
+      return peer;
+    };
+    const startCall = async videoEnabled => {
+      if (!window.supabase || !currentUser) { setCallMessage('Connecte-toi à ton compte avant de lancer un appel.'); return; }
+      try {
+        callStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: videoEnabled });
+        showLocalVideo(callStream, videoEnabled);
+        callChannel = supabaseClient.channel(callRoom).on('broadcast', { event: 'signal' }, async ({ payload }) => {
+          if (payload.from === currentUser.id) return;
+          if (payload.kind === 'offer') {
+            callPeer = makePeer(false, videoEnabled); await callPeer.setRemoteDescription(payload.offer);
+            const answer = await callPeer.createAnswer(); await callPeer.setLocalDescription(answer); await sendSignal({ kind: 'answer', answer });
+          } else if (payload.kind === 'answer' && callPeer) await callPeer.setRemoteDescription(payload.answer);
+          else if (payload.kind === 'ice' && callPeer) await callPeer.addIceCandidate(payload.candidate);
+        }).subscribe(status => { if (status === 'SUBSCRIBED') { callPeer = makePeer(true, videoEnabled); } });
+      } catch (error) { setCallMessage('Autorise le micro ou la caméra pour utiliser cet appel.'); }
+    };
+    const stopCall = () => { callStream?.getTracks().forEach(track => track.stop()); callPeer?.close(); if (callChannel) supabaseClient.removeChannel(callChannel); callStream = null; callPeer = null; callChannel = null; setCallMessage('Aucun appel en cours.'); };
+    document.getElementById('general-voice-btn')?.addEventListener('click', () => startCall(false));
+    document.getElementById('general-visio-btn')?.addEventListener('click', () => startCall(true));
+    window.addEventListener('beforeunload', stopCall);
+  })();
+</script>
 </body></html>
 
