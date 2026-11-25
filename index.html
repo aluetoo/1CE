@@ -360,8 +360,9 @@
       document.getElementById("joinform").classList.add("hidden");
       member = data;
       showState(true);
-      await Promise.all([loadPosts(), loadMessages(), loadPhotos()]);
-      await startChatRealtime();
+      // L'affichage de la page ne doit pas attendre les chargements réseau.
+      Promise.allSettled([loadPosts(), loadMessages(), loadPhotos()]);
+      startChatRealtime().catch(error => console.warn("Chat temps réel indisponible :", error));
     }
 
     const loginForm = document.getElementById("loginform");
