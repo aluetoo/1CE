@@ -223,7 +223,32 @@
     @media(max-width:600px){.settings-header{padding:10px 14px}.settings-content{padding:18px 12px 36px}}
 \n.photo-grid .photo-thumb{cursor:zoom-in}.photo-lightbox{position:fixed;inset:0;z-index:1500;background:#000f;display:flex;align-items:center;justify-content:center;padding:60px 70px}.photo-lightbox.hidden{display:none!important}.photo-lightbox figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:12px}.photo-lightbox img{max-width:86vw;max-height:78dvh;object-fit:contain}.photo-lightbox figcaption{color:white}.lightbox-close,.lightbox-arrow{position:absolute;border:1px solid #ffffff35;background:#20242c;color:white;border-radius:50%;width:46px;height:46px;font-size:30px}.lightbox-close{right:22px;top:18px}.lightbox-arrow.prev{left:20px}.lightbox-arrow.next{right:20px}.lightbox-count{position:absolute;bottom:18px;color:#ddd}.add-choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;max-width:850px}.add-choice{display:flex;flex-direction:column;align-items:flex-start;gap:10px;text-align:left;padding:24px;border:1px solid var(--line);border-radius:18px;background:var(--panel);color:var(--text);min-height:150px}.add-choice>span{font-size:30px}.add-choice small{color:var(--muted)}.add-back{margin:4px 0 14px}.settings-organized{display:flex;flex-direction:column;gap:14px}.settings-category-menu{display:flex;flex-direction:column;gap:10px}.settings-category-tile{display:flex;align-items:center;gap:14px;width:100%;padding:17px;border:1px solid #30343b;border-radius:15px;background:#1b1b1f;color:#f4f4f5;text-align:left}.settings-category-tile>span:first-child{font-size:23px;color:var(--mint)}.settings-category-tile>span:nth-child(2){display:flex;flex:1;flex-direction:column;gap:4px}.settings-category-tile small,.settings-glass-row small{display:block;color:#a5a5af;font-size:12px;margin-top:4px}.settings-panel{padding:20px;border:1px solid #35353b;border-radius:17px;background:#1b1b1f;color:#f4f4f5}.settings-panel h3{margin:0 0 16px}.settings-panel p{color:#bbb;font-size:13px}.settings-lang-grid{display:flex;flex-wrap:wrap;gap:10px}.settings-lang{padding:12px 15px;border-radius:12px;background:#24252a;border:1px solid #3a3b42;color:white}.settings-lang.active{border-color:var(--mint);color:var(--mint)}.settings-color-grid{display:grid;grid-template-columns:repeat(4,52px);gap:16px}.settings-color{width:48px;height:48px;border-radius:50%;background:var(--swatch);border:3px solid transparent}.settings-color.active{border-color:white;box-shadow:0 0 0 3px #ffffff35}.settings-glass-row{display:flex;justify-content:space-between;align-items:center;gap:16px}body.glass-mode .card,body.glass-mode .side{backdrop-filter:blur(18px);background:rgba(25,38,57,.72)}@media(max-width:600px){.add-choices{grid-template-columns:1fr}.photo-lightbox{padding:60px 12px}.photo-lightbox img{max-width:94vw;max-height:72dvh}}
 .account-security-modal{position:fixed;inset:0;z-index:1600;background:#000b;display:flex;align-items:center;justify-content:center;padding:18px}.account-security-modal.hidden{display:none!important}.account-security-card{width:min(460px,100%);max-height:90dvh;overflow:auto;padding:22px;border:1px solid #45464a;border-radius:18px;background:#1b1b1f;color:#f4f4f5}.account-security-card h3{margin:0 0 8px}.account-security-card p{color:#bbb;font-size:13px;line-height:1.5}.account-security-card label{display:block;font-size:12px;margin:12px 0 6px}.account-security-card button{margin-top:10px;width:100%}.account-security-card .field{width:100%}.settings-panel button{margin:6px 6px 6px 0}.settings-panel button:disabled{opacity:.45;cursor:not-allowed}body.glass-mode .settings-category-tile,body.glass-mode .settings-panel,body.glass-mode .account-security-card{backdrop-filter:blur(18px);background:rgba(30,34,42,.72)}
-  </style>
+  
+    /* En-tête du chat adapté aux petits écrans */
+    #appview #page-chat .discord-main{min-width:0;width:100%}
+    #appview #page-chat .discord-head{box-sizing:border-box;min-width:0}
+    #appview #page-chat .discord-head > div{min-width:0}
+    #appview #page-chat .discord-head strong{overflow-wrap:anywhere}
+    #appview #page-chat .online-pill{flex:0 0 auto;max-width:100%;white-space:normal;line-height:1.35}
+    @media(max-width:520px){
+      #appview #page-chat .discord-head{
+        height:auto!important;min-height:0!important;flex-direction:column!important;
+        align-items:flex-start!important;justify-content:center!important;
+        gap:9px!important;padding:13px 14px!important;
+      }
+      #appview #page-chat .discord-head > div{width:100%;min-width:0}
+      #appview #page-chat .discord-head strong{font-size:15px;line-height:1.35}
+      #appview #page-chat .discord-head small{font-size:12px;line-height:1.4;white-space:normal}
+      #appview #page-chat .online-pill{
+        align-self:flex-start!important;font-size:11px!important;
+        padding:7px 10px!important;min-height:34px;
+      }
+      #appview #page-chat .discord-main{min-width:0}
+      #appview #page-chat .discord-main .chatlist{padding:12px!important}
+      #appview #page-chat .discord-compose{padding:10px!important;gap:7px!important}
+      #appview #page-chat .discord-compose .field{min-width:0;width:0;flex:1 1 auto}
+    }
+</style>
 </head>
 <body>
   <div class="shell">
