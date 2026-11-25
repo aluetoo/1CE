@@ -213,6 +213,63 @@
       #tab-general .alu-composer-wrap{background:transparent!important;padding-left:10px!important;padding-right:10px!important}
       #tab-general .alu-composer{border-radius:28px!important}
     }
+
+    /* Correctif structurel : le dock était stylé comme l'ancien en-tête */
+    #tab-general>div:first-child{display:flex!important;flex-direction:column!important;min-height:0!important}
+    #tab-general .max-w-4xl{
+      display:flex!important;flex:1 1 auto!important;flex-direction:column!important;
+      min-height:100%!important;height:100%!important;gap:0!important;
+    }
+    #tab-general .max-w-4xl>div:first-child.general-call-dock{
+      display:flex!important;flex:0 0 auto!important;flex-direction:row!important;
+      align-items:center!important;justify-content:center!important;
+      width:max-content!important;max-width:100%!important;min-height:0!important;
+      margin:8px auto 14px!important;padding:0!important;
+      background:transparent!important;border:0!important;border-radius:0!important;
+      outline:0!important;box-shadow:none!important;
+      backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+    }
+    #tab-general .general-call-dock button,
+    #tab-general .general-call-dock button:hover,
+    #tab-general .general-call-dock button:focus,
+    #tab-general .general-call-dock button:focus-visible{
+      display:inline-flex!important;align-items:center!important;justify-content:center!important;
+      min-height:44px!important;padding:10px 19px!important;border:0!important;
+      outline:0!important;border-radius:9999px!important;
+      background:rgba(70,125,235,.18)!important;color:#8db3ff!important;
+      box-shadow:none!important;filter:none!important;
+    }
+    #tab-general .general-call-dock button:focus-visible{outline:2px solid rgba(125,170,255,.55)!important;outline-offset:3px!important}
+    #general-messages-list{
+      display:flex!important;flex:1 1 0!important;flex-direction:column!important;
+      min-height:0!important;overflow-y:auto!important;overscroll-behavior:contain;
+      padding-bottom:22px!important;
+    }
+    #tab-general .alu-composer-wrap{
+      position:sticky!important;bottom:0!important;transform:none!important;
+      flex:0 0 auto!important;margin:0!important;
+      padding:8px 10px calc(45px + env(safe-area-inset-bottom,0px))!important;
+      background:transparent!important;border:0!important;box-shadow:none!important;
+      backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+    }
+    #tab-general .alu-composer{
+      background:rgba(255,255,255,.13)!important;
+      border:1px solid rgba(255,255,255,.22)!important;border-radius:28px!important;
+      box-shadow:0 10px 32px rgba(0,0,0,.16),inset 0 1px 0 rgba(255,255,255,.16)!important;
+      backdrop-filter:blur(28px) saturate(1.65)!important;
+      -webkit-backdrop-filter:blur(28px) saturate(1.65)!important;
+    }
+    body:not(.glass-ui) #tab-general .alu-composer{
+      background:#292b2e!important;border:1px solid rgba(255,255,255,.10)!important;
+      box-shadow:0 6px 18px rgba(0,0,0,.18)!important;
+      backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+    }
+    @media(max-width:767px){
+      #tab-general .max-w-4xl{min-height:100%!important;height:100%!important}
+      #tab-general .max-w-4xl>div:first-child.general-call-dock{margin:8px auto 12px!important}
+      #general-messages-list{padding:10px 9px 24px!important}
+      #tab-general .alu-composer-wrap{padding:8px 10px calc(45px + env(safe-area-inset-bottom,0px))!important}
+    }
   </style>
 </head>
 <body class="bg-[#f8f9ff] text-slate-800 antialiased h-screen flex flex-col overflow-hidden">
