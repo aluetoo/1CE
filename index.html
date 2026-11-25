@@ -45,6 +45,7 @@
       <h2 class="font-bold text-slate-900">Connexion</h2>
       <input id="auth-login-email" type="email" autocomplete="email" placeholder="Adresse e-mail" class="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm"/>
       <input id="auth-login-password" type="password" autocomplete="current-password" placeholder="Mot de passe" class="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm"/>
+      <input id="auth-login-code" type="password" autocomplete="off" placeholder="Code de classe (si inscription à terminer)" class="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm"/>
       <button id="auth-login-submit" class="w-full rounded-xl bg-indigo-600 p-3 text-white font-bold">Se connecter</button>
       <button id="auth-show-reset" class="w-full text-sm text-indigo-700 font-semibold">Mot de passe oublié ?</button>
       <p class="text-center text-sm text-slate-500">Première visite ? <button id="auth-show-signup" class="text-indigo-700 font-bold">Créer un compte</button></p>
@@ -632,6 +633,7 @@
     async function beginPasswordRecovery() {
       const email=currentUser?.email || document.getElementById('auth-login-email')?.value || '';
       document.getElementById('auth-reset-email').value=email;
+      document.getElementById('auth-gate')?.classList.remove('hidden');
       showAuthPanel('reset');
     }
     async function deleteOwnAccount() {
@@ -1026,8 +1028,19 @@
       document.getElementById('auth-login-submit')?.addEventListener('click',async()=>{
         const email=document.getElementById('auth-login-email').value.trim(),password=document.getElementById('auth-login-password').value;
         if(!email||!password){authMessage('Saisis ton e-mail et ton mot de passe.',true);return;}
-        try{await signIn(email,password);await startAuthenticatedApp();authMessage('');}
-        catch(err){await supabaseClient.auth.signOut();currentUser=null;authMessage(err.message||'Connexion impossible.',true);}
+        try{
+          await signIn(email,password);
+          const {data:member,error:memberError}=await supabaseClient.from('class_members').select('user_id').eq('user_id',currentUser.id).maybeSingle();
+          if(memberError)throw memberError;
+          if(!member){
+            const code=document.getElementById('auth-login-code').value.trim();
+            if(!code)throw new Error('Ce compte doit encore être activé. Saisis le code de classe dans le champ prévu puis reconnecte-toi.');
+            const displayName=currentUser.user_metadata?.full_name||currentUser.email?.split('@')[0]||'Élève 1CE';
+            const {data,error}=await supabaseClient.functions.invoke('redeem-class-invite',{body:{class_code:code,display_name:displayName}});
+            if(error||!data?.success)throw new Error(data?.error||error?.message||'Activation impossible.');
+          }
+          await startAuthenticatedApp();authMessage('');
+        }catch(err){await supabaseClient.auth.signOut();currentUser=null;authMessage(err.message||'Connexion impossible.',true);}
       });
       document.getElementById('auth-signup-submit')?.addEventListener('click',async()=>{
         const name=document.getElementById('auth-signup-name').value.trim(),email=document.getElementById('auth-signup-email').value.trim(),code=document.getElementById('auth-signup-code').value.trim(),password=document.getElementById('auth-signup-password').value,confirmPassword=document.getElementById('auth-signup-confirm').value;
