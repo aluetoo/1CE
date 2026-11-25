@@ -139,6 +139,22 @@
     }
     @media(prefers-reduced-motion:reduce){#general-messages-list,#dm-messages-list{scroll-behavior:auto}}
 
+  
+    /* Dock d'appel flottant inspiré du Liquid Glass d'iOS 26 */
+    .general-chat-heading{flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;padding:7px 14px 2px!important;background:transparent}
+    .general-call-dock{position:relative;z-index:8;align-self:center;display:flex;align-items:center;justify-content:center;gap:8px;width:max-content;max-width:calc(100% - 24px);margin:3px auto 10px;padding:7px 9px;border:1px solid rgba(255,255,255,.48);border-radius:999px;background:rgba(255,255,255,.68);backdrop-filter:blur(24px) saturate(1.55);-webkit-backdrop-filter:blur(24px) saturate(1.55);box-shadow:0 8px 28px rgba(30,64,175,.13),inset 0 1px 0 rgba(255,255,255,.8)}
+    .general-call-dock button{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:38px;padding:8px 13px;border:1px solid rgba(37,99,235,.13);border-radius:999px;background:linear-gradient(145deg,rgba(255,255,255,.95),rgba(219,234,254,.82));color:#1d4ed8;font-size:12px;font-weight:700;box-shadow:0 2px 7px rgba(30,64,175,.10);transition:transform .16s ease,background .16s ease}
+    .general-call-dock button:active{transform:scale(.96)}
+    .general-call-dock button svg{width:17px;height:17px;flex:0 0 auto}
+    .general-call-status{max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#475569;font-size:10px;font-weight:600}
+    #general-video-room:not(.call-fullscreen){background:linear-gradient(145deg,#172554,#0f172a)!important}
+    .wa-bubble-out{background:#dbeafe!important;color:#172554!important}
+    .wa-author{color:#2563eb!important}
+    .wa-bubble-out .wa-time span{color:#2563eb!important}
+    .alu-send-btn:not(:disabled){background:#2563eb!important;color:#fff!important}
+    @media(max-width:767px){.general-chat-heading{padding:6px 12px 0!important}.general-call-dock{margin:3px auto 8px;padding:6px;gap:6px}.general-call-dock button{min-height:36px;padding:7px 11px;font-size:11px}.general-call-status{max-width:90px;font-size:9px}}
+    @media(prefers-reduced-motion:reduce){.general-call-dock button{transition:none}}
+
   </style>
 </head>
 <body class="bg-[#f8f9ff] text-slate-800 antialiased h-screen flex flex-col overflow-hidden">
@@ -321,28 +337,19 @@
 <!-- Center Chat & Stream -->
 <div class="flex-1 flex flex-col bg-[#f8f9ff] overflow-y-auto custom-scrollbar p-6">
 <div class="max-w-4xl w-full mx-auto space-y-6">
-<!-- Header bar -->
-<div class="flex items-center justify-between bg-white p-5 rounded-2xl border border-slate-200/80 shadow-sm">
-<div>
-<div class="flex items-center gap-2">
-<span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-md uppercase tracking-wider">Canal Principal</span>
-<span class="text-xs text-slate-500 font-semibold flex items-center gap-1" id="general-session-status">
-<span class="w-2 h-2 rounded-full bg-slate-400"></span> En attente
-                  </span>
+<!-- En-tête compact de la discussion -->
+<div class="general-chat-heading">
+  <div class="min-w-0"><h2 class="text-sm font-bold text-slate-800">Discussion de classe</h2><p class="text-xs text-slate-500">Toute la classe 1CE</p></div>
 </div>
-<h2 class="text-xl font-bold text-slate-900 mt-1"># général • Toute la classe 1CE</h2>
-<p class="text-xs text-slate-500">L'espace convivial pour discuter tous ensemble, poser des questions sur les cours ou lancer des appels.</p>
-</div>
-<div class="flex items-center gap-2">
-<button class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-semibold flex items-center gap-2 shadow-sm transition-colors" id="general-voice-btn">
-<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
-<span>Démarrer un appel vocal</span>
-</button>
-<button class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-semibold flex items-center gap-2 shadow-sm transition-colors" id="general-visio-btn">
-<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
-<span>Rejoindre la visio</span>
-</button>
-</div>
+<!-- Commandes d'appel flottantes -->
+<div class="general-call-dock" aria-label="Démarrer un appel">
+  <button type="button" id="general-voice-btn" aria-label="Appel vocal" title="Appel vocal">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.8 19.8 0 0 1 11.19 18a19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.09 3.18 2 2 0 0 1 4.08 1h3a2 2 0 0 1 2 1.72l.45 2.7a2 2 0 0 1-.57 1.7L7.1 8.98a16 16 0 0 0 6 6l1.86-1.86a2 2 0 0 1 1.7-.57l2.7.45a2 2 0 0 1 1.64 1.92z"/></svg><span>Appel vocal</span>
+  </button>
+  <button type="button" id="general-visio-btn" aria-label="Appel vidéo" title="Appel vidéo">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="13" height="14" rx="2"/><path d="m16 10 5-3v10l-5-3z"/></svg><span>Appel vidéo</span>
+  </button>
+  <span id="general-session-status" class="general-call-status" aria-live="polite"></span>
 </div>
 <!-- Active Video Room Live Panel (Empty State ready for dynamic call) -->
 <div class="bg-slate-900 rounded-3xl p-8 text-white shadow-xl overflow-hidden flex flex-col items-center justify-center text-center min-h-[200px]" id="general-video-room">
@@ -1513,6 +1520,7 @@
       }
       call = {kind, roomName, targetId, remoteId:targetId, video:!!video, stream, channel:null, peer:null, muted:false, cameraOff:false, pendingIce:[], offerSent:false};
       renderControls();
+      toggleCallFullscreen();
       liveStatus(sendInvite ? 'Appel lancé : invitation envoyée…' : 'Recherche de l’autre participant…');
       const channel = supabaseClient.channel(roomName, {config:{presence:{key:currentUser.id}}});
       call.channel = channel;
