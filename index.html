@@ -360,7 +360,8 @@
       document.getElementById("joinform").classList.add("hidden");
       member = data;
       showState(true);
-      await Promise.all([loadPosts(), loadMessages(), loadPhotos()]);\n      await startChatRealtime();
+      await Promise.all([loadPosts(), loadMessages(), loadPhotos()]);
+      await startChatRealtime();
     }
 
     const loginForm = document.getElementById("loginform");
