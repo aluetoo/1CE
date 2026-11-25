@@ -556,7 +556,7 @@
         const input = form.querySelector("input");
         const content = input.value.trim();
         if (!content) return;
-        const moderation = await moderateContent(content,"comment");
+        const moderation = await moderateContent(content,"comment",{post_id:form.dataset.id});
         if (!moderation.ok) { alert(moderation.message); return; }
         if (moderation.notice) alert(moderation.notice);
         await loadPosts();
