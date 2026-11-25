@@ -1008,6 +1008,19 @@
       updateHeaderClock();
       setInterval(updateHeaderClock, 60000);
 
+      supabaseClient.auth.onAuthStateChange((event,session)=>{
+        if(event==='PASSWORD_RECOVERY' && session){
+          currentUser=session.user;
+          document.getElementById('auth-gate')?.classList.remove('hidden');
+          showAuthPanel('reset');
+          document.getElementById('auth-reset-email').value=session.user.email||'';
+          document.getElementById('auth-reset-send')?.classList.add('hidden');
+          document.getElementById('auth-reset-token')?.classList.add('hidden');
+          document.getElementById('auth-reset-verify')?.classList.remove('hidden');
+          authMessage('Choisis ton nouveau mot de passe pour terminer la récupération.');
+        }
+      });
+
       await getCurrentUser();
       if(currentUser) {
         try {
@@ -1057,18 +1070,6 @@
           if(data.session){currentUser=data.user;await redeemPendingInvite();await startAuthenticatedApp();authMessage('Compte créé et accès à la classe activé.');}
           else{authMessage('Compte créé. Vérifie ton e-mail, confirme ton adresse puis reviens sur cette page pour terminer ton inscription.');}
         }catch(err){authMessage(err.message||'Création du compte impossible.',true);}
-      });
-      supabaseClient.auth.onAuthStateChange((event,session)=>{
-        if(event==='PASSWORD_RECOVERY' && session){
-          currentUser=session.user;
-          document.getElementById('auth-gate')?.classList.remove('hidden');
-          showAuthPanel('reset');
-          document.getElementById('auth-reset-email').value=session.user.email||'';
-          document.getElementById('auth-reset-send')?.classList.add('hidden');
-          document.getElementById('auth-reset-token')?.classList.add('hidden');
-          document.getElementById('auth-reset-verify')?.classList.remove('hidden');
-          authMessage('Choisis ton nouveau mot de passe pour terminer la récupération.');
-        }
       });
       document.getElementById('auth-reset-send')?.addEventListener('click',async()=>{
         const email=document.getElementById('auth-reset-email').value.trim();if(!email){authMessage('Saisis ton adresse e-mail.',true);return;}
