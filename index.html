@@ -452,13 +452,36 @@
 
     loginForm.addEventListener("submit", async e => {
       e.preventDefault();
-      statusEl.textContent = "Connexion…";
-      const {data,error} = await client.auth.signInWithPassword({
-        email: document.getElementById("email").value.trim(),
-        password: document.getElementById("password").value
-      });
-      if (error) { statusEl.textContent = "Connexion impossible. Vérifie ton e-mail et ton mot de passe."; return; }
-      await enter(data.session);
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+      statusEl.textContent = "Connexion à Supabase…";
+      const submit = loginForm.querySelector('button[type="submit"]');
+      if (submit) submit.disabled = true;
+      try {
+        const {data,error} = await client.auth.signInWithPassword({ email, password });
+        if (error) {
+          console.warn("Échec Supabase Auth :", error.code || error.name, error.message);
+          const message = (error.message || "").toLowerCase();
+          if (message.includes("email not confirmed")) {
+            statusEl.textContent = "Ton compte existe, mais l’adresse e-mail n’a pas encore été confirmée. Ouvre le mail de Supabase puis réessaie.";
+          } else if (message.includes("invalid login credentials")) {
+            statusEl.textContent = "Supabase ne reconnaît pas cette combinaison e-mail/mot de passe. Vérifie l’adresse exacte et utilise « Mot de passe oublié » si nécessaire.";
+          } else {
+            statusEl.textContent = "Erreur Supabase (" + (error.code || "auth") + ") : " + (error.message || "connexion refusée");
+          }
+          return;
+        }
+        if (!data.session) {
+          statusEl.textContent = "Connexion reçue, mais Supabase n’a pas renvoyé de session. Vérifie la confirmation de ton e-mail.";
+          return;
+        }
+        await enter(data.session);
+      } catch (error) {
+        console.error("Erreur inattendue pendant la connexion :", error);
+        statusEl.textContent = "Impossible de contacter Supabase : " + (error?.message || "erreur réseau");
+      } finally {
+        if (submit) submit.disabled = false;
+      }
     });
 
     signupForm.addEventListener("submit", async e => {
