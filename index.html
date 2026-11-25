@@ -37,6 +37,44 @@
   </style>
 </head>
 <body class="bg-[#f8f9ff] text-slate-800 antialiased h-screen flex flex-col overflow-hidden">
+<!-- Authentification obligatoire -->
+<div id="auth-gate" class="fixed inset-0 z-[100] overflow-y-auto bg-slate-950/95 p-4 flex items-center justify-center">
+  <div class="w-full max-w-md rounded-3xl bg-white p-6 sm:p-8 shadow-2xl space-y-5">
+    <div class="text-center"><div class="mx-auto mb-3 w-14 h-14 rounded-2xl bg-indigo-600 text-white grid place-items-center text-xl font-extrabold">1CE</div><h1 class="text-2xl font-extrabold text-slate-900">Espace Classe 1CE</h1><p class="text-sm text-slate-500 mt-1">Connecte-toi pour accéder à l’espace de classe.</p></div>
+    <div id="auth-login-panel" class="space-y-3">
+      <h2 class="font-bold text-slate-900">Connexion</h2>
+      <input id="auth-login-email" type="email" autocomplete="email" placeholder="Adresse e-mail" class="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm"/>
+      <input id="auth-login-password" type="password" autocomplete="current-password" placeholder="Mot de passe" class="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm"/>
+      <button id="auth-login-submit" class="w-full rounded-xl bg-indigo-600 p-3 text-white font-bold">Se connecter</button>
+      <button id="auth-show-reset" class="w-full text-sm text-indigo-700 font-semibold">Mot de passe oublié ?</button>
+      <p class="text-center text-sm text-slate-500">Première visite ? <button id="auth-show-signup" class="text-indigo-700 font-bold">Créer un compte</button></p>
+    </div>
+    <div id="auth-signup-panel" class="hidden space-y-3">
+      <h2 class="font-bold text-slate-900">Créer ton compte</h2>
+      <input id="auth-signup-name" type="text" maxlength="60" autocomplete="name" placeholder="Prénom et nom" class="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm"/>
+      <input id="auth-signup-email" type="email" autocomplete="email" placeholder="Adresse e-mail" class="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm"/>
+      <input id="auth-signup-code" type="password" autocomplete="off" placeholder="Code de classe" class="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm"/>
+      <input id="auth-signup-password" type="password" minlength="8" autocomplete="new-password" placeholder="Créer un mot de passe (8 caractères minimum)" class="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm"/>
+      <input id="auth-signup-confirm" type="password" minlength="8" autocomplete="new-password" placeholder="Confirmer le mot de passe" class="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm"/>
+      <button id="auth-signup-submit" class="w-full rounded-xl bg-indigo-600 p-3 text-white font-bold">Créer mon compte</button>
+      <button id="auth-back-login" class="w-full text-sm text-indigo-700 font-semibold">Retour à la connexion</button>
+    </div>
+    <div id="auth-reset-panel" class="hidden space-y-3">
+      <h2 class="font-bold text-slate-900">Réinitialiser le mot de passe</h2>
+      <p class="text-xs text-slate-500">Un code de récupération sera envoyé à ton adresse e-mail. Saisis-le ici pour choisir un nouveau mot de passe.</p>
+      <input id="auth-reset-email" type="email" autocomplete="email" placeholder="Adresse e-mail" class="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm"/>
+      <button id="auth-reset-send" class="w-full rounded-xl bg-indigo-600 p-3 text-white font-bold">Envoyer le code</button>
+      <div id="auth-reset-verify" class="hidden space-y-3">
+        <input id="auth-reset-token" inputmode="numeric" autocomplete="one-time-code" placeholder="Code reçu par e-mail" class="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm"/>
+        <input id="auth-reset-new-password" type="password" minlength="8" autocomplete="new-password" placeholder="Nouveau mot de passe (8 caractères minimum)" class="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm"/>
+        <button id="auth-reset-confirm" class="w-full rounded-xl bg-emerald-600 p-3 text-white font-bold">Confirmer le code et changer le mot de passe</button>
+      </div>
+      <button id="auth-reset-back" class="w-full text-sm text-indigo-700 font-semibold">Retour à la connexion</button>
+    </div>
+    <p id="auth-feedback" role="status" aria-live="polite" class="min-h-5 text-center text-sm text-slate-600"></p>
+  </div>
+</div>
+
 <!-- Top Global Header -->
 <header class="h-16 border-b border-slate-200 bg-white px-6 flex items-center justify-between shrink-0 z-30 shadow-sm">
 <div class="flex items-center gap-4 flex-1 max-w-xl">
@@ -472,6 +510,17 @@
 <input checked="" class="w-4 h-4 accent-indigo-600" id="settings-noise-suppression" type="checkbox"/>
 </div>
 </div>
+<!-- Sécurité du compte -->
+<div class="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
+  <h3 class="font-bold text-slate-900 text-sm">Sécurité du compte</h3>
+  <p class="text-xs text-slate-500">Adresse du compte : <span id="settings-account-email" class="font-semibold text-slate-700"></span></p>
+  <button id="settings-forgot-password" type="button" class="px-4 py-2.5 bg-indigo-50 text-indigo-700 rounded-xl text-xs font-bold">Mot de passe oublié / recevoir un code</button>
+  <div class="border-t border-slate-100 pt-4 space-y-2">
+    <h4 class="font-bold text-red-700 text-sm">Supprimer définitivement mon compte</h4>
+    <p class="text-xs text-slate-500">Cette action supprime ton compte et les données associées. Elle est irréversible. Le dernier administrateur ne peut pas supprimer son compte.</p>
+    <button id="settings-delete-account" type="button" class="px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold">Supprimer définitivement mon compte</button>
+  </div>
+</div>
 <!-- Class & School Year Information -->
 <div class="bg-indigo-50/60 p-5 rounded-3xl border border-indigo-100 flex items-center justify-between">
 <div>
@@ -540,15 +589,63 @@
     }
 
     async function signIn(email, password) {
-      try {
-        const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-        if (error) throw error;
-        currentUser = data.user;
-        return data;
-      } catch (err) {
-        console.error('Erreur signIn:', err.message);
-        return null;
-      }
+      const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+      if (error) throw error;
+      currentUser = data.user;
+      return data;
+    }
+
+    function authMessage(message, isError=false) {
+      const el=document.getElementById('auth-feedback');
+      if(el){el.textContent=message;el.className='min-h-5 text-center text-sm '+(isError?'text-red-600':'text-slate-600');}
+    }
+    function showAuthPanel(name) {
+      ['login','signup','reset'].forEach(key=>document.getElementById('auth-'+key+'-panel')?.classList.toggle('hidden',key!==name));
+      authMessage('');
+    }
+    async function redeemPendingInvite() {
+      const pending = sessionStorage.getItem('1ce_pending_class_code');
+      const displayName = sessionStorage.getItem('1ce_pending_display_name') || currentUser?.user_metadata?.full_name || currentUser?.email?.split('@')[0] || 'Élève 1CE';
+      if(!pending || !currentUser) return false;
+      const {data,error}=await supabaseClient.functions.invoke('redeem-class-invite',{body:{class_code:pending,display_name:displayName}});
+      if(error || !data?.success) throw new Error(data?.error || error?.message || 'Activation de la classe impossible.');
+      sessionStorage.removeItem('1ce_pending_class_code');
+      sessionStorage.removeItem('1ce_pending_display_name');
+      return true;
+    }
+    async function startAuthenticatedApp() {
+      const {data:member,error}=await supabaseClient.from('class_members').select('user_id').eq('user_id',currentUser.id).maybeSingle();
+      if(error) throw error;
+      if(!member) throw new Error('Ce compte ne fait pas encore partie de la classe 1CE. Si tu viens de créer ton compte, vérifie ton e-mail puis reconnecte-toi.');
+      document.getElementById('auth-gate')?.classList.add('hidden');
+      window.initCallInbox?.();
+      await loadOwnProfile();
+      const emailLabel=document.getElementById('settings-account-email'); if(emailLabel) emailLabel.textContent=currentUser.email||'';
+      loadGeneralMessages(); subscribeToGeneralMessages(); loadClassmates(); loadPlanningSessions(); loadPosts();
+    }
+    async function sendRecoveryCode(email) {
+      const {error}=await supabaseClient.auth.resetPasswordForEmail(email);
+      if(error) throw error;
+      document.getElementById('auth-reset-verify')?.classList.remove('hidden');
+      authMessage('Demande envoyée. Vérifie ta boîte mail et saisis le code reçu. Si le message contient un lien, le modèle e-mail Supabase doit être configuré pour envoyer {{ .Token }}.');
+    }
+    async function beginPasswordRecovery() {
+      const email=currentUser?.email || document.getElementById('auth-login-email')?.value || '';
+      document.getElementById('auth-reset-email').value=email;
+      showAuthPanel('reset');
+    }
+    async function deleteOwnAccount() {
+      if(!currentUser) return;
+      const typed=prompt('Pour confirmer la suppression définitive, saisis ton adresse e-mail :');
+      if(typed===null) return;
+      if(typed.trim().toLowerCase()!==(currentUser.email||'').toLowerCase()){alert('Adresse e-mail incorrecte. Aucun compte n’a été supprimé.');return;}
+      if(!confirm('Dernière confirmation : supprimer définitivement ton compte et les données associées ?')) return;
+      const {data,error}=await supabaseClient.functions.invoke('delete-own-account',{body:{expected_user_id:currentUser.id}});
+      if(error || !data?.success){alert(data?.error || error?.message || 'Suppression impossible.');return;}
+      await supabaseClient.auth.signOut();
+      currentUser=null;
+      alert('Ton compte a été supprimé.');
+      location.reload();
     }
 
     async function signOut() {
@@ -907,13 +1004,54 @@
       setInterval(updateHeaderClock, 60000);
 
       await getCurrentUser();
-      window.initCallInbox?.();
-      await loadOwnProfile();
-      loadGeneralMessages();
-      subscribeToGeneralMessages();
-      loadClassmates();
-      loadPlanningSessions();
-      loadPosts();
+      if(currentUser) {
+        try {
+          await redeemPendingInvite();
+          await startAuthenticatedApp();
+        } catch(err) {
+          await supabaseClient.auth.signOut();
+          currentUser=null;
+          document.getElementById('auth-gate')?.classList.remove('hidden');
+          authMessage(err.message || 'Connexion impossible.',true);
+        }
+      } else {
+        document.getElementById('auth-gate')?.classList.remove('hidden');
+      }
+      document.getElementById('auth-show-signup')?.addEventListener('click',()=>showAuthPanel('signup'));
+      document.getElementById('auth-back-login')?.addEventListener('click',()=>showAuthPanel('login'));
+      document.getElementById('auth-reset-back')?.addEventListener('click',()=>showAuthPanel('login'));
+      document.getElementById('auth-show-reset')?.addEventListener('click',beginPasswordRecovery);
+      document.getElementById('settings-forgot-password')?.addEventListener('click',beginPasswordRecovery);
+      document.getElementById('settings-delete-account')?.addEventListener('click',deleteOwnAccount);
+      document.getElementById('auth-login-submit')?.addEventListener('click',async()=>{
+        const email=document.getElementById('auth-login-email').value.trim(),password=document.getElementById('auth-login-password').value;
+        if(!email||!password){authMessage('Saisis ton e-mail et ton mot de passe.',true);return;}
+        try{await signIn(email,password);await startAuthenticatedApp();authMessage('');}
+        catch(err){await supabaseClient.auth.signOut();currentUser=null;authMessage(err.message||'Connexion impossible.',true);}
+      });
+      document.getElementById('auth-signup-submit')?.addEventListener('click',async()=>{
+        const name=document.getElementById('auth-signup-name').value.trim(),email=document.getElementById('auth-signup-email').value.trim(),code=document.getElementById('auth-signup-code').value.trim(),password=document.getElementById('auth-signup-password').value,confirmPassword=document.getElementById('auth-signup-confirm').value;
+        if(!name||!email||!code||!password){authMessage('Complète tous les champs.',true);return;}
+        if(password.length<8){authMessage('Le mot de passe doit contenir au moins 8 caractères.',true);return;}
+        if(password!==confirmPassword){authMessage('Les deux mots de passe ne correspondent pas.',true);return;}
+        try{
+          sessionStorage.setItem('1ce_pending_class_code',code);sessionStorage.setItem('1ce_pending_display_name',name);
+          const {data,error}=await supabaseClient.auth.signUp({email,password,options:{data:{full_name:name},emailRedirectTo:location.origin}});
+          if(error)throw error;
+          if(data.session){currentUser=data.user;await redeemPendingInvite();await startAuthenticatedApp();authMessage('Compte créé et accès à la classe activé.');}
+          else{authMessage('Compte créé. Vérifie ton e-mail, confirme ton adresse puis reviens sur cette page pour terminer ton inscription.');}
+        }catch(err){authMessage(err.message||'Création du compte impossible.',true);}
+      });
+      document.getElementById('auth-reset-send')?.addEventListener('click',async()=>{
+        const email=document.getElementById('auth-reset-email').value.trim();if(!email){authMessage('Saisis ton adresse e-mail.',true);return;}
+        try{await sendRecoveryCode(email);}catch(err){authMessage(err.message||'Envoi du code impossible.',true);}
+      });
+      document.getElementById('auth-reset-confirm')?.addEventListener('click',async()=>{
+        const email=document.getElementById('auth-reset-email').value.trim(),token=document.getElementById('auth-reset-token').value.trim(),password=document.getElementById('auth-reset-new-password').value;
+        if(!email||!token||password.length<8){authMessage('Vérifie l’e-mail, le code et le nouveau mot de passe (8 caractères minimum).',true);return;}
+        try{const {error}=await supabaseClient.auth.verifyOtp({email,token,type:'recovery'});if(error)throw error;const {error:updateError}=await supabaseClient.auth.updateUser({password});if(updateError)throw updateError;authMessage('Mot de passe modifié. Tu peux maintenant te connecter.');await supabaseClient.auth.signOut();showAuthPanel('login');}
+        catch(err){authMessage(err.message||'Code invalide ou expiré.',true);}
+      });
       document.getElementById('notifications-button')?.addEventListener('click', () => alert('Tu es à jour : aucune notification non lue.'));
       document.getElementById('dm-new-conversation')?.addEventListener('click', () => { switchTab('dms'); document.getElementById('dm-search-input')?.focus(); });
       document.getElementById('dm-audio-call')?.addEventListener('click', () => window.startDirectCall?.(false));
