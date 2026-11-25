@@ -642,7 +642,8 @@
       broadcastTyping(true);if(typingStopTimer)clearTimeout(typingStopTimer);
       typingStopTimer=setTimeout(()=>broadcastTyping(false),1400);
     });
-\n    async function loadMessages() {
+
+    async function loadMessages() {
       const root = document.getElementById("chatlist");
       const {data,error} = await client.from("messages").select("id,author_id,author_name,content,created_at").order("created_at",{ascending:false}).limit(80);
       if (error) { root.innerHTML = '<div class="empty">Impossible de charger les discussions.</div>'; return; }
