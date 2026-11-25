@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+
+<html lang="fr"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@100..900&display=swap" rel="stylesheet"/><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "primary-container": "#4f46e5", "on-tertiary": "#ffffff", "secondary": "#006c49", "surface-container-low": "#eff4ff", "on-secondary-fixed-variant": "#005236", "surface-dim": "#cbdbf5", "tertiary-fixed-dim": "#ffb95f", "on-secondary": "#ffffff", "outline-variant": "#c7c4d8", "surface-container-highest": "#d3e4fe", "error-container": "#ffdad6", "surface-container": "#e5eeff", "inverse-primary": "#c3c0ff", "tertiary-fixed": "#ffddb8", "on-surface": "#0b1c30", "surface-container-lowest": "#ffffff", "inverse-surface": "#213145", "surface-tint": "#4d44e3", "surface-bright": "#f8f9ff", "secondary-fixed-dim": "#4edea3", "background": "#f8f9ff", "primary": "#3525cd", "outline": "#777587", "error": "#ba1a1a", "surface": "#f8f9ff", "on-tertiary-fixed": "#2a1700", "primary-fixed": "#e2dfff", "inverse-on-surface": "#eaf1ff", "on-surface-variant": "#464555", "surface-container-high": "#dce9ff", "secondary-fixed": "#6ffbbe", "on-error-container": "#93000a", "on-tertiary-fixed-variant": "#653e00", "on-primary-container": "#dad7ff", "on-primary-fixed": "#0f0069", "tertiary": "#684000", "on-tertiary-container": "#ffd4a4", "on-secondary-fixed": "#002113", "on-primary": "#ffffff", "on-background": "#0b1c30", "on-error": "#ffffff", "tertiary-container": "#885500", "secondary-container": "#6cf8bb", "on-secondary-container": "#00714d", "surface-variant": "#d3e4fe", "primary-fixed-dim": "#c3c0ff", "on-primary-fixed-variant": "#3323cc" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "space-xs": "0.25rem", "margin-md": "1.5rem", "space-lg": "1.5rem", "space-md": "1rem", "gutter": "1rem", "space-xl": "2rem", "margin-lg": "2rem", "gutter-md": "1.5rem", "margin": "1rem", "space-sm": "0.5rem" }, "fontFamily": { "body-lg": ["Plus Jakarta Sans"], "headline-xl-mobile": ["Plus Jakarta Sans"], "title-md": ["Plus Jakarta Sans"], "label-lg": ["Plus Jakarta Sans"], "body-md": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "headline-lg-mobile": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], "body-sm": ["Plus Jakarta Sans"], "headline-xl": ["Plus Jakarta Sans"], "label-sm": ["Plus Jakarta Sans"], "headline-sm": ["Plus Jakarta Sans"], "label-md": ["Plus Jakarta Sans"] }, "fontSize": { "body-lg": ["16px", { "lineHeight": "26px", "fontWeight": "400" }], "headline-xl-mobile": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.015em", "fontWeight": "800" }], "title-md": ["16px", { "lineHeight": "22px", "fontWeight": "600" }], "label-lg": ["14px", { "lineHeight": "20px", "fontWeight": "600" }], "body-md": ["14px", { "lineHeight": "22px", "fontWeight": "400" }], "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "headline-lg-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }], "headline-md": ["22px", { "lineHeight": "28px", "fontWeight": "700" }], "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }], "headline-xl": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800" }], "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.03em", "fontWeight": "700" }], "headline-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }], "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }] } } } };</script></head><body class="bg-surface font-body-md text-body-md text-on-surface"><aside class="fixed left-0 top-0 h-full w-72 bg-surface-container-low z-50 flex flex-col justify-between shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex flex-col flex-1 overflow-y-auto"><div class="px-space-md py-space-md bg-surface-container-low flex items-center gap-space-sm"><img alt="Logo Classe 1CE" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQgTu9U35KrZ_bbBl7J6jUpjVaST7k5EQhSAHL3BRAqt1MOMOo3ipFpJt64EMPg97eyXgmk7b4iZNsYJ0XSfGGxupFc3bGkKcJoJlNXpHznWZx1bIlPVtewnqz-XbZGtJ1U3dbB1HlfHMqPOTOav7spnZjZFHOpcDSkFYbAqKpA1hbgefXfS1TTPGxqtrki2cFEVTwrTSYwAwji8LgAadO67Ms939qYE293n__I24"/><div class="flex flex-col min-w-0"><span class="font-headline-sm text-headline-sm text-on-surface truncate">Classe 1CE</span><span class="font-label-md text-label-md text-on-surface-variant truncate">1ère Secondaire • 2024-2025</span><div class="flex items-center gap-space-xs mt-space-xs"><span class="w-2 h-2 rounded-full bg-secondary"></span><span class="font-label-sm text-label-sm text-secondary">28 élèves connectés</span></div></div></div><nav class="flex-1 px-space-sm py-space-sm space-y-space-md" data-active-classes="bg-primary-container text-on-primary font-bold rounded-lg"><div class="space-y-space-xs"><div class="px-space-sm flex items-center justify-between"><span class="font-label-sm text-label-sm uppercase text-outline">Discussions & Salons</span><span class="bg-primary-container text-on-primary font-label-sm text-label-sm px-space-xs py-0.5 rounded-full">3</span></div><a aria-current="page" class="flex items-center justify-between px-space-sm py-space-sm transition-all bg-primary-container text-on-primary font-bold rounded-lg" data-path="salon-general" href="#"><div class="flex items-center gap-space-xs truncate"><span class="font-title-md text-title-md text-outline">#</span><span class="font-title-md text-title-md truncate">Général - Toute la classe</span></div><span class="material-symbols-outlined text-outline text-[18px]">volume_up</span></a><a class="flex items-center justify-between px-space-sm py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="messages-prives" href="#"><div class="flex items-center gap-space-xs truncate"><span class="material-symbols-outlined text-[18px]">chat_bubble</span><span class="font-title-md text-title-md truncate">Messages privés (DMs)</span></div><span class="w-2 h-2 rounded-full bg-primary"></span></a></div><div class="space-y-space-xs"><div class="px-space-sm"><span class="font-label-sm text-label-sm uppercase text-outline">Activités de Classe</span></div><a class="flex items-center gap-space-sm px-space-sm py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="fil-actualite" href="#"><span class="material-symbols-outlined text-[20px]">dynamic_feed</span><span class="font-title-md text-title-md">Fil d'actualité & Posts</span></a><a class="flex items-center gap-space-sm px-space-sm py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="souvenirs-photos" href="#"><span class="material-symbols-outlined text-[20px]">photo_library</span><span class="font-title-md text-title-md">Souvenirs & Photos</span></a></div><div class="space-y-space-xs"><div class="px-space-sm"><span class="font-label-sm text-label-sm uppercase text-outline">Espace Personnel</span></div><a class="flex items-center gap-space-sm px-space-sm py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="parametres-classe" href="#"><span class="material-symbols-outlined text-[20px]">tune</span><span class="font-title-md text-title-md">Paramètres & Profil</span></a></div></nav></div><div class="p-space-sm bg-surface-container-lowest m-space-sm rounded-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] flex items-center justify-between gap-space-xs"><div class="flex items-center gap-space-sm min-w-0"><div class="relative flex-shrink-0"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBUgx4PhE5VErFKowhPWSFSmZSN3Jdxiv004RWr13hWhpIuY6ebFPizUlyYI6038NMu8ahLDNF60E97iaGx2vXT9-D05T-YPjdLygvOM2TdJYYkkyUvoHUBjjPHNeK_cyUoiK2p9fPJIPwdGqxVHOIa0sVXNiv6ERp8hJOpBcdjF8M4MwbnmjE7MP65oJSOwm03yErbZKJt7sZDpEMDaVS8ILVivenU21bShL34a8"/><span class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-secondary ring-2 ring-surface-container-lowest"></span></div><div class="flex flex-col min-w-0"><span class="font-label-lg text-label-lg text-on-surface truncate">Lucas M. (Délégué 1CE)</span><span class="font-label-sm text-label-sm text-secondary truncate">🟢 En ligne</span></div></div><div class="flex items-center gap-0.5 flex-shrink-0"><button class="p-1 text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded" type="button"><span class="material-symbols-outlined text-[18px]">mic</span></button><button class="p-1 text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded" type="button"><span class="material-symbols-outlined text-[18px]">settings</span></button></div></div></aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-16 bg-surface/80 backdrop-blur-xl z-40 flex items-center justify-between px-space-lg shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex items-center gap-space-md flex-1 max-w-lg"><div class="relative w-full"><span class="material-symbols-outlined absolute left-3 top-2.5 text-[20px] text-outline">search</span><input class="w-full h-10 pl-10 pr-space-md bg-surface-container-low rounded-lg font-body-md text-body-md text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary-container/20" placeholder="Rechercher des posts, photos, camarades..." type="text"/></div></div><div class="flex items-center gap-space-md"><span class="hidden md:inline font-label-md text-label-md text-on-surface-variant">Mercredi 23 Octobre • 14:32</span><button class="relative p-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low rounded-lg" type="button"><span class="material-symbols-outlined text-[22px]">notifications</span><span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-error"></span></button><button class="flex items-center gap-space-xs px-space-md h-10 bg-primary-container text-on-primary rounded-lg font-label-lg text-label-lg shadow-[0_1px_3px_0_rgba(15,23,42,0.05)] hover:bg-primary transition-all" type="button"><span class="material-symbols-outlined text-[20px]">add_call</span><span>Démarrer un appel</span></button><div class="flex items-center pl-space-xs"><img alt="Profile" class="w-8 h-8 rounded-full object-cover ring-2 ring-primary-container/20" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBUgx4PhE5VErFKowhPWSFSmZSN3Jdxiv004RWr13hWhpIuY6ebFPizUlyYI6038NMu8ahLDNF60E97iaGx2vXT9-D05T-YPjdLygvOM2TdJYYkkyUvoHUBjjPHNeK_cyUoiK2p9fPJIPwdGqxVHOIa0sVXNiv6ERp8hJOpBcdjF8M4MwbnmjE7MP65oJSOwm03yErbZKJt7sZDpEMDaVS8ILVivenU21bShL34a8"/></div></div></header><main class="w-full pt-16 bg-surface"><div class="flex flex-col w-full">
+<div class="p-space-lg max-w-[1720px] mx-auto w-full space-y-space-md">
+<!-- Top Channel Banner with Glass & Modern Social-Academic Vibe -->
+<div class="relative overflow-hidden bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col xl:flex-row xl:items-center justify-between gap-space-md">
+<div class="absolute -right-12 -top-12 w-64 h-64 bg-primary-fixed/30 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute right-40 -bottom-8 w-48 h-48 bg-secondary-fixed/40 rounded-full blur-2xl pointer-events-none"></div>
+<div class="relative z-10 flex flex-col gap-space-xs max-w-2xl">
+<div class="flex items-center gap-space-xs flex-wrap">
+<span class="px-space-xs py-0.5 rounded-full bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm tracking-wide">CANAL PRINCIPAL</span>
+<span class="text-outline font-label-sm text-label-sm">•</span>
+<span class="text-secondary font-label-md text-label-md flex items-center gap-1 font-semibold">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+            Session d'étude active
+          </span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight flex items-center gap-space-xs">
+<span class="text-primary-container">#</span> général • Toute la classe 1CE
+          <span class="text-outline text-headline-sm font-headline-sm font-normal">(28 membres)</span>
+</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">
+          L'espace convivial pour discuter tous ensemble, poser des questions sur les cours ou lancer des appels de groupe.
+        </p>
+</div>
+<!-- Quick Action Buttons -->
+<div class="relative z-10 flex flex-wrap items-center gap-space-sm">
+<button class="group flex items-center gap-space-xs h-10 px-space-md bg-secondary text-on-secondary rounded-lg font-label-lg text-label-lg shadow-sm hover:brightness-110 active:scale-95 transition-all" type="button">
+<span class="material-symbols-outlined text-[20px] group-hover:rotate-12 transition-transform">phone_in_talk</span>
+<span>Démarrer un appel vocal</span>
+</button>
+<button class="group flex items-center gap-space-xs h-10 px-space-md bg-primary-container text-on-primary rounded-lg font-label-lg text-label-lg shadow-sm hover:bg-primary active:scale-95 transition-all" id="toggle-call-canvas" type="button">
+<span class="relative flex h-2.5 w-2.5">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary-fixed opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-secondary-container"></span>
+</span>
+<span class="material-symbols-outlined text-[20px]">videocam</span>
+<div class="flex flex-col text-left">
+<span>Rejoindre la visio en direct</span>
+<span class="text-[10px] leading-tight text-on-primary-container">4 élèves en direct</span>
+</div>
+</button>
+</div>
+</div>
+<!-- Active Visio Notification Pill -->
+<div class="bg-surface-container-low rounded-xl px-space-md py-space-sm flex items-center justify-between shadow-sm">
+<div class="flex items-center gap-space-sm min-w-0">
+<div class="flex -space-x-2 shrink-0">
+<div class="w-7 h-7 rounded-full bg-surface-container-lowest ring-2 ring-surface-container-low overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Portrait d'un jeune adolescent collégien souriant avec un sweat à capuche bleu marine pour l'avatar scolaire" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBAP0XNLuyMSyWOxtClqUQNr4khIXb0QngJ2IFR7NeEwcLplcUIwmrW_8bkeYBIYxEL4itChhj3gavdJd8s5KBjRxZGp2pA3jnRkwT9ZVqB9kQVpRmAERPNRU2N7REyujvBm0PminCHAkSZ9v-JY_8oZNdfYdf0kNoq5yLLZWafEkOX1p3QA3zoKrJ-_dwJT5PlXpFwH_xfesCGGhYEiBWr_NImhBVLxCBwL07K_04"/>
+</div>
+<div class="w-7 h-7 rounded-full bg-surface-container-lowest ring-2 ring-surface-container-low overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Portrait d'une jeune collégienne avec des lunettes et une tresse, souriante et studieuse pour l'avatar scolaire" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB0cvz2ORjzfaVDdsG_6mbjOMEHIXDtc1Q8p-rOCvxOwaB57U5s65SXuhEplQ_HoB20vurLacxz9IrJlEcc0EHtsrGDgzb9Sk-etVNEuLrsuvaq5xRhWMo_1QBXIecAqyQvxY5A3Jbpv6BWaDujnKfpK5rTx7fKpaPWQ5lc_Srznu2w4f0fl0f1Y3hhFrTcT1Lad-N2L3QTEPjZPeU2VkLLxnjwclZ24HN5OSbC1uw"/>
+</div>
+<div class="w-7 h-7 rounded-full bg-surface-container-lowest ring-2 ring-surface-container-low overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Portrait d'une élève de première secondaire souriante avec un casque audio autour du cou pour l'avatar de classe" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBNigD9wi-OTGTT8uuyNHuYHrgOaIA3OQoKdEdFUGiuGb66hgODOac1g-9Soa0UFdWJ44CjAmNGbVxlQZQ3Oqu8zC89QG0NC8TUMBhMgemRvxgtdvh9TkKBlsWxkdVO-wxlqWMpf4GzTvYiHhwK6tU_bC5tqocR6H99x8wkocetHgXmEA7gQmhixS83bBQ1Hl2NQozq9HTmyl5GJvx5kBg4FVul2Y9ZpQoAZ81jJ_8"/>
+</div>
+<div class="w-7 h-7 rounded-full bg-surface-container-lowest ring-2 ring-surface-container-low overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Portrait d'un adolescent de 13 ans souriant avec un t-shirt vert et un cahier ouvert pour avatar d'élève" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAOKRmd7H1UisC3gYFBWtMhiAUxVqm5pk5tkyu-ILV-A1Wt_NVPhqm-3NDSWUvUADVK_cPn9OOAYUiDLLCUbtXYgBAHgnQ-DfXWYyC_xA5z4DXXdWdCvYstmTo_dKHnh4BLeXASaggru4p4cATp_VwJkoubHPonNClL9J84OetVGduw6SHkjecQfaAUf_D_Tjj_NKF7SLy_z-3P8l7Xtp3AyWytuMYnPkz8pf7S3nk"/>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface truncate">
+<span class="font-semibold text-primary">Salon Vocal Actif :</span> 4 élèves en direct (<span class="font-medium">Arthur, Chloé, Sarah, Thomas</span>) • Entraide Devoirs de Mathématiques
+        </p>
+</div>
+<div class="flex items-center gap-space-xs shrink-0">
+<span class="px-space-xs py-0.5 rounded-full bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-bold flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> EN DIRECT
+        </span>
+</div>
+</div>
+<!-- Main Workspace Split: Call + Chat Stream (Left/Center) vs Classroom Roster (Right) -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-space-md items-start">
+<!-- Center & Left Content (9 Cols): Call Deck + Chat Room -->
+<div class="xl:col-span-9 flex flex-col gap-space-md">
+<!-- Embedded Interactive Live Video/Audio Call Canvas -->
+<section class="bg-inverse-surface rounded-xl overflow-hidden shadow-xl p-space-md flex flex-col gap-space-md" id="visio-section">
+<div class="flex items-center justify-between text-inverse-on-surface pb-space-xs">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-secondary-fixed text-[22px]">spatial_audio_off</span>
+<span class="font-headline-sm text-headline-sm text-surface-bright">Atelier Mathématiques : Équations & Fractions</span>
+<span class="bg-surface-container-highest/20 text-surface-bright text-label-sm font-label-sm px-space-xs py-0.5 rounded">1CE • Vocal Groupe #1</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="text-surface-dim font-label-sm text-label-sm">Qualité HD • 128 kbps</span>
+<button class="p-1 rounded text-surface-dim hover:text-surface-bright hover:bg-surface-container-highest/20 transition-all" type="button">
+<span class="material-symbols-outlined text-[18px]">fullscreen</span>
+</button>
+</div>
+</div>
+<!-- Video Grid Mosaic (3-Tile + 1-Screen Share Focal) -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-space-sm">
+<!-- Screen Share: Math Exercise (Focal 7 cols) -->
+<div class="md:col-span-7 bg-surface-container-lowest rounded-xl overflow-hidden relative shadow-sm min-h-[260px] flex flex-col">
+<div class="bg-surface-container-low px-space-sm py-1.5 flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-[16px] text-primary">present_to_all</span>
+<span class="font-label-sm text-label-sm text-on-surface font-semibold">Partage d'écran de Thomas B. • Exercice 4 Page 72</span>
+</div>
+<span class="bg-primary text-on-primary text-[10px] px-1.5 py-0.5 rounded font-bold uppercase tracking-wider">Direct</span>
+</div>
+<div class="flex-1 p-space-md bg-surface-container-lowest flex flex-col justify-center items-center relative select-none">
+<div class="w-full max-w-md bg-surface-container-low p-space-md rounded-lg space-y-space-sm text-left">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm font-bold text-primary-container">PROBLÈME 1 : RÉDUCTION AU MÊME DÉNOMINATEUR</span>
+<span class="font-label-sm text-label-sm text-outline">Manuel 1CE</span>
+</div>
+<div class="p-space-sm bg-surface-container-lowest rounded text-on-surface font-mono text-body-sm">
+                    Calcul : <span class="font-bold text-primary">A = 3/4 + 5/6 - 1/3</span><br/>
+                    Étape 1 : PPCM(4, 6, 3) = <span class="text-secondary font-bold">12</span><br/>
+                    Étape 2 : A = (9/12) + (10/12) - (4/12)<br/>
+                    Résultat : <span class="bg-secondary-fixed/40 px-1 rounded font-bold text-secondary">A = 15/12 = 5/4</span>
+</div>
+<div class="flex items-center gap-space-xs text-[12px] text-on-surface-variant">
+<span class="material-symbols-outlined text-[14px] text-secondary">check_circle</span>
+<span>Validé avec Mme Laurent (Prof Maths)</span>
+</div>
+</div>
+<div class="absolute bottom-2 left-2 bg-inverse-surface/85 backdrop-blur-md px-space-xs py-1 rounded text-inverse-on-surface font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-secondary-fixed">screen_share</span>
+<span>Écran partagé (Thomas)</span>
+</div>
+</div>
+</div>
+<!-- 3 Participant Tiles in Stack (5 cols) -->
+<div class="md:col-span-5 grid grid-cols-2 md:grid-cols-1 gap-space-sm">
+<!-- Participant 1: Thomas (Speaking - Green Pulsing Border Effect) -->
+<div class="relative bg-surface-container-highest rounded-xl overflow-hidden h-32 md:h-[86px] flex items-center shadow-inner">
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10"></div>
+<img class="w-full h-full object-cover" data-alt="Gros plan d'un adolescent de première secondaire concentré parlant dans son micro avec un casque de gamer dans sa chambre pour une session d'étude" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_BaDbkAGjNTvPZVU-ZBE9IQaK0jVknlqIfjsNUVLrWUbJL-s-BpcCNkQndJRdQxK66IVn_gvhFC5du1dwjPAm_zYkElTYhIbvdBCp3-fPBvzoIQI_5bo2oq-u6NWgxVJzBTbQYzRh2FLjrvwK_3ob79MRuUeRIM3ZuBcD0NeNhDLcBxLr9fzaVhfyiz03VV3UfgdBjVQYnYla5AEltKOPPnq7Uayjw5Y4pdDiKwo"/>
+<!-- Glowing Speaking Wave Indicator -->
+<div class="absolute inset-0 ring-4 ring-secondary-fixed animate-pulse pointer-events-none rounded-xl"></div>
+<div class="absolute bottom-1.5 left-2 z-20 flex items-center gap-1.5 text-white">
+<div class="flex items-center gap-0.5 h-3">
+<span class="w-1 h-3 bg-secondary-fixed rounded-full animate-bounce"></span>
+<span class="w-1 h-2 bg-secondary-fixed rounded-full animate-bounce delay-100"></span>
+<span class="w-1 h-3.5 bg-secondary-fixed rounded-full animate-bounce delay-200"></span>
+</div>
+<span class="font-label-sm text-label-sm drop-shadow font-semibold">Thomas B.</span>
+</div>
+<span class="absolute top-1.5 right-2 z-20 bg-secondary/80 text-white rounded-full p-1 leading-none shadow">
+<span class="material-symbols-outlined text-[14px]">mic</span>
+</span>
+</div>
+<!-- Participant 2: Chloé (Listening) -->
+<div class="relative bg-surface-container-highest rounded-xl overflow-hidden h-32 md:h-[86px] flex items-center shadow-inner">
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10"></div>
+<img class="w-full h-full object-cover" data-alt="Jeune fille de treize ans assise à son bureau de travail avec des surligneurs colorés et un classeur scolaire ouvert pour son appel vidéo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA69mgQDvNT_WG68ABqSs6_imzcFyZTrDvShWHoN-7co86tzE9nyN1Cy-_6hUiFW0SoTTNSo2dUBdJBJnxAr50sfYHgF74aiExjtDd_Icp2O4ZMu8cqV79_KYrMj4aaAbxac7pGL6PS5hdtpDZvZA9w5K4bSNv4h_nQTd49eU4Z4IDtwnG262QjwrNeajyVc3n4NhaeI9j68EQKQG3CSvFPebRbOH9STqlV-IWkU4U"/>
+<div class="absolute bottom-1.5 left-2 z-20 flex items-center gap-1.5 text-white">
+<span class="font-label-sm text-label-sm drop-shadow font-semibold">Chloé V.</span>
+</div>
+<span class="absolute top-1.5 right-2 z-20 bg-secondary/80 text-white rounded-full p-1 leading-none shadow">
+<span class="material-symbols-outlined text-[14px]">mic</span>
+</span>
+</div>
+<!-- Participant 3: Sarah & Arthur Joint Box -->
+<div class="relative bg-surface-container-highest rounded-xl overflow-hidden h-32 md:h-[86px] grid grid-cols-2 gap-0.5">
+<div class="relative h-full">
+<img class="w-full h-full object-cover" data-alt="Portrait souriant d'une élève de 1ère secondaire avec un cahier de notes rose devant son ordinateur portable" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCjAmDzJwoRTQcMVMR23dY506gw19duLjXNtonSRnLvSIdCHrNQxIXdWhcjsqFP_AKszfqAvpKkz8XDm176X3SrqsWroLGI3hpIUbP6Rfal2mwl8EtT2CCxakcxzSqJHTeLVpRrUCeQ8QEIDnrAjOU_9Aj6NfmjgZIkVe1oX2cmYtkTyQIMmNWDvrIjauZ3OgoV995mh5O2StNNSi-vXEEIdMfFu5yk0G7KKgT-u68"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+<span class="absolute bottom-1 left-1.5 text-white font-label-sm text-[10px] font-semibold drop-shadow">Sarah M.</span>
+<span class="absolute top-1 right-1 bg-error/90 text-white rounded-full p-0.5 shadow">
+<span class="material-symbols-outlined text-[12px]">mic_off</span>
+</span>
+</div>
+<div class="relative h-full">
+<img class="w-full h-full object-cover" data-alt="Élève garçon attentif écrivant avec un stylo plume pendant une visioconférence de classe" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDq25zykg0VKPtbnQuUbNiXMTi-UpLX-7puqXKngIykklSchJuQ2_Aw4FZEmHTZkuvKWatldHIU_QW6mQoETJzqIvkorK6ARpwnu2jcxsrnRhQLQq8p1NKrlVUrnOs7OxbESpyU0c1CUkTMwyeeg3Hj_fcnzEDuW_fv9Hjqh9uiVGq_clq7vUA0Ky2UVmQ_QOqwrL05WaEVbEfAzgdzcAIkK6Ad4XxTG1LjtYu8vyE"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+<span class="absolute bottom-1 left-1.5 text-white font-label-sm text-[10px] font-semibold drop-shadow">Arthur D.</span>
+<span class="absolute top-1 right-1 bg-secondary/80 text-white rounded-full p-0.5 shadow">
+<span class="material-symbols-outlined text-[12px]">mic</span>
+</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Frosted Floating Call Deck Controls -->
+<div class="bg-surface-container-highest/20 backdrop-blur-xl rounded-xl p-space-xs flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="w-2.5 h-2.5 rounded-full bg-secondary animate-ping"></span>
+<span class="font-label-sm text-label-sm text-surface-bright font-medium">Temps écoulé : 18:42</span>
+</div>
+<!-- Call Quick Actions -->
+<div class="flex items-center gap-space-xs">
+<button class="w-9 h-9 rounded-lg bg-surface-container-highest/30 text-surface-bright flex items-center justify-center hover:bg-surface-container-highest/50 transition-all" title="Couper le micro" type="button">
+<span class="material-symbols-outlined text-[18px]">mic</span>
+</button>
+<button class="w-9 h-9 rounded-lg bg-surface-container-highest/30 text-surface-bright flex items-center justify-center hover:bg-surface-container-highest/50 transition-all" title="Activer caméra" type="button">
+<span class="material-symbols-outlined text-[18px]">videocam</span>
+</button>
+<button class="w-9 h-9 rounded-lg bg-primary-container text-on-primary flex items-center justify-center hover:brightness-110 transition-all" title="Partager votre écran" type="button">
+<span class="material-symbols-outlined text-[18px]">screen_share</span>
+</button>
+<button class="w-9 h-9 rounded-lg bg-surface-container-highest/30 text-surface-bright flex items-center justify-center hover:bg-surface-container-highest/50 transition-all" title="Lever la main" type="button">
+<span class="material-symbols-outlined text-[18px]">front_hand</span>
+</button>
+<button class="h-9 px-space-sm rounded-lg bg-error text-on-error flex items-center gap-1 font-label-sm text-label-sm hover:brightness-110 active:scale-95 transition-all" type="button">
+<span class="material-symbols-outlined text-[18px]">call_end</span>
+<span>Quitter</span>
+</button>
+</div>
+<div class="hidden sm:flex items-center gap-1">
+<span class="font-label-sm text-label-sm text-surface-dim">Mode grille (4/4)</span>
+</div>
+</div>
+</section>
+<!-- Chat Stream Section (Discord-like Rich Adolescent Tone) -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm flex flex-col overflow-hidden min-h-[520px]">
+<!-- Stream Subheader with Filters -->
+<div class="px-space-md py-space-sm bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-space-xs font-label-md text-label-md text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px] text-primary">forum</span>
+<span class="font-bold text-on-surface">Historique des messages</span>
+<span>• Aujourd'hui</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<button class="px-space-xs py-0.5 rounded text-on-surface-variant hover:bg-surface-container font-label-sm text-label-sm flex items-center gap-1 transition-all" type="button">
+<span class="material-symbols-outlined text-[16px]">push_pin</span>
+<span>2 Épinglés</span>
+</button>
+<button class="px-space-xs py-0.5 rounded text-on-surface-variant hover:bg-surface-container font-label-sm text-label-sm flex items-center gap-1 transition-all" type="button">
+<span class="material-symbols-outlined text-[16px]">filter_list</span>
+<span>Tous les devoirs</span>
+</button>
+</div>
+</div>
+<!-- Message Flow Area -->
+<div class="flex-1 p-space-md space-y-space-md overflow-y-auto">
+<!-- Day Separator Stamp -->
+<div class="flex items-center my-space-sm">
+<div class="flex-grow h-px bg-surface-container-high"></div>
+<span class="px-space-md font-label-sm text-label-sm uppercase tracking-wider text-outline bg-surface-container-lowest">
+                Mercredi 23 Octobre
+              </span>
+<div class="flex-grow h-px bg-surface-container-high"></div>
+</div>
+<!-- Pinned Notice from Prof / Délégué -->
+<div class="p-space-sm bg-primary-fixed/20 rounded-xl flex items-start gap-space-sm">
+<div class="p-2 bg-primary-container text-on-primary rounded-lg shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[20px]">campaign</span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-space-xs flex-wrap">
+<span class="font-label-lg text-label-lg font-bold text-on-surface">Mme Laurent (Prof de Mathématiques)</span>
+<span class="px-space-xs py-0.2 rounded bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm font-semibold">ENSEIGNANTE</span>
+<span class="text-outline font-label-sm text-label-sm">13:10</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface mt-1">
+                  Rappel pour la classe de 1CE : L'évaluation sur les fractions et le calcul littéral aura lieu vendredi en salle 204. Vous pouvez utiliser le salon vocal aujourd'hui pour réviser entre vous ! Bon courage à tous ! 📚✨
+                </p>
+<!-- Reactions Cluster -->
+<div class="flex items-center gap-1 mt-space-xs flex-wrap">
+<button class="px-2 py-0.5 bg-surface-container-lowest hover:bg-surface-container rounded-full text-on-surface font-label-sm text-label-sm flex items-center gap-1 transition-all shadow-xs" type="button">
+<span>👍</span> <span class="font-bold text-primary">19</span>
+</button>
+<button class="px-2 py-0.5 bg-surface-container-lowest hover:bg-surface-container rounded-full text-on-surface font-label-sm text-label-sm flex items-center gap-1 transition-all shadow-xs" type="button">
+<span>🫡</span> <span class="font-bold text-primary">12</span>
+</button>
+<button class="px-2 py-0.5 bg-surface-container-lowest hover:bg-surface-container rounded-full text-on-surface font-label-sm text-label-sm flex items-center gap-1 transition-all shadow-xs" type="button">
+<span>❤️</span> <span class="font-bold text-primary">8</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Message 1: Thomas B. (Asking for homework) -->
+<div class="flex items-start gap-space-sm group">
+<div class="relative shrink-0 mt-0.5">
+<div class="w-10 h-10 rounded-full bg-surface-container-high overflow-hidden shadow-xs">
+<img class="w-full h-full object-cover" data-alt="Portrait jeune garçon de treize ans avec un grand sourire et cheveux bruns pour l'avatar de classe sur fond clair" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC5S2inF6Ef0Ew6_2biqAow1K5IBV28QFgPI2F-Dbdc6Cl1rvp9FEL3hmXWxmjd4bmzQ95DlBsoqAd7HNJTr-eRbay0j43FzQ-e_wgq-TV9Fijyr188BNh1d9pSZTlkphwP7653UsGIW93GztdP8HSWnrmZgGBdzvWPmv30HT8WURIdUWB0w19Pw2NKFC37cxFkw9kkYyNxXHtP5DBjbRVNJ1hfUIOp9Kyv7-4cWxY"/>
+</div>
+<span class="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-secondary rounded-full ring-2 ring-surface-container-lowest"></span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-baseline gap-space-xs">
+<span class="font-label-lg text-label-lg font-bold text-on-surface">Thomas B.</span>
+<span class="px-1.5 py-0.2 rounded bg-surface-container text-on-surface-variant font-label-sm text-label-sm">Élève 1CE</span>
+<span class="font-label-sm text-label-sm text-outline">14:02</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface mt-0.5">
+                  Salut tout le monde ! Est-ce que quelqu'un a noté la consigne exacte pour l'exercice 4 de maths de demain ? J'étais distrait quand Mme Laurent a effacé le tableau blanc 😅
+                </p>
+<div class="flex items-center gap-1 mt-1.5">
+<button class="px-2 py-0.5 bg-surface-container-low hover:bg-surface-container rounded-full text-on-surface font-label-sm text-label-sm flex items-center gap-1 transition-all" type="button">
+<span>🙋‍♂️</span> <span class="font-semibold text-outline">2</span>
+</button>
+<button class="opacity-0 group-hover:opacity-100 p-1 text-outline hover:text-on-surface rounded transition-opacity" type="button">
+<span class="material-symbols-outlined text-[16px]">add_reaction</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Message 2: Chloé V. (Proposing video study) -->
+<div class="flex items-start gap-space-sm group">
+<div class="relative shrink-0 mt-0.5">
+<div class="w-10 h-10 rounded-full bg-surface-container-high overflow-hidden shadow-xs">
+<img class="w-full h-full object-cover" data-alt="Portrait ado de 12 ans souriante avec des écouteurs blancs pour discussion de groupe collégien" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCXdDyFrs9PsspZR5fWIfUIbkjemh806rD-LQFGfeqh3nXWYXP2Wx7LS6zKCWQ4wgfSwb0GI7pUwE2jYZrQ1UxttFi6buKja3MTehy04yxlTnZ4K2GFnL2ZO5iJkBdHYKADvuKCNZv9RA61HapzktY4H1lhS6oO0Z7jUKKtqpU2bbP3MDIezJ_41f414QdrTlNxRtMWz1NrqWq-rbcpZN9pi2y8kKTQnTrDfK9teJc"/>
+</div>
+<span class="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-secondary rounded-full ring-2 ring-surface-container-lowest"></span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-baseline gap-space-xs">
+<span class="font-label-lg text-label-lg font-bold text-on-surface">Chloé V.</span>
+<span class="px-1.5 py-0.2 rounded bg-secondary-container text-on-secondary-container font-label-sm text-label-sm font-semibold">Déléguée Adjointe</span>
+<span class="font-label-sm text-label-sm text-outline">14:05</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface mt-0.5">
+                  @Thomas c'est la page 72, il faut réduire les fractions et justifier le dénominateur commun ! On est justement en train de le faire dans le salon visio avec Arthur et Sarah. Viens nous rejoindre, on partage l'écran ! 🚀💻
+                </p>
+<div class="flex items-center gap-1 mt-1.5">
+<button class="px-2 py-0.5 bg-primary-fixed/40 rounded-full text-on-surface font-label-sm text-label-sm flex items-center gap-1 shadow-xs" type="button">
+<span>🚀</span> <span class="font-bold text-primary">6</span>
+</button>
+<button class="px-2 py-0.5 bg-surface-container-low hover:bg-surface-container rounded-full text-on-surface font-label-sm text-label-sm flex items-center gap-1 transition-all" type="button">
+<span>🔥</span> <span class="font-semibold text-outline">4</span>
+</button>
+<button class="opacity-0 group-hover:opacity-100 p-1 text-outline hover:text-on-surface rounded transition-opacity" type="button">
+<span class="material-symbols-outlined text-[16px]">add_reaction</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Message 3: Sarah M. (Sharing interactive quiz link) -->
+<div class="flex items-start gap-space-sm group">
+<div class="relative shrink-0 mt-0.5">
+<div class="w-10 h-10 rounded-full bg-surface-container-high overflow-hidden shadow-xs">
+<img class="w-full h-full object-cover" data-alt="Portrait jeune collégienne rieuse avec des barrettes colorées et un sweat à capuche lilas pour profil élève" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA4HklwObA1jm9TQOos_kjLxtzsIz-PmE4PQ5pxerBjMjMiyZ4QEXwERjeVrt6g5D30z4L6l1G98l6XjMxFLtrSoR53_EXrqItafzPyNBrKxHaZvCwbBJTbV7tIuoHBkhyqLs_b-h-tMloZU_kTOpUjHulPNk_ojCg7GoXVpQYR3ln7Iw35968cGYNOxBoveZkVAEaZHbvSI-uT-8LkW0kD9itQj2BlexY-Nd-71ww"/>
+</div>
+<span class="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-secondary rounded-full ring-2 ring-surface-container-lowest"></span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-baseline gap-space-xs">
+<span class="font-label-lg text-label-lg font-bold text-on-surface">Sarah M.</span>
+<span class="px-1.5 py-0.2 rounded bg-surface-container text-on-surface-variant font-label-sm text-label-sm">Élève 1CE</span>
+<span class="font-label-sm text-label-sm text-outline">14:14</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface mt-0.5">
+                  J'ai aussi préparé un mini Quizizz pour réviser le vocabulaire d'histoire-géo sur la Mésopotamie pour le test de demain matin ! Voici le lien, qui veut battre mon record de 980 points ? 😂⚡
+                </p>
+<!-- Embedded Rich Link Card -->
+<div class="mt-space-xs max-w-md bg-surface-container-low rounded-xl p-space-sm flex items-center justify-between gap-space-sm shadow-xs hover:bg-surface-container transition-all cursor-pointer">
+<div class="flex items-center gap-space-sm min-w-0">
+<div class="w-11 h-11 rounded-lg bg-tertiary-container text-on-tertiary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[24px]">quiz</span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md font-bold text-on-surface truncate">Quiz 1CE • Histoire : Cités-États Mésopotamie</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant truncate">quizizz.com/join?class=1CE-2024</span>
+<span class="font-label-sm text-label-sm text-secondary font-semibold">12 questions • Durée 5 min</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline shrink-0">arrow_forward</span>
+</div>
+<div class="flex items-center gap-1 mt-1.5">
+<button class="px-2 py-0.5 bg-surface-container-low hover:bg-surface-container rounded-full text-on-surface font-label-sm text-label-sm flex items-center gap-1 transition-all" type="button">
+<span>😂</span> <span class="font-semibold text-outline">7</span>
+</button>
+<button class="px-2 py-0.5 bg-surface-container-low hover:bg-surface-container rounded-full text-on-surface font-label-sm text-label-sm flex items-center gap-1 transition-all" type="button">
+<span>🧠</span> <span class="font-semibold text-outline">5</span>
+</button>
+<button class="px-2 py-0.5 bg-secondary-container/60 rounded-full text-on-surface font-label-sm text-label-sm flex items-center gap-1 shadow-xs" type="button">
+<span>⚡</span> <span class="font-bold text-secondary">11</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Message 4: Lucas M. (Delegate confirmation) -->
+<div class="flex items-start gap-space-sm group">
+<div class="relative shrink-0 mt-0.5">
+<div class="w-10 h-10 rounded-full bg-surface-container-high overflow-hidden shadow-xs">
+<img class="w-full h-full object-cover" data-alt="Portrait Lucas délégué de première secondaire avec un t-shirt décontracté et sourire confiant" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAYKlHrR17pxkd0GKoEu5RRbKraQ-wnWnMZla0C1gpTP9FE1JwQTJ5u6bgHo2NLtTEMPWxmh61PcARKK5gn7MWcMejrXg8KSFU7iQ4Be1bkvYnz3KSjuasQo2dOYmkVGB455EeaPLla8IoS2RHHgN8v3fkNHjju7clu5WaiFuhX1y6LjPb7mkU1Ko5oVVfTeJRuBV_q80aKsE5Vu0p9xvbPqB9LM88SAXxYiA__kIA"/>
+</div>
+<span class="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-secondary rounded-full ring-2 ring-surface-container-lowest"></span>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-baseline gap-space-xs">
+<span class="font-label-lg text-label-lg font-bold text-on-surface">Lucas M. (Toi)</span>
+<span class="px-1.5 py-0.2 rounded bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm font-semibold">Délégué Titulaire</span>
+<span class="font-label-sm text-label-sm text-outline">14:28</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface mt-0.5">
+                  Top le quiz Sarah ! J'ai épinglé le message de Mme Laurent en haut du salon. N'oubliez pas qu'on a le cours d'EPS à 15h30 au gymnase nord, prévoyez vos gourdes. 🏃‍♂️🥤
+                </p>
+<div class="flex items-center gap-1 mt-1.5">
+<button class="px-2 py-0.5 bg-surface-container-low hover:bg-surface-container rounded-full text-on-surface font-label-sm text-label-sm flex items-center gap-1 transition-all" type="button">
+<span>👍</span> <span class="font-semibold text-outline">8</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Rich Chat Input Bar -->
+<div class="p-space-md bg-surface-container-low">
+<div class="bg-surface-container-lowest rounded-xl p-space-xs shadow-sm flex flex-col gap-space-xs">
+<div class="flex items-center gap-space-xs px-space-xs">
+<span class="font-label-sm text-label-sm text-outline">Écrire dans</span>
+<span class="font-label-sm text-label-sm text-primary font-bold">#général</span>
+</div>
+<!-- Input text box -->
+<input class="w-full px-space-sm py-2 bg-transparent text-on-surface placeholder:text-outline font-body-md text-body-md focus:outline-none" id="chat-input" placeholder="Envoyer un message à la classe 1CE, poser une question, partager un souvenir..." type="text"/>
+<!-- Tooling Bar (GIF, Emoji, Upload, Call shortcut, Send) -->
+<div class="flex items-center justify-between pt-1">
+<div class="flex items-center gap-1 text-on-surface-variant">
+<button class="p-1.5 rounded hover:bg-surface-container hover:text-on-surface transition-all" title="Ajouter une photo ou fichier" type="button">
+<span class="material-symbols-outlined text-[20px]">attach_file</span>
+</button>
+<button class="p-1.5 rounded hover:bg-surface-container hover:text-on-surface transition-all" title="Sélectionner un GIF" type="button">
+<span class="material-symbols-outlined text-[20px]">gif_box</span>
+</button>
+<button class="p-1.5 rounded hover:bg-surface-container hover:text-on-surface transition-all" title="Ajouter un émoji" type="button">
+<span class="material-symbols-outlined text-[20px]">mood</span>
+</button>
+<button class="p-1.5 rounded hover:bg-surface-container hover:text-on-surface transition-all" title="Message vocal" type="button">
+<span class="material-symbols-outlined text-[20px]">mic</span>
+</button>
+<span class="h-4 w-px bg-outline-variant mx-1"></span>
+<button class="px-space-xs py-1 rounded text-secondary hover:bg-secondary-fixed/30 font-label-sm text-label-sm font-semibold flex items-center gap-1 transition-all" title="Rejoindre l'appel vocal instantanément" type="button">
+<span class="material-symbols-outlined text-[16px]">call</span>
+<span class="hidden sm:inline">Vocal rapide</span>
+</button>
+</div>
+<button class="h-9 px-space-md bg-primary-container text-on-primary rounded-lg font-label-lg text-label-lg flex items-center gap-1 shadow-sm hover:bg-primary active:scale-95 transition-all" id="send-btn" type="button">
+<span>Envoyer</span>
+<span class="material-symbols-outlined text-[18px]">send</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Drawer: Class Roster & Voice Participants (3 Cols) -->
+<aside class="xl:col-span-3 bg-surface-container-lowest rounded-xl p-space-md shadow-sm space-y-space-md">
+<!-- Roster Header -->
+<div class="flex items-center justify-between pb-space-xs">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[20px]">groups</span>
+<span class="font-headline-sm text-headline-sm text-on-surface">Membres 1CE</span>
+</div>
+<span class="px-space-xs py-0.5 rounded-full bg-surface-container text-on-surface font-label-sm text-label-sm font-bold">28</span>
+</div>
+<!-- Section 1: In Voice / Video (4) -->
+<div class="space-y-space-xs">
+<div class="flex items-center justify-between px-space-xs">
+<span class="font-label-sm text-label-sm font-bold uppercase tracking-wider text-secondary flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+              En Vocal Direct — 4
+            </span>
+</div>
+<div class="space-y-1">
+<!-- Vocal Member: Thomas -->
+<div class="p-space-xs rounded-lg hover:bg-surface-container flex items-center justify-between group transition-all cursor-pointer">
+<div class="flex items-center gap-space-xs min-w-0">
+<div class="relative shrink-0">
+<div class="w-8 h-8 rounded-full bg-surface-container-high overflow-hidden ring-2 ring-secondary">
+<img class="w-full h-full object-cover" data-alt="Avatar adolescent 13 ans participant vocal" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-TnqM0TufqdVQ4WGfvYJxNA1j7tL6LZ3u44Yb5chgYoIuKpvXYhefOfVRG8PhZpqkevJnElR2oBXWYlw7-bk0XNsBYJ2vb4G1kISpHYPjU7u3Dmn8l4XrdMbLZrSUBeQAuzKksfuxvFYn0YbULVMhjh2CoRGvComImJip3ZVIbgMpP_aSkkd7yNpAqXHvgUURlr3qAaTOL-aVUe5er-VtbGeHrQS0LyE3jhU3bXw"/>
+</div>
+<span class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-secondary rounded-full ring-2 ring-surface-container-lowest"></span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface font-semibold truncate group-hover:text-primary transition-colors">Thomas B.</span>
+<span class="font-label-sm text-label-sm text-secondary truncate flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[12px]">graphic_eq</span> En train de parler
+                  </span>
+</div>
+</div>
+<div class="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 text-on-surface-variant hover:text-primary rounded" title="Message privé" type="button">
+<span class="material-symbols-outlined text-[16px]">chat</span>
+</button>
+</div>
+</div>
+<!-- Vocal Member: Chloé -->
+<div class="p-space-xs rounded-lg hover:bg-surface-container flex items-center justify-between group transition-all cursor-pointer">
+<div class="flex items-center gap-space-xs min-w-0">
+<div class="relative shrink-0">
+<div class="w-8 h-8 rounded-full bg-surface-container-high overflow-hidden ring-2 ring-secondary">
+<img class="w-full h-full object-cover" data-alt="Avatar jeune fille écouteurs pour salon vocal" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-01G8kHm3-Xei6aDhPcPT22enP67OHbLOEpWJPGAjp2qleAD6kZPS8LTRNBUsThP97Xw2ev658cfkEulzjXT5TZYxFvRkpI9DVK3eVDHZtwZ5hiJQSurwPJCzH-zUlmKMvMM-rU-OjuRmlp4rxYxgp7rszlXSfy_H1V6q8RTmTNiFtOWWwsmTvo0TzA-2X4--vl6htveh8Gsz0-i1FXxDCfySX_-G3l_W-EPTnkk"/>
+</div>
+<span class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-secondary rounded-full ring-2 ring-surface-container-lowest"></span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface font-semibold truncate group-hover:text-primary transition-colors">Chloé V.</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant truncate">Déléguée Adjointe</span>
+</div>
+</div>
+<div class="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 text-on-surface-variant hover:text-primary rounded" title="Message privé" type="button">
+<span class="material-symbols-outlined text-[16px]">chat</span>
+</button>
+</div>
+</div>
+<!-- Vocal Member: Sarah -->
+<div class="p-space-xs rounded-lg hover:bg-surface-container flex items-center justify-between group transition-all cursor-pointer">
+<div class="flex items-center gap-space-xs min-w-0">
+<div class="relative shrink-0">
+<div class="w-8 h-8 rounded-full bg-surface-container-high overflow-hidden ring-2 ring-secondary">
+<img class="w-full h-full object-cover" data-alt="Avatar Sarah élève 1CE salon vocal" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCkkQJ8snzOT6ffRRMcB1Jo9k6XtBoGZ2kwl9VTaqrhxCHtHKcePYDAjrZHm0IjW2c8rjEuVLUrSXInLihO5VDgaATUOqgN7Z0uo_bXcokHs2KIOqnOkflE5_I9Tc3ztC0AIOW0W6IRdV2DlsdWX0HLS9HTkS8eiJg88kkLU1IWyEpn8aHphmmaJgLSttqp63vJsBDBzxu-9M134j2UAcof8VL0n82vingRP7KU-hg"/>
+</div>
+<span class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-secondary rounded-full ring-2 ring-surface-container-lowest"></span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface font-semibold truncate group-hover:text-primary transition-colors">Sarah M.</span>
+<span class="font-label-sm text-label-sm text-outline truncate flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[12px] text-error">mic_off</span> Micro muet
+                  </span>
+</div>
+</div>
+<div class="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 text-on-surface-variant hover:text-primary rounded" title="Message privé" type="button">
+<span class="material-symbols-outlined text-[16px]">chat</span>
+</button>
+</div>
+</div>
+<!-- Vocal Member: Arthur -->
+<div class="p-space-xs rounded-lg hover:bg-surface-container flex items-center justify-between group transition-all cursor-pointer">
+<div class="flex items-center gap-space-xs min-w-0">
+<div class="relative shrink-0">
+<div class="w-8 h-8 rounded-full bg-surface-container-high overflow-hidden ring-2 ring-secondary">
+<img class="w-full h-full object-cover" data-alt="Avatar Arthur garçon élève salon vocal" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBM1GoaMs7-V7U2LNDvucLCUt4iDTK5wYqK2RjExGxeYGHCf97knCe66vpzViLqLupKaBFPM5hjDMdu0ir2MYcZgEejGNoa9ERUTFrNkLc72fE7-zhN6Tq1RoqlDm8UJ98IaFC1gAz0zjCjY0ad7Ms4goV39c-1aUIzu5cflKFakLfNQ8-9BvvNSZZ0fplkS56PKFlPnZonvnWGBWBMyp06_STm_1f-4RBv3yijVLs"/>
+</div>
+<span class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-secondary rounded-full ring-2 ring-surface-container-lowest"></span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface font-semibold truncate group-hover:text-primary transition-colors">Arthur D.</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant truncate">Élève 1CE</span>
+</div>
+</div>
+<div class="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 text-on-surface-variant hover:text-primary rounded" title="Message privé" type="button">
+<span class="material-symbols-outlined text-[16px]">chat</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Section 2: Online Members (18 Total) -->
+<div class="space-y-space-xs">
+<div class="flex items-center justify-between px-space-xs">
+<span class="font-label-sm text-label-sm font-bold uppercase tracking-wider text-outline">
+              En Ligne — 18
+            </span>
+</div>
+<div class="space-y-1">
+<!-- Professeur -->
+<div class="p-space-xs rounded-lg hover:bg-surface-container flex items-center justify-between group transition-all cursor-pointer">
+<div class="flex items-center gap-space-xs min-w-0">
+<div class="relative shrink-0">
+<div class="w-8 h-8 rounded-full bg-tertiary-fixed overflow-hidden flex items-center justify-center font-bold text-on-tertiary-fixed text-label-sm">
+                    ML
+                  </div>
+<span class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-secondary rounded-full ring-2 ring-surface-container-lowest"></span>
+</div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1">
+<span class="font-label-md text-label-md text-on-surface font-semibold truncate">Mme Laurent</span>
+<span class="material-symbols-outlined text-[14px] text-tertiary-container" title="Professeur référent">verified</span>
+</div>
+<span class="font-label-sm text-label-sm text-tertiary-container font-semibold truncate">Professeur Maths</span>
+</div>
+</div>
+<button class="p-1 opacity-0 group-hover:opacity-100 text-on-surface-variant hover:text-primary rounded transition-opacity" title="Poser une question en privé" type="button">
+<span class="material-symbols-outlined text-[16px]">mail</span>
+</button>
+</div>
+<!-- Lucas M. (You) -->
+<div class="p-space-xs rounded-lg bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-space-xs min-w-0">
+<div class="relative shrink-0">
+<div class="w-8 h-8 rounded-full bg-primary-fixed overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Avatar de Lucas délégué de première secondaire" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAjBHikFmR0QFyMkkYnB2Cnonuoa5_hTodV4jbJSWrt5T5WFOZZ1qlvpezoo6vThG7077qpqh_mCoBnV5MR5dEmn0qWLeJQUyXZxiGTqW_q_TS1PqfDWFPOPNpvpNHfa6ywgC-_5fiYci8apcyH0ge2qNK-puO_fyREIFDmVcPp7WjlXHylVUn8advx7HvMyR760G9XxyvdBbgZDncd62afRm4wLlQ-x2IavmJrpbM"/>
+</div>
+<span class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-secondary rounded-full ring-2 ring-surface-container-lowest"></span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface font-bold truncate">Lucas M. (Moi)</span>
+<span class="font-label-sm text-label-sm text-primary font-semibold truncate">Délégué Titulaire 1CE</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-[16px] text-secondary">star</span>
+</div>
+<!-- Student: Manon R. -->
+<div class="p-space-xs rounded-lg hover:bg-surface-container flex items-center justify-between group transition-all cursor-pointer">
+<div class="flex items-center gap-space-xs min-w-0">
+<div class="relative shrink-0">
+<div class="w-8 h-8 rounded-full bg-surface-container-high overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Portrait Manon élève de classe souriante avec cheveux ondulés" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBCBRgrj1q53P9ROCNj40XotH397q83uzSxEaSmHjV7Z9L9Qm1syN8pqsLoWIrPSlARaxSxbKgigmZkgGZC1uJKN6xSrCvY8VtMEJFRnvY1k3y96oJQO5DlkcWXI9nNVQk4Kh-s0uz9xXtTfRaOqJXI-WcAhIr_KdDftOazhgFKJdprUtjSJCPx8S39F-96_jZ81q_IZzYPCnRHH_wITapEmgh9buSAFZ4jDdQoWLM"/>
+</div>
+<span class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-secondary rounded-full ring-2 ring-surface-container-lowest"></span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface font-medium truncate group-hover:text-primary transition-colors">Manon R.</span>
+<span class="font-label-sm text-label-sm text-outline truncate">Révisions Mésopotamie</span>
+</div>
+</div>
+<div class="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 text-on-surface-variant hover:text-primary rounded" title="Message privé" type="button">
+<span class="material-symbols-outlined text-[16px]">chat</span>
+</button>
+<button class="p-1 text-on-surface-variant hover:text-secondary rounded" title="Appeler" type="button">
+<span class="material-symbols-outlined text-[16px]">call</span>
+</button>
+</div>
+</div>
+<!-- Student: Maxime P. -->
+<div class="p-space-xs rounded-lg hover:bg-surface-container flex items-center justify-between group transition-all cursor-pointer">
+<div class="flex items-center gap-space-xs min-w-0">
+<div class="relative shrink-0">
+<div class="w-8 h-8 rounded-full bg-surface-container-high overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Portrait Maxime collégien souriant avec pull rayé" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDK8ATJBUYrZXUCmKsY7927UfVE32nPHPm9a3y8vMb-WpDOFOqUGllmHI_CE4__HhPT-cqxvhsS-vXtv3-e_-Tobk_RogYbFStHXWskDDs16IJbPR4Uj-91WtGbJniznqiqaQRooNlKenjLWr-kXulO9M3PeNxj4ge3xKqFsOFs0TJ-fVhhHSJ17bKoFkN53-vnnKDgNgVwACwKPoDSK71scYbk8QPIB4WAwp5QKMU"/>
+</div>
+<span class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-secondary rounded-full ring-2 ring-surface-container-lowest"></span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface font-medium truncate group-hover:text-primary transition-colors">Maxime P.</span>
+<span class="font-label-sm text-label-sm text-outline truncate">En train de lire</span>
+</div>
+</div>
+<div class="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 text-on-surface-variant hover:text-primary rounded" title="Message privé" type="button">
+<span class="material-symbols-outlined text-[16px]">chat</span>
+</button>
+</div>
+</div>
+<!-- Student: Léa B. -->
+<div class="p-space-xs rounded-lg hover:bg-surface-container flex items-center justify-between group transition-all cursor-pointer">
+<div class="flex items-center gap-space-xs min-w-0">
+<div class="relative shrink-0">
+<div class="w-8 h-8 rounded-full bg-surface-container-high overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Portrait Léa élève avec queue de cheval blonde et sourire" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCFx5xUZSHsER66Uyy9frcAOQAJ3puETHkFuXpi5S_qxzLOkT3y2nbx7MLAnC7Hef05TiQ8s0uOsJFxvYXoA13r9rO1TFLec9P3uJ18MbOLpUHIJtDEXvQwWcj7xf6a2BtSuiFsoYYyKowoj-bcdDlRSJ9XcHtHIYZ5M8EIWws1R_9XFti4Fik93oH0-cqAiIvmgl91UsHjEN3lp-hsYQIkJ_6nIEANIOARYqL-9-E"/>
+</div>
+<span class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-secondary rounded-full ring-2 ring-surface-container-lowest"></span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface font-medium truncate group-hover:text-primary transition-colors">Léa B.</span>
+<span class="font-label-sm text-label-sm text-outline truncate">Actif sur le quiz</span>
+</div>
+</div>
+<div class="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 text-on-surface-variant hover:text-primary rounded" title="Message privé" type="button">
+<span class="material-symbols-outlined text-[16px]">chat</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Section 3: Offline Members (10) -->
+<div class="space-y-space-xs pt-space-xs">
+<div class="flex items-center justify-between px-space-xs">
+<span class="font-label-sm text-label-sm font-bold uppercase tracking-wider text-outline">
+              Hors Ligne — 10
+            </span>
+</div>
+<div class="space-y-1 opacity-70">
+<!-- Offline Student: Julien K. -->
+<div class="p-space-xs rounded-lg hover:bg-surface-container flex items-center justify-between group transition-all cursor-pointer">
+<div class="flex items-center gap-space-xs min-w-0">
+<div class="relative shrink-0 grayscale">
+<div class="w-8 h-8 rounded-full bg-surface-container-high overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Avatar Julien élève de classe hors-ligne" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDtONNjWf_ltYl1ZKdbD9hS0L-101ydxjcvTMby3rQdJtVfURVbwGOvpZL0m5JSug3TYacs4ItOtSPfgJR47rKxlp5k1pG0MVh9VJdfFxVXxOThfP2lP0HyC6ndsZabnY0kaLjVJ5LNodeNJjeZREqOauetkDY-E5k6iCvP_Xjp-FFVvL8LXEjyO6e_NI0is7T_3GildQNbGWdMt9oc6BLdKRT3UptVs7Ot65qmr5g"/>
+</div>
+<span class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-outline rounded-full ring-2 ring-surface-container-lowest"></span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface font-medium truncate">Julien K.</span>
+<span class="font-label-sm text-label-sm text-outline truncate">Vu il y a 32 min</span>
+</div>
+</div>
+<button class="p-1 opacity-0 group-hover:opacity-100 text-on-surface-variant hover:text-primary rounded transition-opacity" title="Envoyer un message différé" type="button">
+<span class="material-symbols-outlined text-[16px]">send</span>
+</button>
+</div>
+<!-- Offline Student: Inès D. -->
+<div class="p-space-xs rounded-lg hover:bg-surface-container flex items-center justify-between group transition-all cursor-pointer">
+<div class="flex items-center gap-space-xs min-w-0">
+<div class="relative shrink-0 grayscale">
+<div class="w-8 h-8 rounded-full bg-surface-container-high overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Avatar Inès élève collégienne hors ligne" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBBzsN7bn6P2A1DiHrs91IF4e6f28UrkRvpPXiFxQm9nG0JfPOH6ytmNdErQvZ0e6wyffWmnhX6-vgysepNVqjgmrdLuNYSqyyfKH5mzRCpTrAXr9UQoYf2XvRrEVxbYFolQJZdiTqJxyeNfY8DFqfGal_Dog8CnnMzHX1rcrB8SM08Elv3JO91DFU-jnR33dWZpzGrQgJ5minkFss1RCXvfqKAHz_lDdXam1J8iXY"/>
+</div>
+<span class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-outline rounded-full ring-2 ring-surface-container-lowest"></span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface font-medium truncate">Inès D.</span>
+<span class="font-label-sm text-label-sm text-outline truncate">Vu ce matin</span>
+</div>
+</div>
+<button class="p-1 opacity-0 group-hover:opacity-100 text-on-surface-variant hover:text-primary rounded transition-opacity" title="Envoyer un message différé" type="button">
+<span class="material-symbols-outlined text-[16px]">send</span>
+</button>
+</div>
+<!-- Offline Student: Yanis T. -->
+<div class="p-space-xs rounded-lg hover:bg-surface-container flex items-center justify-between group transition-all cursor-pointer">
+<div class="flex items-center gap-space-xs min-w-0">
+<div class="relative shrink-0 grayscale">
+<div class="w-8 h-8 rounded-full bg-surface-container-high overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Avatar Yanis garçon de première secondaire hors ligne" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqjnHtRk69QAxycspBAePOpip4r9wReJMHMcbMUxzbZozQxDA7BAjvrDct1jDKO-amKYj17NwT8tep704LENFWFvzB2ltPnMDQ-3PF7L8pxs5_CEABgsIP5INOJ3RObeF-J1cnfKhjK-UG4xBG34gxasu-MSSoN7mK5aL6JHlsKDexWi9sdNV-3VO9f7waPKboieFJUgva9GJuvH3rsrcwT0pO-mhZMoWNV1yC2ik"/>
+</div>
+<span class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-outline rounded-full ring-2 ring-surface-container-lowest"></span>
+</div>
+<div class="flex flex-col min-w-0">
+<span class="font-label-md text-label-md text-on-surface font-medium truncate">Yanis T.</span>
+<span class="font-label-sm text-label-sm text-outline truncate">Vu hier</span>
+</div>
+</div>
+<button class="p-1 opacity-0 group-hover:opacity-100 text-on-surface-variant hover:text-primary rounded transition-opacity" title="Envoyer un message différé" type="button">
+<span class="material-symbols-outlined text-[16px]">send</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Class Quick Stats / Engagement Card -->
+<div class="p-space-sm bg-surface-container-low rounded-xl space-y-space-xs">
+<span class="font-label-sm text-label-sm font-bold text-on-surface-variant uppercase">Règles du Salon 1CE</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+            Entraide, respect et bienveillance. Pas de spams et micro coupé si vous écoutez de la musique ! ✨
+          </p>
+<div class="pt-1 flex items-center justify-between text-label-sm text-primary font-semibold">
+<span>Délégués : Lucas & Chloé</span>
+<span class="material-symbols-outlined text-[16px]">verified_user</span>
+</div>
+</div>
+</aside>
+</div>
+</div>
+</div>
+<script>
+  // Simple micro-interaction for sending message preview
+  const sendBtn = document.getElementById('send-btn');
+  const chatInput = document.getElementById('chat-input');
+  
+  if (sendBtn && chatInput) {
+    sendBtn.addEventListener('click', () => {
+      if (chatInput.value.trim() !== '') {
+        chatInput.value = '';
+        chatInput.placeholder = 'Message envoyé au salon 1CE !';
+        setTimeout(() => {
+          chatInput.placeholder = 'Envoyer un message à la classe 1CE, poser une question, partager un souvenir...';
+        }, 2000);
+      }
+    });
+
+    chatInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        sendBtn.click();
+      }
+    });
+  }
+
+  // Toggle call canvas visibility demo
+  const toggleBtn = document.getElementById('toggle-call-canvas');
+  const visioSection = document.getElementById('visio-section');
+  if (toggleBtn && visioSection) {
+    toggleBtn.addEventListener('click', () => {
+      visioSection.scrollIntoView({ behavior: 'smooth' });
+      visioSection.classList.add('ring-4', 'ring-primary-container');
+      setTimeout(() => {
+        visioSection.classList.remove('ring-4', 'ring-primary-container');
+      }, 1200);
+    });
+  }
+</script></main></div></body></html>
