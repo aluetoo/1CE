@@ -77,6 +77,8 @@
  #tab-planning>div,#tab-posts>div,#tab-settings>div{padding:14px!important}
  .call-fullscreen{z-index:100!important}
 }
+
+@media(max-width:767px){#mobile-menu-button .mobile-menu-close-label{display:none}body.mobile-sidebar-open #mobile-menu-button .mobile-menu-open-label{display:none}body.mobile-sidebar-open #mobile-menu-button .mobile-menu-close-label{display:inline}}
 @media(min-width:768px){#mobile-menu-button,#mobile-sidebar-backdrop{display:none!important}}
 
   </style>
@@ -124,7 +126,7 @@
 
 <!-- Top Global Header -->
 <header class="h-16 border-b border-slate-200 bg-white px-6 flex items-center justify-between shrink-0 z-30 shadow-sm">
-<button id="mobile-menu-button" type="button" aria-label="Ouvrir le menu" aria-controls="class-sidebar" aria-expanded="false" class="hidden place-items-center w-10 h-10 rounded-xl text-slate-600 hover:bg-slate-100" onclick="document.body.classList.add('mobile-sidebar-open');this.setAttribute('aria-expanded','true')"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" stroke-width="2"/></svg></button>
+<button id="mobile-menu-button" type="button" aria-label="Ouvrir le menu" aria-controls="class-sidebar" aria-expanded="false" class="hidden place-items-center min-w-10 h-10 px-2 rounded-xl text-indigo-600 bg-indigo-50 hover:bg-indigo-100 font-black text-xl tracking-tight" onclick="const opened=document.body.classList.toggle('mobile-sidebar-open');this.setAttribute('aria-expanded',String(opened));this.setAttribute('aria-label',opened?'Fermer le menu':'Ouvrir le menu')"><span class="mobile-menu-open-label">&gt;&gt;</span><span class="mobile-menu-close-label">&lt;&lt;</span></button>
 <div class="flex items-center gap-4 flex-1 max-w-xl">
 <div class="relative w-full">
 <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
