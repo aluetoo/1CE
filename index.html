@@ -38,9 +38,9 @@
 </head>
 <body class="bg-[#f8f9ff] text-slate-800 antialiased h-screen flex flex-col overflow-hidden">
 <!-- Authentification obligatoire -->
-<div id="auth-gate" class="fixed inset-0 z-[100] overflow-y-auto bg-slate-950/95 p-4 flex items-center justify-center">
+<div id="auth-gate" class="fixed inset-0 z-[100] overflow-y-auto bg-slate-950 p-4 flex items-center justify-center" role="dialog" aria-modal="true" aria-labelledby="auth-gate-title">
   <div class="w-full max-w-md rounded-3xl bg-white p-6 sm:p-8 shadow-2xl space-y-5">
-    <div class="text-center"><div class="mx-auto mb-3 w-14 h-14 rounded-2xl bg-indigo-600 text-white grid place-items-center text-xl font-extrabold">1CE</div><h1 class="text-2xl font-extrabold text-slate-900">Espace Classe 1CE</h1><p class="text-sm text-slate-500 mt-1">Connecte-toi pour accéder à l’espace de classe.</p></div>
+    <div class="text-center"><div class="mx-auto mb-3 w-14 h-14 rounded-2xl bg-indigo-600 text-white grid place-items-center text-xl font-extrabold">1CE</div><h1 id="auth-gate-title" class="text-2xl font-extrabold text-slate-900">Espace Classe 1CE</h1><p class="text-sm text-slate-500 mt-1">Connecte-toi pour accéder à l’espace de classe.</p></div>
     <div id="auth-login-panel" class="space-y-3">
       <h2 class="font-bold text-slate-900">Connexion</h2>
       <input id="auth-login-email" type="email" autocomplete="email" placeholder="Adresse e-mail" class="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm"/>
