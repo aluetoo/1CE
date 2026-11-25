@@ -836,8 +836,8 @@
       if (!currentUser) return;
       try {
         const { error } = await supabaseClient
-          .from('profiles')
-          .upsert({ id: currentUser.id, full_name: fullName, username: username });
+          .from('class_members')
+          .upsert({ user_id: currentUser.id, display_name: fullName || username || 'Élève 1CE' });
         if (error) throw error;
         alert('Profil mis à jour avec succès !');
       } catch (err) {
