@@ -313,7 +313,7 @@
     const esc = value => String(value ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
     const dateLabel = value => new Date(value).toLocaleString("fr-BE",{dateStyle:"medium",timeStyle:"short"});
 
-    async function moderateContent(text, kind) {
+    async function moderateContent(text, kind, extra = {}) {
       const response = await fetch(SUPABASE_URL + "/functions/v1/moderate-content", {
         method: "POST",
         headers: {
@@ -321,7 +321,7 @@
           "apikey": SUPABASE_PUBLISHABLE_KEY,
           "Authorization": "Bearer " + session.access_token
         },
-        body: JSON.stringify({ text, kind })
+        body: JSON.stringify({ text, kind, ...extra })
       });
       const result = await response.json().catch(() => ({}));
       if (!response.ok) return { ok:false, message:result.reason || result.error || "La modération a refusé l'envoi. Réessaie plus tard." };
@@ -558,9 +558,8 @@
         if (!content) return;
         const moderation = await moderateContent(content,"comment");
         if (!moderation.ok) { alert(moderation.message); return; }
-        const {error} = await client.from("comments").insert({post_id:form.dataset.id,author_id:session.user.id,author_name:member.display_name,content:moderation.text});
-        if (error) alert("Le commentaire n’a pas pu être envoyé.");
-        else { if(moderation.notice) alert(moderation.notice); await loadPosts(); }
+        if (moderation.notice) alert(moderation.notice);
+        await loadPosts();
       }));
     }
 
@@ -573,11 +572,9 @@
       status.textContent = "Vérification du contenu…";
       const moderation = await moderateContent(content,"post");
       if (!moderation.ok) { status.textContent = moderation.message; return; }
-      const safeContent = moderation.text;
-      document.getElementById("postcontent").value = safeContent === content ? "" : safeContent;
-      const {error} = await client.from("posts").insert({author_id:session.user.id,author_name:member.display_name,content:safeContent});
-      status.textContent = error ? "La publication n’a pas pu être envoyée." : (moderation.notice || "Publié !");
-      if (!error) { document.getElementById("postcontent").value = ""; await loadPosts(); }
+      document.getElementById("postcontent").value = "";
+      status.textContent = moderation.notice || "Publié !";
+      await loadPosts();
     });
 
 
@@ -657,9 +654,8 @@
       status.textContent = "Vérification du message…";
       const moderation = await moderateContent(content,"message");
       if (!moderation.ok) { status.textContent = moderation.message; return; }
-      const {error} = await client.from("messages").insert({author_id:session.user.id,author_name:member.display_name,content:moderation.text});
-      status.textContent = error ? "Message non envoyé." : (moderation.notice || "");
-      if (!error) {
+      status.textContent = moderation.notice || "";
+      {
         input.value = "";
         if (chatRealtimeChannel) await chatRealtimeChannel.send({type:"broadcast",event:"new-message",payload:{sent_at:new Date().toISOString()}});
         await loadMessages();
@@ -691,21 +687,19 @@
       if (file.size > 10*1024*1024) { status.textContent = "La photo doit faire 10 Mo maximum."; return; }
       const captionInput = document.getElementById("photocaption");
       const caption = captionInput.value.trim();
-      if (caption) {
-        status.textContent = "Vérification de la légende…";
-        const moderation = await moderateContent(caption,"caption");
-        if (!moderation.ok) { status.textContent = moderation.message; return; }
-        captionInput.value = moderation.text;
-        if (moderation.notice) status.textContent = moderation.notice;
-      }
       status.textContent = "Envoi de la photo…";
       const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g,"_");
       const path = session.user.id + "/" + Date.now() + "-" + safeName;
       const {error:uploadError} = await client.storage.from("class-photos").upload(path,file,{contentType:file.type,upsert:false});
       if (uploadError) { status.textContent = "La photo n’a pas pu être envoyée."; return; }
-      const {error:rowError} = await client.from("photos").insert({uploader_id:session.user.id,object_path:path,caption:document.getElementById("photocaption").value.trim() || null});
-      if (rowError) { status.textContent = "Photo envoyée, mais impossible d’enregistrer sa légende."; return; }
-      status.textContent = "Photo ajoutée à la galerie.";
+      status.textContent = "Vérification de la légende…";
+      const moderation = await moderateContent(caption,"caption",{object_path:path});
+      if (!moderation.ok) {
+        await client.storage.from("class-photos").remove([path]);
+        status.textContent = moderation.message;
+        return;
+      }
+      status.textContent = moderation.notice || "Photo ajoutée à la galerie.";
       e.target.reset();
       await loadPhotos();
     });
