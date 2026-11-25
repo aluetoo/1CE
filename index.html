@@ -319,22 +319,21 @@
       border-radius:22px;
     }
   
-    /* Clavier mobile : garder l'en-tête fixe et ne déplacer que le composer */
+    /* Clavier mobile : le viewport de la page reste intact, seul le composer remonte */
     @media(max-width:767px){
-      #tab-general>div:first-child,#tab-dms>div:last-child{
-        height:calc(var(--app-visual-height, 100dvh) - 60px)!important;
-        max-height:calc(var(--app-visual-height, 100dvh) - 60px)!important;
-        overflow:hidden!important;
-      }
-      #tab-general .alu-composer-wrap,#tab-dms .alu-composer-wrap{
+      html.keyboard-open #tab-general .alu-composer-wrap,
+      html.keyboard-open #tab-dms .alu-composer-wrap{
         position:fixed!important;
         left:0!important;right:0!important;
         bottom:var(--app-keyboard-inset, 0px)!important;
-        z-index:40!important;
+        transform:none!important;
+        z-index:100!important;
         width:100%!important;
         margin:0!important;
+        padding-bottom:8px!important;
       }
-      #general-messages-list,#dm-messages-list{padding-bottom:110px!important}
+      html.keyboard-open #general-messages-list,
+      html.keyboard-open #dm-messages-list{padding-bottom:110px!important}
     }
 
 
@@ -1839,26 +1838,27 @@
 </script>
 
 <script>
-  // Ajuste uniquement la zone de saisie à la hauteur visible lorsque le clavier mobile apparaît.
+  // Le clavier mobile ne redimensionne pas la conversation : seul le composer suit le visual viewport.
   (() => {
     const viewport = window.visualViewport;
     if (!viewport) return;
+    const root = document.documentElement;
+    const isComposer = element => element?.matches?.('#general-message-input, #dm-message-input');
     const updateKeyboardLayout = () => {
       const keyboardInset = Math.max(0, window.innerHeight - viewport.height - viewport.offsetTop);
-      document.documentElement.style.setProperty('--app-visual-height', viewport.height + 'px');
-      document.documentElement.style.setProperty('--app-keyboard-inset', keyboardInset + 'px');
+      root.style.setProperty('--app-keyboard-inset', keyboardInset + 'px');
+      const keyboardOpen = keyboardInset > 100 && isComposer(document.activeElement);
+      root.classList.toggle('keyboard-open', keyboardOpen);
     };
     viewport.addEventListener('resize', updateKeyboardLayout);
     viewport.addEventListener('scroll', updateKeyboardLayout);
     window.addEventListener('resize', updateKeyboardLayout);
     document.addEventListener('focusin', event => {
-      if (event.target.matches('#general-message-input, #dm-message-input')) {
-        updateKeyboardLayout();
-      }
+      if (isComposer(event.target)) requestAnimationFrame(updateKeyboardLayout);
     });
     document.addEventListener('focusout', event => {
-      if (event.target.matches('#general-message-input, #dm-message-input')) {
-        setTimeout(updateKeyboardLayout, 120);
+      if (isComposer(event.target)) {
+        requestAnimationFrame(() => requestAnimationFrame(updateKeyboardLayout));
       }
     });
     updateKeyboardLayout();
