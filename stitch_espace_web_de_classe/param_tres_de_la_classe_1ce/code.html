@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+
+<html lang="fr"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@100..900&display=swap" rel="stylesheet"/><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "primary-container": "#4f46e5", "on-tertiary": "#ffffff", "secondary": "#006c49", "surface-container-low": "#eff4ff", "on-secondary-fixed-variant": "#005236", "surface-dim": "#cbdbf5", "tertiary-fixed-dim": "#ffb95f", "on-secondary": "#ffffff", "outline-variant": "#c7c4d8", "surface-container-highest": "#d3e4fe", "error-container": "#ffdad6", "surface-container": "#e5eeff", "inverse-primary": "#c3c0ff", "tertiary-fixed": "#ffddb8", "on-surface": "#0b1c30", "surface-container-lowest": "#ffffff", "inverse-surface": "#213145", "surface-tint": "#4d44e3", "surface-bright": "#f8f9ff", "secondary-fixed-dim": "#4edea3", "background": "#f8f9ff", "primary": "#3525cd", "outline": "#777587", "error": "#ba1a1a", "surface": "#f8f9ff", "on-tertiary-fixed": "#2a1700", "primary-fixed": "#e2dfff", "inverse-on-surface": "#eaf1ff", "on-surface-variant": "#464555", "surface-container-high": "#dce9ff", "secondary-fixed": "#6ffbbe", "on-error-container": "#93000a", "on-tertiary-fixed-variant": "#653e00", "on-primary-container": "#dad7ff", "on-primary-fixed": "#0f0069", "tertiary": "#684000", "on-tertiary-container": "#ffd4a4", "on-secondary-fixed": "#002113", "on-primary": "#ffffff", "on-background": "#0b1c30", "on-error": "#ffffff", "tertiary-container": "#885500", "secondary-container": "#6cf8bb", "on-secondary-container": "#00714d", "surface-variant": "#d3e4fe", "primary-fixed-dim": "#c3c0ff", "on-primary-fixed-variant": "#3323cc" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "space-xs": "0.25rem", "margin-md": "1.5rem", "space-lg": "1.5rem", "space-md": "1rem", "gutter": "1rem", "space-xl": "2rem", "margin-lg": "2rem", "gutter-md": "1.5rem", "margin": "1rem", "space-sm": "0.5rem" }, "fontFamily": { "body-lg": ["Plus Jakarta Sans"], "headline-xl-mobile": ["Plus Jakarta Sans"], "title-md": ["Plus Jakarta Sans"], "label-lg": ["Plus Jakarta Sans"], "body-md": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "headline-lg-mobile": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], "body-sm": ["Plus Jakarta Sans"], "headline-xl": ["Plus Jakarta Sans"], "label-sm": ["Plus Jakarta Sans"], "headline-sm": ["Plus Jakarta Sans"], "label-md": ["Plus Jakarta Sans"] }, "fontSize": { "body-lg": ["16px", { "lineHeight": "26px", "fontWeight": "400" }], "headline-xl-mobile": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.015em", "fontWeight": "800" }], "title-md": ["16px", { "lineHeight": "22px", "fontWeight": "600" }], "label-lg": ["14px", { "lineHeight": "20px", "fontWeight": "600" }], "body-md": ["14px", { "lineHeight": "22px", "fontWeight": "400" }], "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "headline-lg-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }], "headline-md": ["22px", { "lineHeight": "28px", "fontWeight": "700" }], "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }], "headline-xl": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800" }], "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.03em", "fontWeight": "700" }], "headline-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }], "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }] } } } };</script></head><body class="bg-surface font-body-md text-body-md text-on-surface"><aside class="fixed left-0 top-0 h-full w-72 bg-surface-container-low z-50 flex flex-col justify-between shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex flex-col flex-1 overflow-y-auto"><div class="px-space-md py-space-md bg-surface-container-low flex items-center gap-space-sm"><img alt="Logo Classe 1CE" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQgTu9U35KrZ_bbBl7J6jUpjVaST7k5EQhSAHL3BRAqt1MOMOo3ipFpJt64EMPg97eyXgmk7b4iZNsYJ0XSfGGxupFc3bGkKcJoJlNXpHznWZx1bIlPVtewnqz-XbZGtJ1U3dbB1HlfHMqPOTOav7spnZjZFHOpcDSkFYbAqKpA1hbgefXfS1TTPGxqtrki2cFEVTwrTSYwAwji8LgAadO67Ms939qYE293n__I24"/><div class="flex flex-col min-w-0"><span class="font-headline-sm text-headline-sm text-on-surface truncate">Classe 1CE</span><span class="font-label-md text-label-md text-on-surface-variant truncate">1ère Secondaire • 2024-2025</span><div class="flex items-center gap-space-xs mt-space-xs"><span class="w-2 h-2 rounded-full bg-secondary"></span><span class="font-label-sm text-label-sm text-secondary">28 élèves connectés</span></div></div></div><nav class="flex-1 px-space-sm py-space-sm space-y-space-md" data-active-classes="bg-primary-container text-on-primary font-bold rounded-lg"><div class="space-y-space-xs"><div class="px-space-sm flex items-center justify-between"><span class="font-label-sm text-label-sm uppercase text-outline">Discussions & Salons</span><span class="bg-primary-container text-on-primary font-label-sm text-label-sm px-space-xs py-0.5 rounded-full">3</span></div><a class="flex items-center justify-between px-space-sm py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="salon-general" href="#"><div class="flex items-center gap-space-xs truncate"><span class="font-title-md text-title-md text-outline">#</span><span class="font-title-md text-title-md truncate">Général - Toute la classe</span></div><span class="material-symbols-outlined text-outline text-[18px]">volume_up</span></a><a class="flex items-center justify-between px-space-sm py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="messages-prives" href="#"><div class="flex items-center gap-space-xs truncate"><span class="material-symbols-outlined text-[18px]">chat_bubble</span><span class="font-title-md text-title-md truncate">Messages privés (DMs)</span></div><span class="w-2 h-2 rounded-full bg-primary"></span></a></div><div class="space-y-space-xs"><div class="px-space-sm"><span class="font-label-sm text-label-sm uppercase text-outline">Activités de Classe</span></div><a class="flex items-center gap-space-sm px-space-sm py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="fil-actualite" href="#"><span class="material-symbols-outlined text-[20px]">dynamic_feed</span><span class="font-title-md text-title-md">Fil d'actualité & Posts</span></a><a class="flex items-center gap-space-sm px-space-sm py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="souvenirs-photos" href="#"><span class="material-symbols-outlined text-[20px]">photo_library</span><span class="font-title-md text-title-md">Souvenirs & Photos</span></a></div><div class="space-y-space-xs"><div class="px-space-sm"><span class="font-label-sm text-label-sm uppercase text-outline">Espace Personnel</span></div><a aria-current="page" class="flex items-center gap-space-sm px-space-sm py-space-sm transition-all bg-primary-container text-on-primary font-bold rounded-lg" data-path="parametres-classe" href="#"><span class="material-symbols-outlined text-[20px]">tune</span><span class="font-title-md text-title-md">Paramètres & Profil</span></a></div></nav></div><div class="p-space-sm bg-surface-container-lowest m-space-sm rounded-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] flex items-center justify-between gap-space-xs"><div class="flex items-center gap-space-sm min-w-0"><div class="relative flex-shrink-0"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBUgx4PhE5VErFKowhPWSFSmZSN3Jdxiv004RWr13hWhpIuY6ebFPizUlyYI6038NMu8ahLDNF60E97iaGx2vXT9-D05T-YPjdLygvOM2TdJYYkkyUvoHUBjjPHNeK_cyUoiK2p9fPJIPwdGqxVHOIa0sVXNiv6ERp8hJOpBcdjF8M4MwbnmjE7MP65oJSOwm03yErbZKJt7sZDpEMDaVS8ILVivenU21bShL34a8"/><span class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-secondary ring-2 ring-surface-container-lowest"></span></div><div class="flex flex-col min-w-0"><span class="font-label-lg text-label-lg text-on-surface truncate">Lucas M. (Délégué 1CE)</span><span class="font-label-sm text-label-sm text-secondary truncate">🟢 En ligne</span></div></div><div class="flex items-center gap-0.5 flex-shrink-0"><button class="p-1 text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded" type="button"><span class="material-symbols-outlined text-[18px]">mic</span></button><button class="p-1 text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded" type="button"><span class="material-symbols-outlined text-[18px]">settings</span></button></div></div></aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-16 bg-surface/80 backdrop-blur-xl z-40 flex items-center justify-between px-space-lg shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex items-center gap-space-md flex-1 max-w-lg"><div class="relative w-full"><span class="material-symbols-outlined absolute left-3 top-2.5 text-[20px] text-outline">search</span><input class="w-full h-10 pl-10 pr-space-md bg-surface-container-low rounded-lg font-body-md text-body-md text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary-container/20" placeholder="Rechercher des posts, photos, camarades..." type="text"/></div></div><div class="flex items-center gap-space-md"><span class="hidden md:inline font-label-md text-label-md text-on-surface-variant">Mercredi 23 Octobre • 14:32</span><button class="relative p-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low rounded-lg" type="button"><span class="material-symbols-outlined text-[22px]">notifications</span><span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-error"></span></button><button class="flex items-center gap-space-xs px-space-md h-10 bg-primary-container text-on-primary rounded-lg font-label-lg text-label-lg shadow-[0_1px_3px_0_rgba(15,23,42,0.05)] hover:bg-primary transition-all" type="button"><span class="material-symbols-outlined text-[20px]">add_call</span><span>Démarrer un appel</span></button><div class="flex items-center pl-space-xs"><img alt="Profile" class="w-8 h-8 rounded-full object-cover ring-2 ring-primary-container/20" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBUgx4PhE5VErFKowhPWSFSmZSN3Jdxiv004RWr13hWhpIuY6ebFPizUlyYI6038NMu8ahLDNF60E97iaGx2vXT9-D05T-YPjdLygvOM2TdJYYkkyUvoHUBjjPHNeK_cyUoiK2p9fPJIPwdGqxVHOIa0sVXNiv6ERp8hJOpBcdjF8M4MwbnmjE7MP65oJSOwm03yErbZKJt7sZDpEMDaVS8ILVivenU21bShL34a8"/></div></div></header><main class="w-full pt-16 bg-surface"><div class="flex flex-col w-full">
+<div class="p-space-lg lg:p-space-xl max-w-7xl mx-auto w-full">
+<!-- Header Title & Class Identity Context -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md mb-space-xl">
+<div>
+<div class="flex items-center gap-space-xs text-primary font-label-md uppercase tracking-wider mb-space-xs">
+<span class="material-symbols-outlined text-[18px]">manage_accounts</span>
+<span>Espace Personnel & Préférences</span>
+</div>
+<h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Paramètres de la classe 1CE</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Personnalise ton profil scolaire, tes périphériques audio/vidéo et tes préférences d'alertes.</p>
+</div>
+<div class="flex items-center gap-space-sm self-start md:self-auto">
+<span class="font-label-md text-label-md text-secondary opacity-0 transition-opacity flex items-center gap-1" id="save-status">
+<span class="material-symbols-outlined text-[16px]">check_circle</span> Enregistré automatiquement
+        </span>
+<button class="px-space-md py-2 bg-primary-container hover:bg-primary text-on-primary font-label-lg text-label-lg rounded-xl shadow-md transition-all flex items-center gap-space-xs" onclick="triggerSaveNotification()" type="button">
+<span class="material-symbols-outlined text-[18px]">save</span>
+<span>Sauvegarder</span>
+</button>
+</div>
+</div>
+<!-- Layout Grid: Sub-navigation & Settings Canvas -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg">
+<!-- Inner Settings Sidebar -->
+<aside class="lg:col-span-3">
+<div class="bg-surface-container-lowest p-space-sm rounded-xl shadow-sm sticky top-24 space-y-1">
+<button class="settings-tab-btn w-full flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-left transition-all bg-primary-container text-on-primary font-title-md text-title-md" id="tab-profil" onclick="switchSettingsTab('profil')" type="button">
+<span class="material-symbols-outlined text-[20px]">badge</span>
+<span>Profil Élève</span>
+</button>
+<button class="settings-tab-btn w-full flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-left transition-all text-on-surface-variant hover:bg-surface-container font-title-md text-title-md" id="tab-audio-video" onclick="switchSettingsTab('audio-video')" type="button">
+<span class="material-symbols-outlined text-[20px]">videocam</span>
+<span>Audio & Vidéo</span>
+</button>
+<button class="settings-tab-btn w-full flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-left transition-all text-on-surface-variant hover:bg-surface-container font-title-md text-title-md" id="tab-notifications" onclick="switchSettingsTab('notifications')" type="button">
+<span class="material-symbols-outlined text-[20px]">notifications_active</span>
+<span>Notifications</span>
+</button>
+<button class="settings-tab-btn w-full flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-left transition-all text-on-surface-variant hover:bg-surface-container font-title-md text-title-md" id="tab-securite" onclick="switchSettingsTab('securite')" type="button">
+<span class="material-symbols-outlined text-[20px]">shield_person</span>
+<span>Sécurité & Présence</span>
+</button>
+<button class="settings-tab-btn w-full flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-left transition-all text-on-surface-variant hover:bg-surface-container font-title-md text-title-md" id="tab-apparence" onclick="switchSettingsTab('apparence')" type="button">
+<span class="material-symbols-outlined text-[20px]">palette</span>
+<span>Thème & Style</span>
+</button>
+<div class="pt-space-md px-space-sm pb-space-xs mt-space-sm">
+<div class="p-space-sm bg-surface-container-low rounded-lg">
+<span class="font-label-sm text-label-sm text-outline uppercase block mb-1">Rôle scolaire</span>
+<div class="flex items-center gap-2">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold bg-primary-fixed text-on-primary-fixed">Délégué de classe</span>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-bold bg-secondary-container text-on-secondary-container">1CE</span>
+</div>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Panels Content Area -->
+<div class="lg:col-span-9 space-y-space-lg">
+<!-- 1. SECTION: PROFIL ELEVE -->
+<section class="settings-panel bg-surface-container-lowest p-space-lg rounded-xl shadow-sm space-y-space-lg" id="panel-profil">
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container">badge</span>
+              Carte d'identité & Statut
+            </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">C'est sous cette forme que tes camarades et professeurs te verront dans les salons et fils de discussion.</p>
+</div>
+<!-- Avatar & Customization Hub -->
+<div class="p-space-md bg-surface-container-low rounded-xl flex flex-col sm:flex-row items-center sm:items-start gap-space-md">
+<div class="relative group">
+<img alt="Photo de profil Lucas M." class="w-24 h-24 rounded-full object-cover shadow-sm" id="avatar-preview" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBUgx4PhE5VErFKowhPWSFSmZSN3Jdxiv004RWr13hWhpIuY6ebFPizUlyYI6038NMu8ahLDNF60E97iaGx2vXT9-D05T-YPjdLygvOM2TdJYYkkyUvoHUBjjPHNeK_cyUoiK2p9fPJIPwdGqxVHOIa0sVXNiv6ERp8hJOpBcdjF8M4MwbnmjE7MP65oJSOwm03yErbZKJt7sZDpEMDaVS8ILVivenU21bShL34a8"/>
+<span class="absolute bottom-1 right-1 w-5 h-5 rounded-full bg-secondary ring-4 ring-surface-container-lowest"></span>
+<button class="absolute inset-0 bg-inverse-surface/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-on-primary" type="button">
+<span class="material-symbols-outlined text-[24px]">photo_camera</span>
+</button>
+</div>
+<div class="flex-1 text-center sm:text-left space-y-space-xs">
+<div class="flex flex-wrap items-center justify-center sm:justify-start gap-space-xs">
+<button class="px-space-md py-1.5 bg-primary-container text-on-primary rounded-lg font-label-md text-label-md shadow-sm hover:bg-primary transition-all" type="button">Changer la photo</button>
+<button class="px-space-md py-1.5 bg-surface-container text-on-surface-variant hover:text-on-surface rounded-lg font-label-md text-label-md transition-all" type="button">Supprimer</button>
+</div>
+<p class="font-body-sm text-body-sm text-outline">Formats acceptés : JPG, PNG ou Memoji. Max 4 Mo. Sois reconnaissable pour les cours !</p>
+</div>
+</div>
+<!-- Form Fields -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-1" for="student-name">Prénom & Nom officiel</label>
+<input class="w-full h-11 px-space-md bg-surface-container-low rounded-lg font-body-md text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary-container" id="student-name" type="text" value="Lucas Mercier"/>
+<span class="font-label-sm text-label-sm text-outline mt-1 block">Synchronisé avec le registre d'appel officiel.</span>
+</div>
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-1" for="student-handle">Pseudo de classe (@)</label>
+<div class="relative flex items-center">
+<span class="absolute left-3 font-title-md text-outline">@</span>
+<input class="w-full h-11 pl-8 pr-space-md bg-surface-container-low rounded-lg font-body-md text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary-container" id="student-handle" type="text" value="lucas_delegue1ce"/>
+</div>
+<span class="font-label-sm text-label-sm text-outline mt-1 block">Utilisé pour les mentions rapides dans le chat.</span>
+</div>
+</div>
+<!-- Custom Status Field with Quick Badges -->
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-1" for="custom-status">Statut personnalisé du moment</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-3 text-[18px] text-tertiary">edit_note</span>
+<input class="w-full h-11 pl-10 pr-space-md bg-surface-container-low rounded-lg font-body-md text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary-container" id="custom-status" type="text" value="En train de réviser les maths 📐 (contrôle jeudi !)"/>
+</div>
+<div class="mt-space-sm flex flex-wrap items-center gap-space-xs">
+<span class="font-label-sm text-label-sm text-on-surface-variant mr-1">Suggestions rapides :</span>
+<button class="px-space-sm py-1 bg-surface-container rounded-full font-label-sm text-label-sm text-on-surface hover:bg-primary-fixed transition-colors" onclick="setStatus('Prêt pour le projet SVT 🔬')" type="button">🔬 SVT</button>
+<button class="px-space-sm py-1 bg-surface-container rounded-full font-label-sm text-label-sm text-on-surface hover:bg-primary-fixed transition-colors" onclick="setStatus('En pause récréation 🥪')" type="button">🥪 Pause récré</button>
+<button class="px-space-sm py-1 bg-surface-container rounded-full font-label-sm text-label-sm text-on-surface hover:bg-primary-fixed transition-colors" onclick="setStatus('Au CDI en travail de groupe 📚')" type="button">📚 Au CDI</button>
+<button class="px-space-sm py-1 bg-surface-container rounded-full font-label-sm text-label-sm text-on-surface hover:bg-primary-fixed transition-colors" onclick="setStatus('Devoirs terminés ! 🚀')" type="button">🚀 Libre</button>
+</div>
+</div>
+</section>
+<!-- 2. SECTION: AUDIO & VIDEO -->
+<section class="settings-panel bg-surface-container-lowest p-space-lg rounded-xl shadow-sm space-y-space-lg" id="panel-audio-video">
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container">videocam</span>
+              Configuration Audio & Vidéo
+            </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Vérifie que tes camarades t'entendent et te voient impeccablement avant d'activer ton micro en visio.</p>
+</div>
+<!-- Video Webcam Feed Preview Deck -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-space-md items-center">
+<div class="md:col-span-7">
+<div class="relative aspect-video w-full bg-inverse-surface rounded-xl overflow-hidden shadow-inner flex items-center justify-center">
+<img class="w-full h-full object-cover" data-alt="Student sitting in a tidy study room with warm soft background lighting looking forward at web camera, high resolution natural webcam feed preview with educational ambient style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB2zATpuXdJkoJq91pilEegLlmonHKrN78TPiRy0WdnS5oEZgckwOZaHK8YIFgrRImw73-iYjK1xGw-Cwrze4B-_XPKiF6OP0RASFJvHCZvzmLIf8eYPIrmuGd1lNQWWvwLuwYU_7tKvR8C4Pt5JuvIs28kmnVs9RQHdUxTQIy8dhRjOHjGTW3LSyt71mrfvmGTcnONbrmuVQL8kvWcvu0ePsHCOwy1bNA_5zFiJDI"/>
+<!-- Video HUD Elements -->
+<div class="absolute top-3 left-3 px-space-xs py-0.5 rounded bg-inverse-surface/80 backdrop-blur-md text-on-primary font-label-sm text-label-sm flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+<span>Aperçu en direct (1080p)</span>
+</div>
+<div class="absolute bottom-3 left-3 right-3 flex items-center justify-between text-on-primary">
+<span class="font-label-md text-label-md bg-inverse-surface/70 px-2 py-1 rounded backdrop-blur-sm">Lucas M. (Caméra intégrée)</span>
+<div class="flex items-center gap-1 bg-inverse-surface/70 px-2 py-1 rounded backdrop-blur-sm">
+<span class="material-symbols-outlined text-[16px] text-secondary">hd</span>
+<span class="font-label-sm text-label-sm">60 FPS</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Peripheral Selectors -->
+<div class="md:col-span-5 space-y-space-md">
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-1 flex items-center gap-1" for="camera-select">
+<span class="material-symbols-outlined text-[18px] text-primary">camera</span>
+                  Webcam / Caméra
+                </label>
+<select class="w-full h-11 px-space-md bg-surface-container-low rounded-lg font-body-md text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary-container" id="camera-select">
+<option>Caméra FaceTime HD (Intégrée)</option>
+<option>Logitech C920 USB Pro</option>
+<option>Caméra Virtuelle OBS</option>
+</select>
+</div>
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-1 flex items-center gap-1" for="mic-select">
+<span class="material-symbols-outlined text-[18px] text-primary">mic</span>
+                  Microphone d'entrée
+                </label>
+<select class="w-full h-11 px-space-md bg-surface-container-low rounded-lg font-body-md text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary-container" id="mic-select">
+<option>Microphone interne (MacBook Pro)</option>
+<option>Casque USB pour cours en ligne</option>
+<option>AirPods de Lucas</option>
+</select>
+</div>
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-1 flex items-center gap-1" for="speaker-select">
+<span class="material-symbols-outlined text-[18px] text-primary">volume_up</span>
+                  Haut-parleurs de sortie
+                </label>
+<select class="w-full h-11 px-space-md bg-surface-container-low rounded-lg font-body-md text-body-md text-on-surface focus:outline-none focus:ring-2 focus:ring-primary-container" id="speaker-select">
+<option>Haut-parleurs internes</option>
+<option>Casque USB (Sortie audio)</option>
+<option>AirPods de Lucas</option>
+</select>
+</div>
+</div>
+</div>
+<!-- Live Mic Volume Slider & Sound Wave Test Gauge -->
+<div class="p-space-md bg-surface-container-low rounded-xl space-y-space-md">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+<div>
+<span class="font-title-md text-title-md text-on-surface block">Niveau d'entrée & Test Micro</span>
+<span class="font-body-sm text-body-sm text-outline">Parle à voix haute pour vérifier l'intensité de capture sonore.</span>
+</div>
+<button class="px-space-md py-1.5 bg-primary-container text-on-primary font-label-md text-label-md rounded-lg hover:bg-primary transition-all flex items-center gap-1.5 self-start sm:self-auto" id="btn-test-sound" onclick="toggleMicTest()" type="button">
+<span class="material-symbols-outlined text-[18px]">graphic_eq</span>
+<span id="test-sound-text">Tester le micro</span>
+</button>
+</div>
+<!-- Volume Slider & Animated Audio Bar Matrix -->
+<div class="space-y-space-xs">
+<div class="flex items-center justify-between font-label-sm text-label-sm text-on-surface-variant">
+<span>Sensibilité du microphone</span>
+<span class="font-bold text-primary" id="vol-percentage">78%</span>
+</div>
+<input class="w-full h-2 bg-surface-container-highest rounded-lg appearance-none cursor-pointer accent-primary-container" id="mic-slider" max="100" min="0" oninput="updateMicLevel(this.value)" type="range" value="78"/>
+<!-- Responsive Dynamic Audio Meter Bar -->
+<div class="pt-2 flex items-center gap-1 h-6">
+<span class="material-symbols-outlined text-outline text-[18px]">mic_external_on</span>
+<div class="flex-1 h-3 bg-surface-container-highest rounded-full overflow-hidden flex p-0.5 gap-0.5">
+<div class="h-full w-[25%] bg-secondary rounded-l-full transition-all duration-150" id="meter-segment-1"></div>
+<div class="h-full w-[35%] bg-secondary transition-all duration-150" id="meter-segment-2"></div>
+<div class="h-full w-[25%] bg-tertiary-fixed-dim transition-all duration-150" id="meter-segment-3"></div>
+<div class="h-full w-[15%] bg-error rounded-r-full transition-all duration-150 opacity-20" id="meter-segment-4"></div>
+</div>
+</div>
+</div>
+<!-- Advanced Voice Processing Toggles -->
+<div class="pt-space-sm space-y-space-sm">
+<div class="flex items-center justify-between">
+<div>
+<span class="font-title-md text-title-md text-on-surface block">Suppression intelligente du bruit de fond</span>
+<span class="font-body-sm text-body-sm text-outline">Filtre les frappes au clavier, la télé du salon et les bruits extérieurs.</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-surface-container-lowest after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+</label>
+</div>
+<div class="flex items-center justify-between">
+<div>
+<span class="font-title-md text-title-md text-on-surface block">Ajustement automatique du gain sonore</span>
+<span class="font-body-sm text-body-sm text-outline">Harmonise le volume si tu te penches en arrière ou parles doucement.</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-surface-container-lowest after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+</label>
+</div>
+</div>
+</div>
+</section>
+<!-- 3. SECTION: NOTIFICATIONS & SALONS -->
+<section class="settings-panel bg-surface-container-lowest p-space-lg rounded-xl shadow-sm space-y-space-lg" id="panel-notifications">
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container">notifications_active</span>
+              Alertes & Activité de Classe
+            </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Choisis précisément ce qui peut sonner sur ton ordinateur pour ne pas être perturbé durant les heures de cours.</p>
+</div>
+<div class="space-y-space-md">
+<!-- Toggle Item 1 -->
+<div class="p-space-md bg-surface-container-low rounded-xl flex items-center justify-between gap-space-md">
+<div class="flex items-start gap-space-sm">
+<div class="p-2 rounded-lg bg-primary-container text-on-primary">
+<span class="material-symbols-outlined text-[20px]">alternate_email</span>
+</div>
+<div>
+<span class="font-title-md text-title-md text-on-surface block">Mentions directes (@classe, @Lucas)</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Reçois une notification sonore lorsque le professeur ou un élève interpelle toute la classe.</span>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-highest rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-surface-container-lowest after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+</label>
+</div>
+<!-- Toggle Item 2 -->
+<div class="p-space-md bg-surface-container-low rounded-xl flex items-center justify-between gap-space-md">
+<div class="flex items-start gap-space-sm">
+<div class="p-2 rounded-lg bg-secondary text-on-secondary">
+<span class="material-symbols-outlined text-[20px]">ring_volume</span>
+</div>
+<div>
+<span class="font-title-md text-title-md text-on-surface block">Appels vidéo et vocaux entrants</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Sonnerie lors des lancements d'appels d'étude en groupe ou cours à distance.</span>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-highest rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-surface-container-lowest after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+</label>
+</div>
+<!-- Toggle Item 3 -->
+<div class="p-space-md bg-surface-container-low rounded-xl flex items-center justify-between gap-space-md">
+<div class="flex items-start gap-space-sm">
+<div class="p-2 rounded-lg bg-tertiary-container text-on-tertiary">
+<span class="material-symbols-outlined text-[20px]">assignment_late</span>
+</div>
+<div>
+<span class="font-title-md text-title-md text-on-surface block">Rappels de devoirs urgents (J-1)</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Alerte automatique à 18h00 pour les exercices à rendre le lendemain.</span>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-highest rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-surface-container-lowest after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+</label>
+</div>
+<!-- Toggle Item 4 -->
+<div class="p-space-md bg-surface-container-low rounded-xl flex items-center justify-between gap-space-md">
+<div class="flex items-start gap-space-sm">
+<div class="p-2 rounded-lg bg-surface-dim text-on-surface">
+<span class="material-symbols-outlined text-[20px]">photo_camera</span>
+</div>
+<div>
+<span class="font-title-md text-title-md text-on-surface block">Nouveaux souvenirs partagés</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Notification quand une photo de sortie scolaire est ajoutée à l'album 1CE.</span>
+</div>
+</div>
+<label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
+<input class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-highest rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-surface-container-lowest after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+</label>
+</div>
+</div>
+</section>
+<!-- 4. SECTION: CONFIDENTIALITÉ & SÉCURITÉ -->
+<section class="settings-panel bg-surface-container-lowest p-space-lg rounded-xl shadow-sm space-y-space-lg" id="panel-securite">
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container">shield_person</span>
+              Confidentialité & Sécurité de l'Élève
+            </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Contrôle qui peut communiquer avec toi et comment tes présences sont affichées.</p>
+</div>
+<div class="space-y-space-md">
+<div>
+<span class="block font-title-md text-title-md text-on-surface mb-2">Qui peut initier un appel privé direct avec moi ?</span>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-space-sm">
+<label class="p-space-md bg-surface-container-low rounded-xl flex items-center gap-space-xs cursor-pointer hover:bg-surface-container transition-all">
+<input checked="" class="text-primary-container focus:ring-primary-container" name="call-perm" type="radio"/>
+<div class="ml-2">
+<span class="font-label-lg text-label-lg text-on-surface block">Toute la classe 1CE</span>
+<span class="font-body-sm text-body-sm text-outline">Recommandé pour les travaux</span>
+</div>
+</label>
+<label class="p-space-md bg-surface-container-low rounded-xl flex items-center gap-space-xs cursor-pointer hover:bg-surface-container transition-all">
+<input class="text-primary-container focus:ring-primary-container" name="call-perm" type="radio"/>
+<div class="ml-2">
+<span class="font-label-lg text-label-lg text-on-surface block">Amis ajoutés uniquement</span>
+<span class="font-body-sm text-body-sm text-outline">Cercle restreint</span>
+</div>
+</label>
+<label class="p-space-md bg-surface-container-low rounded-xl flex items-center gap-space-xs cursor-pointer hover:bg-surface-container transition-all">
+<input class="text-primary-container focus:ring-primary-container" name="call-perm" type="radio"/>
+<div class="ml-2">
+<span class="font-label-lg text-label-lg text-on-surface block">Professeurs seuls</span>
+<span class="font-body-sm text-body-sm text-outline">Mode révision calme</span>
+</div>
+</label>
+</div>
+</div>
+<div class="pt-space-sm space-y-space-sm">
+<div class="flex items-center justify-between p-space-md bg-surface-container-low rounded-xl">
+<div>
+<span class="font-title-md text-title-md text-on-surface block">Afficher mon badge de présence en ligne (🟢 Vert)</span>
+<span class="font-body-sm text-body-sm text-outline">Si désactivé, tu apparaîtras hors-ligne même quand tu révises sur la plateforme.</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-highest rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-surface-container-lowest after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+</label>
+</div>
+<div class="flex items-center justify-between p-space-md bg-surface-container-low rounded-xl">
+<div>
+<span class="font-title-md text-title-md text-on-surface block">Accepter les requêtes de partage d'écran spontanées</span>
+<span class="font-body-sm text-body-sm text-outline">Demande toujours une confirmation avant d'autoriser un camarade à voir ton écran.</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer flex-shrink-0">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-surface-container-highest rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-surface-container-lowest after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-secondary"></div>
+</label>
+</div>
+</div>
+</div>
+</section>
+<!-- 5. SECTION: THÈME & APPARENCE -->
+<section class="settings-panel bg-surface-container-lowest p-space-lg rounded-xl shadow-sm space-y-space-lg" id="panel-apparence">
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary-container">palette</span>
+              Thème & Couleurs d'Accentuation
+            </h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">Adapte l'ambiance visuelle à ton confort d'étude pour réduire la fatigue oculaire.</p>
+</div>
+<!-- Mode Cards -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
+<div class="cursor-pointer p-space-md rounded-xl bg-surface-container-low shadow-sm transition-all flex items-center gap-space-md" id="mode-card-light" onclick="selectThemeMode('light')">
+<div class="w-12 h-12 rounded-lg bg-surface-container-lowest flex items-center justify-center text-primary shadow-sm">
+<span class="material-symbols-outlined text-[28px]">light_mode</span>
+</div>
+<div class="flex-1">
+<div class="flex items-center justify-between">
+<span class="font-title-md text-title-md text-on-surface">Mode Clair Scolaire</span>
+<span class="material-symbols-outlined text-primary text-[20px]" id="light-check">check_circle</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Luminosité standard, lisibilité optimale en journée de classe.</p>
+</div>
+</div>
+<div class="cursor-pointer p-space-md rounded-xl bg-surface-container-low opacity-75 hover:opacity-100 transition-all flex items-center gap-space-md" id="mode-card-dark" onclick="selectThemeMode('dark')">
+<div class="w-12 h-12 rounded-lg bg-inverse-surface flex items-center justify-center text-tertiary-fixed shadow-sm">
+<span class="material-symbols-outlined text-[28px]">dark_mode</span>
+</div>
+<div class="flex-1">
+<div class="flex items-center justify-between">
+<span class="font-title-md text-title-md text-on-surface">Mode Sombre Nocturne</span>
+<span class="material-symbols-outlined text-outline text-[20px]" id="dark-check">radio_button_unchecked</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Recommandé pour les séances de devoirs tardives à la maison.</p>
+</div>
+</div>
+</div>
+<!-- Accent Palette Selector -->
+<div>
+<span class="block font-title-md text-title-md text-on-surface mb-2">Couleur d'accent dynamique</span>
+<div class="flex flex-wrap items-center gap-space-sm">
+<button class="w-10 h-10 rounded-full bg-primary-container ring-4 ring-primary-container/20 flex items-center justify-center text-on-primary" type="button">
+<span class="material-symbols-outlined text-[18px]">check</span>
+</button>
+<button class="w-10 h-10 rounded-full bg-secondary hover:scale-105 transition-transform" type="button"></button>
+<button class="w-10 h-10 rounded-full bg-tertiary-container hover:scale-105 transition-transform" type="button"></button>
+<button class="w-10 h-10 rounded-full bg-primary hover:scale-105 transition-transform" type="button"></button>
+</div>
+</div>
+</section>
+<!-- Academic Registry Informational Footer Banner (Requirement Encart) -->
+<div class="p-space-lg bg-surface-container rounded-xl shadow-sm relative overflow-hidden">
+<div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-space-md">
+<div class="space-y-space-xs">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[20px]">school</span>
+<span class="font-title-md text-title-md text-on-surface">Informations sur la classe 1CE (Collège & Lycée)</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                Année scolaire <strong>2024-2025</strong> • Effectif total : <strong>28 élèves inscrits</strong> • Professeur principal référent : <strong>M. Dupont</strong> (Sciences & Vie)
+              </p>
+</div>
+<div class="flex items-center gap-space-xs flex-shrink-0">
+<span class="px-space-md py-1 bg-surface-container-lowest text-on-surface font-label-md text-label-md rounded-lg shadow-sm">
+                Salle 204 • Bâtiment B
+              </span>
+<button class="px-space-md py-1 bg-primary text-on-primary font-label-md text-label-md rounded-lg shadow-sm hover:opacity-95 transition-opacity" type="button">
+                Planning de classe
+              </button>
+</div>
+</div>
+<!-- Decorative SVG Stamp in background -->
+<svg class="absolute -right-8 -bottom-8 w-44 h-44 text-surface-container-high opacity-40 pointer-events-none" fill="currentColor" viewbox="0 0 100 100">
+<circle cx="50" cy="50" fill="none" r="45" stroke="currentColor" stroke-dasharray="8 6" stroke-width="6"></circle>
+<path d="M50 25 L65 75 L50 65 L35 75 Z"></path>
+</svg>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+  function switchSettingsTab(tabId) {
+    const tabs = ['profil', 'audio-video', 'notifications', 'securite', 'apparence'];
+    tabs.forEach(id => {
+      const btn = document.getElementById('tab-' + id);
+      const panel = document.getElementById('panel-' + id);
+      if (btn && panel) {
+        if (id === tabId) {
+          btn.className = 'settings-tab-btn w-full flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-left transition-all bg-primary-container text-on-primary font-title-md text-title-md';
+          panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+          btn.className = 'settings-tab-btn w-full flex items-center gap-space-sm px-space-md py-space-sm rounded-lg text-left transition-all text-on-surface-variant hover:bg-surface-container font-title-md text-title-md';
+        }
+      }
+    });
+  }
+
+  function setStatus(text) {
+    const input = document.getElementById('custom-status');
+    if (input) {
+      input.value = text;
+      triggerSaveNotification();
+    }
+  }
+
+  function updateMicLevel(val) {
+    const percentage = document.getElementById('vol-percentage');
+    if (percentage) percentage.textContent = val + '%';
+    
+    // Dynamically adjust audio test segments
+    const seg3 = document.getElementById('meter-segment-3');
+    const seg4 = document.getElementById('meter-segment-4');
+    if (seg3 && seg4) {
+      if (val > 80) {
+        seg4.style.opacity = '1';
+        seg3.style.opacity = '1';
+      } else if (val > 50) {
+        seg4.style.opacity = '0.2';
+        seg3.style.opacity = '1';
+      } else {
+        seg4.style.opacity = '0.1';
+        seg3.style.opacity = '0.3';
+      }
+    }
+  }
+
+  let isTestingMic = false;
+  let testInterval = null;
+  function toggleMicTest() {
+    isTestingMic = !isTestingMic;
+    const btnText = document.getElementById('test-sound-text');
+    const seg1 = document.getElementById('meter-segment-1');
+    const seg2 = document.getElementById('meter-segment-2');
+
+    if (isTestingMic) {
+      btnText.textContent = 'Arrêter le test';
+      testInterval = setInterval(() => {
+        const rand = Math.floor(Math.random() * 40) + 60;
+        if (seg1) seg1.style.width = (rand * 0.3) + '%';
+        if (seg2) seg2.style.width = (rand * 0.4) + '%';
+      }, 150);
+    } else {
+      btnText.textContent = 'Tester le micro';
+      clearInterval(testInterval);
+      if (seg1) seg1.style.width = '25%';
+      if (seg2) seg2.style.width = '35%';
+    }
+  }
+
+  function triggerSaveNotification() {
+    const badge = document.getElementById('save-status');
+    if (badge) {
+      badge.style.opacity = '1';
+      setTimeout(() => {
+        badge.style.opacity = '0';
+      }, 2500);
+    }
+  }
+
+  function selectThemeMode(mode) {
+    const lightCard = document.getElementById('mode-card-light');
+    const darkCard = document.getElementById('mode-card-dark');
+    const lightCheck = document.getElementById('light-check');
+    const darkCheck = document.getElementById('dark-check');
+
+    if (mode === 'light') {
+      lightCard.classList.remove('opacity-75');
+      darkCard.classList.add('opacity-75');
+      lightCheck.textContent = 'check_circle';
+      lightCheck.className = 'material-symbols-outlined text-primary text-[20px]';
+      darkCheck.textContent = 'radio_button_unchecked';
+      darkCheck.className = 'material-symbols-outlined text-outline text-[20px]';
+    } else {
+      darkCard.classList.remove('opacity-75');
+      lightCard.classList.add('opacity-75');
+      darkCheck.textContent = 'check_circle';
+      darkCheck.className = 'material-symbols-outlined text-primary text-[20px]';
+      lightCheck.textContent = 'radio_button_unchecked';
+      lightCheck.className = 'material-symbols-outlined text-outline text-[20px]';
+    }
+    triggerSaveNotification();
+  }
+</script></main></div></body></html>
