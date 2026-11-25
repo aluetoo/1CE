@@ -395,7 +395,9 @@
 <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-3">
 <img alt="Profil" class="w-10 h-10 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB3BkpZNeg44Mz8Z0_jCUE9niveQDD3uZRODD5opP_w-u9kEAcTzcrrvbTekCsMBSPItGXc7jfAOgd-O0xcZVmg3nLpzN9DzOFBEnr7mt6lmOX1wSKZnRxoC2UiMqEe_ccPRORVHkG5Yc9GweorIJhCevT7DWBaextfi2giVKGSd9UzYf445uGqmVrV3k3BSJDpVfVpOQuUy45eUpx25KuvDS-aL_1kHBWQNFzXmhc"/>
 <input class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500" id="post-content-input" placeholder="Partager un souvenir, une photo de classe, une réussite ou une question..." type="text"/>
-<button class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-semibold" onclick="handleCreatePost()">Publier</button>
+<input class="hidden" id="post-photo-input" accept="image/*" type="file"/>
+<button class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold" onclick="document.getElementById('post-photo-input').click()" type="button">📷 Photo</button>
+<button class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-semibold" onclick="handleCreatePost()" type="button">Publier</button>
 </div>
 <!-- Posts Feed -->
 <div class="space-y-6" id="posts-feed-list">
@@ -427,7 +429,8 @@
 <img alt="Profil" class="w-16 h-16 rounded-2xl object-cover border-2 border-indigo-200" id="settings-avatar-preview" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDiA0gGD_hanUA_Rcd__XCmCKVtPvF3iSlPl2r4VplFhAN-KBMP1gl12iqBEbapoc7lmm1a7TBc3JSgtyHrR725iTMxB5Bnr4HVrFcL_fKuZIsJuS0jAYIVXJfEtMrlY4aCEKZstfg63fVeWpNTevUzlAMbQoAwl4Zfl753LrBvErUOgmSOBsHF6eK3NvnALZnFHWKK0y3lInQncuYUzf8nez104GF68aDYCymlZ78"/>
 <div class="space-y-1">
 <div class="flex gap-2">
-<button class="px-3 py-1.5 bg-indigo-600 text-white rounded-xl text-xs font-semibold">Changer la photo</button>
+<input class="hidden" id="settings-avatar-input" accept="image/*" type="file" onchange="handleAvatarSelected(event)"/>
+<button class="px-3 py-1.5 bg-indigo-600 text-white rounded-xl text-xs font-semibold" onclick="document.getElementById('settings-avatar-input').click()" type="button">Changer la photo</button>
 <button class="px-3 py-1.5 bg-slate-100 text-slate-600 rounded-xl text-xs font-medium">Supprimer</button>
 </div>
 <p class="text-[11px] text-slate-400">Formats acceptés : JPG, PNG max 4 Mo.</p>
@@ -808,16 +811,32 @@
       }
     }
 
+    async function uploadClassPhoto(file, caption = '') {
+      if (!currentUser || !file) return null;
+      if (!file.type.startsWith('image/') || file.size > 10 * 1024 * 1024) throw new Error('Choisis une image de 10 Mo maximum.');
+      const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+      const path = currentUser.id + '/' + Date.now() + '-' + safeName;
+      const { error: uploadError } = await supabaseClient.storage.from('class-photos').upload(path, file, { contentType: file.type, upsert: false });
+      if (uploadError) throw uploadError;
+      const { error: rowError } = await supabaseClient.from('photos').insert({ uploader_id: currentUser.id, object_path: path, caption: caption || 'Photo partagée par la classe' });
+      if (rowError) { await supabaseClient.storage.from('class-photos').remove([path]); throw rowError; }
+      return path;
+    }
+
     async function createPost(content) {
       if (!content.trim() || !currentUser) return;
       try {
+        const photoInput = document.getElementById('post-photo-input');
+        const selectedPhoto = photoInput?.files?.[0];
+        if (selectedPhoto) await uploadClassPhoto(selectedPhoto, content.trim());
         const { error } = await supabaseClient
           .from('posts')
           .insert([{ author_id: currentUser.id, author_name: currentUser.email?.split('@')[0] || 'Élève 1CE', content: content.trim() }]);
         if (error) throw error;
+        if (photoInput) photoInput.value = '';
         loadPosts();
       } catch (err) {
-        console.error('Erreur createPost:', err.message);
+        alert('La publication ou la photo n’a pas pu être enregistrée : ' + err.message);
       }
     }
 
@@ -827,6 +846,33 @@
         createPost(input.value);
         input.value = '';
       }
+    }
+
+    async function handleAvatarSelected(event) {
+      const file = event.target.files?.[0];
+      if (!file || !currentUser) return;
+      try {
+        if (!file.type.startsWith('image/') || file.size > 5 * 1024 * 1024) throw new Error('Choisis une image de 5 Mo maximum.');
+        const path = currentUser.id + '/avatar-' + Date.now() + '-' + file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+        const { error: uploadError } = await supabaseClient.storage.from('class-avatars').upload(path, file, { contentType: file.type, upsert: false });
+        if (uploadError) throw uploadError;
+        const { data: signed, error: signedError } = await supabaseClient.storage.from('class-avatars').createSignedUrl(path, 60 * 60 * 24 * 30);
+        if (signedError) throw signedError;
+        const { error: profileError } = await supabaseClient.from('profiles').upsert({ id: currentUser.id, avatar_url: signed.signedUrl }, { onConflict: 'id' });
+        if (profileError) throw profileError;
+        ['header-user-avatar', 'sidebar-user-avatar', 'settings-avatar-preview'].forEach(id => { const img = document.getElementById(id); if (img) img.src = signed.signedUrl; });
+      } catch (err) { alert('La photo de profil n’a pas pu être enregistrée : ' + err.message); }
+    }
+
+    async function loadOwnProfile() {
+      if (!currentUser) return;
+      const { data } = await supabaseClient.from('profiles').select('full_name, username, avatar_url').eq('id', currentUser.id).maybeSingle();
+      if (!data) return;
+      const name = document.getElementById('settings-fullname-input');
+      const username = document.getElementById('settings-username-input');
+      if (name) name.value = data.full_name || '';
+      if (username) username.value = data.username || '';
+      if (data.avatar_url) ['header-user-avatar', 'sidebar-user-avatar', 'settings-avatar-preview'].forEach(id => { const img = document.getElementById(id); if (img) img.src = data.avatar_url; });
     }
 
     // =========================================================================
@@ -865,6 +911,7 @@
       setInterval(updateHeaderClock, 60000);
 
       await getCurrentUser();
+      await loadOwnProfile();
       loadGeneralMessages();
       subscribeToGeneralMessages();
       loadClassmates();
