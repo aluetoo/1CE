@@ -53,11 +53,18 @@
     #page-posts .postactions{border-top:1px solid var(--line);padding-top:11px;margin-bottom:0}
     #page-posts .likebtn{border:0;background:transparent}
     /* Galerie façon Google Photos */
-    #page-photos .photo-grid{grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:5px}
-    #page-photos .photo-grid .card{padding:7px;border:0;background:transparent;min-width:0}
-    #page-photos .photo-grid img{height:190px;object-fit:cover;border-radius:12px;display:block}
-    #page-photos .photo-grid .photoby{font-size:11px;color:var(--muted);padding:8px 3px 0}
-    #page-photos .photo-grid .photoby strong{color:#edf4fb}
+    #page-photos .photo-grid{grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:4px}
+    #page-photos .photo-grid .card{position:relative;padding:0;border:0;background:transparent;min-width:0;overflow:hidden;border-radius:5px;aspect-ratio:1/1}
+    #page-photos .photo-grid img{width:100%;height:100%;object-fit:cover;border-radius:5px;display:block;transition:transform .25s ease}
+    #page-photos .photo-grid .card:hover img{transform:scale(1.045)}
+    #page-photos .photo-grid .card p,#page-photos .photo-grid .photoby{position:absolute;left:0;right:0;margin:0;padding:22px 10px 9px;background:linear-gradient(transparent,rgba(0,0,0,.78));color:white;font-size:11px;opacity:0;transition:opacity .2s ease}
+    #page-photos .photo-grid .card p{bottom:25px;font-size:12px}
+    #page-photos .photo-grid .photoby{bottom:0;padding-top:8px;color:#e8edf4}
+    #page-photos .photo-grid .photoby strong{color:white}
+    #page-photos .photo-grid .card:hover p,#page-photos .photo-grid .card:hover .photoby{opacity:1}
+    #page-addphotos{max-width:760px!important;margin:0 auto!important}
+    #page-addphotos .formcard{padding:24px;border-radius:18px}
+    @media(hover:none){#page-photos .photo-grid .card p,#page-photos .photo-grid .photoby{opacity:1}}
     @media(max-width:720px){
       .menu-toggle{display:inline-flex!important}
       .layout{display:block}
@@ -67,8 +74,8 @@
       .discord-shell{grid-template-columns:1fr;min-height:500px}
       .channelrail{display:none}
       .discord-main .chatlist{min-height:330px}
-      #page-photos .photo-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-      #page-photos .photo-grid img{height:160px}
+      #page-photos .photo-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:3px}
+      #page-photos .photo-grid .card{aspect-ratio:1/1}
     }
 
     @media(max-width:720px){.shell{padding:16px}.layout{grid-template-columns:1fr}.side{position:static;display:flex;overflow:auto;gap:4px}.side small{display:none}.nav{white-space:nowrap;width:auto}.grid{grid-template-columns:1fr}.hero{padding:25px}.topnote{display:none}.wide{grid-column:auto}}
@@ -167,6 +174,7 @@
     }
     #appview #page-home,
     #appview #page-photos,
+    #appview #page-addphotos,
     #appview #page-posts,
     #appview #page-chat{padding:0!important}
     #appview #page-posts{max-width:none!important}
@@ -184,6 +192,7 @@
       #appview #page-home .sectionhead,
       #appview #page-home .grid,
       #appview #page-photos > *,
+      #appview #page-addphotos > *,
       #appview #page-posts > *{margin-left:12px!important;margin-right:12px!important}
       #appview #page-chat .discord-shell{height:calc(100dvh - 62px)!important}
     }
@@ -260,12 +269,16 @@
     </section>
     <section id="appview" class="layout hidden">
       <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
-      <aside class="side" id="mainSidebar"><div class="sidebrand"><div class="sidebrand-mark"><strong>1CE</strong><span>Espace de classe</span></div><button class="sidebar-close" id="sidebarClose" type="button" aria-label="Fermer le menu">✕</button></div><small>Explorer</small><button class="nav active" data-page="home">⌂ &nbsp; Accueil</button><button class="nav" data-page="photos">▧ &nbsp; Photos & souvenirs</button><button class="nav" data-page="posts">▤ &nbsp; Publications</button><button class="nav" data-page="chat">◌ &nbsp; Discussions</button><button class="nav" id="settingsOpen" type="button">⚙ &nbsp; Paramètres</button></aside>
+      <aside class="side" id="mainSidebar"><div class="sidebrand"><div class="sidebrand-mark"><strong>1CE</strong><span>Espace de classe</span></div><button class="sidebar-close" id="sidebarClose" type="button" aria-label="Fermer le menu">✕</button></div><small>Explorer</small><button class="nav active" data-page="home">⌂ &nbsp; Accueil</button><button class="nav" data-page="photos">▦ &nbsp; Souvenirs</button><button class="nav" data-page="addphotos">＋ &nbsp; Ajouter photos</button><button class="nav" data-page="posts">▤ &nbsp; Publications</button><button class="nav" data-page="chat">◌ &nbsp; Discussions</button><button class="nav" id="settingsOpen" type="button">⚙ &nbsp; Paramètres</button></aside>
       <main class="content">
         <div id="page-home"><section class="hero"><div class="eyebrow">Bienvenue dans notre espace</div><h2>Les souvenirs de la 1CE, tous ensemble.</h2><p>Retrouve les photos, les nouvelles et les discussions de la classe dans un espace réservé aux membres.</p></section>
         <div class="sectionhead"><h3>Le coin de la classe</h3><span>Bienvenue 👋</span></div><div class="grid"><article class="card tile"><div class="symbol">📸</div><div><h4>Nos souvenirs</h4><p>Les moments et photos partagés par la classe.</p></div></article><article class="card tile"><div class="symbol">💬</div><div><h4>Le fil de la 1CE</h4><p>Les nouvelles et les discussions du groupe.</p></div></article><article class="card wide"><h4>À la une</h4><p>Bienvenue dans l’espace de la 1CE ! Retrouvez les photos, les nouvelles et les discussions de la classe depuis le menu.</p></article></div></div>
         <div id="page-photos" class="hidden">
-    <div class="sectionhead"><h3>Photos & souvenirs</h3><span>Galerie privée</span></div>
+    <div class="sectionhead"><h3>Souvenirs</h3><span>Galerie privée de la 1CE</span></div>
+    <div class="photo-grid" id="photogrid"><div class="empty">Les photos de la classe apparaîtront ici.</div></div>
+  </div>
+  <div id="page-addphotos" class="hidden">
+    <div class="sectionhead"><h3>Ajouter des photos</h3><span>Partager un moment avec la classe</span></div>
     <form id="photoform" class="card formcard">
       <h4>Ajouter un souvenir</h4>
       <input class="field" id="photofile" type="file" accept="image/jpeg,image/png,image/webp,image/gif" required>
@@ -273,7 +286,6 @@
       <label class="notice"><input id="photoconsent" type="checkbox" required> J’ai l’accord des personnes reconnaissables sur cette photo avant de la partager.</label>
       <button class="primary" type="submit">Partager la photo</button><div class="status" id="photostatus" role="status"></div>
     </form>
-    <div class="photo-grid" id="photogrid"><div class="empty">Les photos de la classe apparaîtront ici.</div></div>
   </div>
         <div id="page-posts" class="hidden">
     <div class="sectionhead"><h3>Publications</h3><span>Le fil de la classe</span></div>
@@ -524,7 +536,7 @@
     document.querySelectorAll(".nav:not(#settingsOpen)").forEach(btn => btn.addEventListener("click", () => {
       closeSidebar();
       document.querySelectorAll(".nav").forEach(x => x.classList.toggle("active", x === btn));
-      ["home","photos","posts","chat"].forEach(p => document.getElementById("page-"+p).classList.toggle("hidden", p !== btn.dataset.page));
+      ["home","photos","addphotos","posts","chat"].forEach(p => document.getElementById("page-"+p).classList.toggle("hidden", p !== btn.dataset.page));
       appView.classList.toggle("page-fullscreen", btn.dataset.page !== "home");
     }));
 
