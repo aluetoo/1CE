@@ -448,8 +448,8 @@
 </div>
 </section>
 <!-- ==================== TAB 5: PARAMÈTRES DE LA CLASSE ==================== -->
-<section class="tab-content flex-1 hidden overflow-hidden" id="tab-settings">
-<div class="flex-1 overflow-y-auto custom-scrollbar p-6">
+<section class="tab-content flex flex-col flex-1 min-h-0 hidden overflow-hidden" id="tab-settings">
+<div class="flex-1 min-h-0 w-full overflow-y-auto overscroll-contain custom-scrollbar p-6">
 <div class="max-w-4xl w-full mx-auto space-y-6">
 <div class="flex items-center justify-between bg-white p-6 rounded-3xl border border-slate-200 shadow-sm">
 <div>
@@ -516,6 +516,11 @@
   <h3 class="font-bold text-slate-900 text-sm">Sécurité du compte</h3>
   <p class="text-xs text-slate-500">Adresse du compte : <span id="settings-account-email" class="font-semibold text-slate-700"></span></p>
   <button id="settings-forgot-password" type="button" class="px-4 py-2.5 bg-indigo-50 text-indigo-700 rounded-xl text-xs font-bold">Mot de passe oublié / recevoir un code</button>
+  <div class="border-t border-slate-100 pt-4 space-y-2">
+    <h4 class="font-bold text-slate-800 text-sm">Session</h4>
+    <p class="text-xs text-slate-500">Déconnecte ton compte de cet appareil.</p>
+    <button id="settings-signout" type="button" class="px-4 py-2.5 bg-slate-800 hover:bg-slate-900 text-white rounded-xl text-xs font-bold">Se déconnecter</button>
+  </div>
   <div class="border-t border-slate-100 pt-4 space-y-2">
     <h4 class="font-bold text-red-700 text-sm">Supprimer définitivement mon compte</h4>
     <p class="text-xs text-slate-500">Cette action supprime ton compte et les données associées. Elle est irréversible. Le dernier administrateur ne peut pas supprimer son compte.</p>
@@ -658,12 +663,17 @@
     }
 
     async function signOut() {
+      const button=document.getElementById('settings-signout');
+      if(button){button.disabled=true;button.textContent='Déconnexion…';}
       try {
         const { error } = await supabaseClient.auth.signOut();
         if (error) throw error;
         currentUser = null;
+        location.reload();
       } catch (err) {
         console.error('Erreur signOut:', err.message);
+        alert('La déconnexion a échoué : '+(err.message||'erreur inconnue'));
+        if(button){button.disabled=false;button.textContent='Se déconnecter';}
       }
     }
 
@@ -1044,6 +1054,7 @@
       document.getElementById('auth-reset-back')?.addEventListener('click',()=>showAuthPanel('login'));
       document.getElementById('auth-show-reset')?.addEventListener('click',beginPasswordRecovery);
       document.getElementById('settings-forgot-password')?.addEventListener('click',beginPasswordRecovery);
+      document.getElementById('settings-signout')?.addEventListener('click',signOut);
       document.getElementById('settings-delete-account')?.addEventListener('click',deleteOwnAccount);
       document.getElementById('auth-login-submit')?.addEventListener('click',async()=>{
         const email=document.getElementById('auth-login-email').value.trim(),password=document.getElementById('auth-login-password').value;
