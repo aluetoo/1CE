@@ -197,6 +197,21 @@
     .online-panel strong{display:block;margin-bottom:10px;font-size:13px}
     .online-member{padding:7px 0;border-top:1px solid #293950;color:#dce6f2;font-size:12px}
     .online-empty{color:var(--muted);font-size:12px}
+    /* Paramètres en plein écran */
+    #settings-screen{position:fixed;inset:0;z-index:1100;display:flex;flex-direction:column;background:#131314;color:#f4f4f5;transform:translateX(100%);visibility:hidden;transition:transform .28s ease,visibility .28s ease}
+    #settings-screen.open{transform:translateX(0);visibility:visible}
+    .settings-header{min-height:68px;display:flex;align-items:center;gap:14px;padding:12px 22px;border-bottom:1px solid #343438}
+    .settings-header h2{font:700 19px Manrope;margin:0}
+    .settings-back{width:40px;height:40px;border:1px solid #414148;border-radius:12px;background:#202024;color:#f4f4f5;font-size:20px}
+    .settings-content{width:min(760px,100%);margin:0 auto;padding:24px 18px 48px;overflow:auto}
+    .settings-group{margin:0 0 22px;padding:18px;border:1px solid #35353b;border-radius:17px;background:#1b1b1f}
+    .settings-group h3{font:700 15px Manrope;margin:0 0 8px}
+    .settings-group p{color:#b8b8c2;font-size:13px;line-height:1.6;margin:0}
+    .settings-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid #343438}
+    .settings-row:first-of-type{border-top:0}
+    .settings-icon{width:38px;height:38px;display:grid;place-items:center;border-radius:12px;background:#29292f}
+    .settings-row strong{display:block;font-size:13px}.settings-row small{display:block;color:#a5a5af;font-size:11px;margin-top:4px}
+    @media(max-width:600px){.settings-header{padding:10px 14px}.settings-content{padding:18px 12px 36px}}
 \n  </style>
 </head>
 <body>
@@ -245,7 +260,7 @@
     </section>
     <section id="appview" class="layout hidden">
       <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
-      <aside class="side" id="mainSidebar"><div class="sidebrand"><div class="sidebrand-mark"><strong>1CE</strong><span>Espace de classe</span></div><button class="sidebar-close" id="sidebarClose" type="button" aria-label="Fermer le menu">✕</button></div><small>Explorer</small><button class="nav active" data-page="home">⌂ &nbsp; Accueil</button><button class="nav" data-page="photos">▧ &nbsp; Photos & souvenirs</button><button class="nav" data-page="posts">▤ &nbsp; Publications</button><button class="nav" data-page="chat">◌ &nbsp; Discussions</button></aside>
+      <aside class="side" id="mainSidebar"><div class="sidebrand"><div class="sidebrand-mark"><strong>1CE</strong><span>Espace de classe</span></div><button class="sidebar-close" id="sidebarClose" type="button" aria-label="Fermer le menu">✕</button></div><small>Explorer</small><button class="nav active" data-page="home">⌂ &nbsp; Accueil</button><button class="nav" data-page="photos">▧ &nbsp; Photos & souvenirs</button><button class="nav" data-page="posts">▤ &nbsp; Publications</button><button class="nav" data-page="chat">◌ &nbsp; Discussions</button><button class="nav" id="settingsOpen" type="button">⚙ &nbsp; Paramètres</button></aside>
       <main class="content">
         <div id="page-home"><section class="hero"><div class="eyebrow">Bienvenue dans notre espace</div><h2>Les souvenirs de la 1CE, tous ensemble.</h2><p>Retrouve les photos, les nouvelles et les discussions de la classe dans un espace réservé aux membres.</p></section>
         <div class="sectionhead"><h3>Le coin de la classe</h3><span>Bienvenue 👋</span></div><div class="grid"><article class="card tile"><div class="symbol">📸</div><div><h4>Nos souvenirs</h4><p>Les moments et photos partagés par la classe.</p></div></article><article class="card tile"><div class="symbol">💬</div><div><h4>Le fil de la 1CE</h4><p>Les nouvelles et les discussions du groupe.</p></div></article><article class="card wide"><h4>À la une</h4><p>Bienvenue dans l’espace de la 1CE ! Retrouvez les photos, les nouvelles et les discussions de la classe depuis le menu.</p></article></div></div>
@@ -268,6 +283,19 @@
         <div id="page-chat" class="hidden"><div class="discord-shell"><aside class="channelrail"><div class="rail-title">SALONS TEXTUELS</div><div class="channel active"># <span>général</span></div><div class="rail-hint">Un salon commun pour toute la 1CE</div><div class="rail-bottom">Salon de la classe</div></aside><section class="discord-main"><div class="discord-head"><div><strong># général</strong><small>Les discussions de la classe</small></div><button class="online-pill" id="onlineToggle" type="button" aria-expanded="false">Membres en ligne · <span id="onlineCount">0</span></button></div><div class="chatlist" id="chatlist"><div class="empty">Les messages apparaîtront ici.</div></div><div id="typingIndicator" class="typing-indicator" aria-live="polite"></div><div id="onlinePanel" class="online-panel hidden"><strong>Membres connectés</strong><div id="onlineList"></div></div><form id="chatform" class="discord-compose"><input class="field" id="chatcontent" maxlength="1000" placeholder="Écrire dans #général…" required><button class="primary" type="submit" aria-label="Envoyer">➤</button></form><div class="status" id="chatstatus" role="status"></div></section></div></div>
       </main>
     </section>
+    <section id="settings-screen" aria-hidden="true">
+      <header class="settings-header"><button class="settings-back" id="settingsBack" type="button" aria-label="Retour">‹</button><h2>Paramètres</h2></header>
+      <div class="settings-content">
+        <div class="eyebrow">Ton espace 1CE</div>
+        <section class="settings-group"><h3>Modération intelligente</h3><p>Les messages, publications, commentaires et légendes sont vérifiés avant leur envoi pour garder un espace respectueux.</p>
+          <div class="settings-row"><span class="settings-icon">✦</span><div><strong>Assistant de modération IA</strong><small>Actif · vérification avant publication</small></div></div>
+          <div class="settings-row"><span class="settings-icon">✎</span><div><strong>Langage grossier</strong><small>Les jurons légers sont partiellement masqués.</small></div></div>
+          <div class="settings-row"><span class="settings-icon">⏱</span><div><strong>Contenu très inapproprié</strong><small>Envoi refusé et suspension temporaire de 30 minutes.</small></div></div>
+        </section>
+        <section class="settings-group"><h3>Confidentialité</h3><p>La clé Groq reste sur le serveur Supabase. Elle n'est jamais envoyée au navigateur. Les textes sont transmis à Groq pour leur analyse de modération.</p></section>
+        <section class="settings-group"><h3>À savoir</h3><p>La modération analyse actuellement les textes et les légendes, pas le contenu visuel des images elles-mêmes. En cas d'erreur du service, l'envoi est mis en pause plutôt que de publier un texte non vérifié.</p></section>
+      </div>
+    </section>
     <footer class="footer">1CE · Espace privé de classe · Partage uniquement avec l’accord des personnes concernées</footer>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -284,6 +312,21 @@
 
     const esc = value => String(value ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
     const dateLabel = value => new Date(value).toLocaleString("fr-BE",{dateStyle:"medium",timeStyle:"short"});
+
+    async function moderateContent(text, kind) {
+      const response = await fetch(SUPABASE_URL + "/functions/v1/moderate-content", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "apikey": SUPABASE_PUBLISHABLE_KEY,
+          "Authorization": "Bearer " + session.access_token
+        },
+        body: JSON.stringify({ text, kind })
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) return { ok:false, message:result.reason || result.error || "La modération a refusé l'envoi. Réessaie plus tard." };
+      return { ok:true, text:result.text || text, notice:result.notice || "" };
+    }
 
     function showState(authorized) {
       loginView.classList.toggle("hidden", !!authorized);
@@ -451,6 +494,17 @@
       session = null; member = null; await stopChatRealtime(); statusEl.textContent = ""; showState(false);
     });
 
+    const settingsScreen = document.getElementById("settings-screen");
+    document.getElementById("settingsOpen").addEventListener("click", () => {
+      closeSidebar();
+      settingsScreen.classList.add("open");
+      settingsScreen.setAttribute("aria-hidden","false");
+    });
+    document.getElementById("settingsBack").addEventListener("click", () => {
+      settingsScreen.classList.remove("open");
+      settingsScreen.setAttribute("aria-hidden","true");
+    });
+
     const sidebarToggle = document.getElementById("sidebarToggle");
     const sidebarLayout = document.getElementById("appview");
     const sidebarBackdrop = document.getElementById("sidebarBackdrop");
@@ -500,8 +554,13 @@
       root.querySelectorAll(".commentform").forEach(form => form.addEventListener("submit", async e => {
         e.preventDefault();
         const input = form.querySelector("input");
-        const {error} = await client.from("comments").insert({post_id:form.dataset.id,author_id:session.user.id,author_name:member.display_name,content:input.value.trim()});
-        if (!error) await loadPosts();
+        const content = input.value.trim();
+        if (!content) return;
+        const moderation = await moderateContent(content,"comment");
+        if (!moderation.ok) { alert(moderation.message); return; }
+        const {error} = await client.from("comments").insert({post_id:form.dataset.id,author_id:session.user.id,author_name:member.display_name,content:moderation.text});
+        if (error) alert("Le commentaire n’a pas pu être envoyé.");
+        else { if(moderation.notice) alert(moderation.notice); await loadPosts(); }
       }));
     }
 
@@ -511,8 +570,13 @@
       const content = document.getElementById("postcontent").value.trim();
       if (!content) return;
       status.textContent = "Publication…";
-      const {error} = await client.from("posts").insert({author_id:session.user.id,author_name:member.display_name,content});
-      status.textContent = error ? "La publication n’a pas pu être envoyée." : "Publié !";
+      status.textContent = "Vérification du contenu…";
+      const moderation = await moderateContent(content,"post");
+      if (!moderation.ok) { status.textContent = moderation.message; return; }
+      const safeContent = moderation.text;
+      document.getElementById("postcontent").value = safeContent === content ? "" : safeContent;
+      const {error} = await client.from("posts").insert({author_id:session.user.id,author_name:member.display_name,content:safeContent});
+      status.textContent = error ? "La publication n’a pas pu être envoyée." : (moderation.notice || "Publié !");
       if (!error) { document.getElementById("postcontent").value = ""; await loadPosts(); }
     });
 
@@ -590,8 +654,11 @@
       const status = document.getElementById("chatstatus");
       const content = input.value.trim();
       if (!content) return;
-      const {error} = await client.from("messages").insert({author_id:session.user.id,author_name:member.display_name,content});
-      status.textContent = error ? "Message non envoyé." : "";
+      status.textContent = "Vérification du message…";
+      const moderation = await moderateContent(content,"message");
+      if (!moderation.ok) { status.textContent = moderation.message; return; }
+      const {error} = await client.from("messages").insert({author_id:session.user.id,author_name:member.display_name,content:moderation.text});
+      status.textContent = error ? "Message non envoyé." : (moderation.notice || "");
       if (!error) {
         input.value = "";
         if (chatRealtimeChannel) await chatRealtimeChannel.send({type:"broadcast",event:"new-message",payload:{sent_at:new Date().toISOString()}});
@@ -622,6 +689,15 @@
       const file = document.getElementById("photofile").files[0];
       if (!file || !document.getElementById("photoconsent").checked) return;
       if (file.size > 10*1024*1024) { status.textContent = "La photo doit faire 10 Mo maximum."; return; }
+      const captionInput = document.getElementById("photocaption");
+      const caption = captionInput.value.trim();
+      if (caption) {
+        status.textContent = "Vérification de la légende…";
+        const moderation = await moderateContent(caption,"caption");
+        if (!moderation.ok) { status.textContent = moderation.message; return; }
+        captionInput.value = moderation.text;
+        if (moderation.notice) status.textContent = moderation.notice;
+      }
       status.textContent = "Envoi de la photo…";
       const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g,"_");
       const path = session.user.id + "/" + Date.now() + "-" + safeName;
