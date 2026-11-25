@@ -318,7 +318,66 @@
     body.glass-ui #tab-general .w-72{
       border-radius:22px;
     }
-  </style>
+  
+    /* Alignement fiable des commandes d'appel + thème noir/bleu du chat */
+    #tab-general .max-w-4xl>div.general-call-dock,
+    #tab-general .general-call-dock{
+      display:flex!important;
+      flex-direction:row!important;
+      align-items:center!important;
+      justify-content:center!important;
+      align-self:stretch!important;
+      width:100%!important;
+      max-width:100%!important;
+      margin-left:auto!important;
+      margin-right:auto!important;
+      text-align:center!important;
+    }
+    #tab-general .general-call-dock button{
+      flex:0 0 auto!important;
+      border-radius:9999px!important;
+    }
+    #tab-general>div:first-child,
+    #tab-dms>div:last-child{
+      background:#05070b!important;
+      color:#f8fafc!important;
+    }
+    #general-messages-list,
+    #dm-messages-list{
+      background:#05070b!important;
+      background-image:none!important;
+      color:#f8fafc!important;
+    }
+    #general-messages-list .wa-bubble-in,
+    #dm-messages-list .wa-bubble-in{
+      background:#1d4ed8!important;
+      color:#fff!important;
+      border:1px solid rgba(147,197,253,.22)!important;
+    }
+    #general-messages-list .wa-bubble-out,
+    #dm-messages-list .wa-bubble-out{
+      background:#2563eb!important;
+      color:#fff!important;
+      border:1px solid rgba(147,197,253,.28)!important;
+    }
+    #general-messages-list .wa-author,
+    #dm-messages-list .wa-author{color:#bfdbfe!important}
+    #general-messages-list .wa-time,
+    #dm-messages-list .wa-time{color:#dbeafe!important}
+    #general-messages-list .wa-bubble-out .wa-time span,
+    #dm-messages-list .wa-bubble-out .wa-time span{color:#fff!important}
+    #tab-general .alu-composer,
+    #tab-dms .alu-composer{
+      background:#111827!important;
+      border-color:rgba(96,165,250,.35)!important;
+      color:#fff!important;
+    }
+    #tab-general .alu-textarea,
+    #tab-dms .alu-textarea{color:#fff!important}
+    #tab-general .alu-textarea::placeholder,
+    #tab-dms .alu-textarea::placeholder{color:#9ca3af!important}
+
+</style>
 </head>
 <body class="bg-[#f8f9ff] text-slate-800 antialiased h-screen flex flex-col overflow-hidden">
 <!-- Authentification obligatoire -->
