@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+
+<html lang="fr"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_dashboard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@100..900&display=swap" rel="stylesheet"/><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "primary-container": "#4f46e5", "on-tertiary": "#ffffff", "secondary": "#006c49", "surface-container-low": "#eff4ff", "on-secondary-fixed-variant": "#005236", "surface-dim": "#cbdbf5", "tertiary-fixed-dim": "#ffb95f", "on-secondary": "#ffffff", "outline-variant": "#c7c4d8", "surface-container-highest": "#d3e4fe", "error-container": "#ffdad6", "surface-container": "#e5eeff", "inverse-primary": "#c3c0ff", "tertiary-fixed": "#ffddb8", "on-surface": "#0b1c30", "surface-container-lowest": "#ffffff", "inverse-surface": "#213145", "surface-tint": "#4d44e3", "surface-bright": "#f8f9ff", "secondary-fixed-dim": "#4edea3", "background": "#f8f9ff", "primary": "#3525cd", "outline": "#777587", "error": "#ba1a1a", "surface": "#f8f9ff", "on-tertiary-fixed": "#2a1700", "primary-fixed": "#e2dfff", "inverse-on-surface": "#eaf1ff", "on-surface-variant": "#464555", "surface-container-high": "#dce9ff", "secondary-fixed": "#6ffbbe", "on-error-container": "#93000a", "on-tertiary-fixed-variant": "#653e00", "on-primary-container": "#dad7ff", "on-primary-fixed": "#0f0069", "tertiary": "#684000", "on-tertiary-container": "#ffd4a4", "on-secondary-fixed": "#002113", "on-primary": "#ffffff", "on-background": "#0b1c30", "on-error": "#ffffff", "tertiary-container": "#885500", "secondary-container": "#6cf8bb", "on-secondary-container": "#00714d", "surface-variant": "#d3e4fe", "primary-fixed-dim": "#c3c0ff", "on-primary-fixed-variant": "#3323cc" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "space-xs": "0.25rem", "margin-md": "1.5rem", "space-lg": "1.5rem", "space-md": "1rem", "gutter": "1rem", "space-xl": "2rem", "margin-lg": "2rem", "gutter-md": "1.5rem", "margin": "1rem", "space-sm": "0.5rem" }, "fontFamily": { "body-lg": ["Plus Jakarta Sans"], "headline-xl-mobile": ["Plus Jakarta Sans"], "title-md": ["Plus Jakarta Sans"], "label-lg": ["Plus Jakarta Sans"], "body-md": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"], "headline-lg-mobile": ["Plus Jakarta Sans"], "headline-md": ["Plus Jakarta Sans"], "body-sm": ["Plus Jakarta Sans"], "headline-xl": ["Plus Jakarta Sans"], "label-sm": ["Plus Jakarta Sans"], "headline-sm": ["Plus Jakarta Sans"], "label-md": ["Plus Jakarta Sans"] }, "fontSize": { "body-lg": ["16px", { "lineHeight": "26px", "fontWeight": "400" }], "headline-xl-mobile": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.015em", "fontWeight": "800" }], "title-md": ["16px", { "lineHeight": "22px", "fontWeight": "600" }], "label-lg": ["14px", { "lineHeight": "20px", "fontWeight": "600" }], "body-md": ["14px", { "lineHeight": "22px", "fontWeight": "400" }], "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }], "headline-lg-mobile": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "700" }], "headline-md": ["22px", { "lineHeight": "28px", "fontWeight": "700" }], "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }], "headline-xl": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.02em", "fontWeight": "800" }], "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.03em", "fontWeight": "700" }], "headline-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }], "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "600" }] } } } };</script></head><body class="bg-surface font-body-md text-body-md text-on-surface"><aside class="fixed left-0 top-0 h-full w-72 bg-surface-container-low z-50 flex flex-col justify-between shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex flex-col flex-1 overflow-y-auto"><div class="px-space-md py-space-md bg-surface-container-low flex items-center gap-space-sm"><img alt="Logo Classe 1CE" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQgTu9U35KrZ_bbBl7J6jUpjVaST7k5EQhSAHL3BRAqt1MOMOo3ipFpJt64EMPg97eyXgmk7b4iZNsYJ0XSfGGxupFc3bGkKcJoJlNXpHznWZx1bIlPVtewnqz-XbZGtJ1U3dbB1HlfHMqPOTOav7spnZjZFHOpcDSkFYbAqKpA1hbgefXfS1TTPGxqtrki2cFEVTwrTSYwAwji8LgAadO67Ms939qYE293n__I24"/><div class="flex flex-col min-w-0"><span class="font-headline-sm text-headline-sm text-on-surface truncate">Classe 1CE</span><span class="font-label-md text-label-md text-on-surface-variant truncate">1ère Secondaire • 2024-2025</span><div class="flex items-center gap-space-xs mt-space-xs"><span class="w-2 h-2 rounded-full bg-secondary"></span><span class="font-label-sm text-label-sm text-secondary">28 élèves connectés</span></div></div></div><nav class="flex-1 px-space-sm py-space-sm space-y-space-md" data-active-classes="bg-primary-container text-on-primary font-bold rounded-lg"><div class="space-y-space-xs"><div class="px-space-sm flex items-center justify-between"><span class="font-label-sm text-label-sm uppercase text-outline">Discussions & Salons</span><span class="bg-primary-container text-on-primary font-label-sm text-label-sm px-space-xs py-0.5 rounded-full">3</span></div><a class="flex items-center justify-between px-space-sm py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="salon-general" href="#"><div class="flex items-center gap-space-xs truncate"><span class="font-title-md text-title-md text-outline">#</span><span class="font-title-md text-title-md truncate">Général - Toute la classe</span></div><span class="material-symbols-outlined text-outline text-[18px]">volume_up</span></a><a class="flex items-center justify-between px-space-sm py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="messages-prives" href="#"><div class="flex items-center gap-space-xs truncate"><span class="material-symbols-outlined text-[18px]">chat_bubble</span><span class="font-title-md text-title-md truncate">Messages privés (DMs)</span></div><span class="w-2 h-2 rounded-full bg-primary"></span></a></div><div class="space-y-space-xs"><div class="px-space-sm"><span class="font-label-sm text-label-sm uppercase text-outline">Activités de Classe</span></div><a aria-current="page" class="flex items-center gap-space-sm px-space-sm py-space-sm transition-all bg-primary-container text-on-primary font-bold rounded-lg" data-path="fil-actualite" href="#"><span class="material-symbols-outlined text-[20px]">dynamic_feed</span><span class="font-title-md text-title-md">Fil d'actualité & Posts</span></a><a class="flex items-center gap-space-sm px-space-sm py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="souvenirs-photos" href="#"><span class="material-symbols-outlined text-[20px]">photo_library</span><span class="font-title-md text-title-md">Souvenirs & Photos</span></a></div><div class="space-y-space-xs"><div class="px-space-sm"><span class="font-label-sm text-label-sm uppercase text-outline">Espace Personnel</span></div><a class="flex items-center gap-space-sm px-space-sm py-space-sm rounded-lg text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-all" data-path="parametres-classe" href="#"><span class="material-symbols-outlined text-[20px]">tune</span><span class="font-title-md text-title-md">Paramètres & Profil</span></a></div></nav></div><div class="p-space-sm bg-surface-container-lowest m-space-sm rounded-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] flex items-center justify-between gap-space-xs"><div class="flex items-center gap-space-sm min-w-0"><div class="relative flex-shrink-0"><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBUgx4PhE5VErFKowhPWSFSmZSN3Jdxiv004RWr13hWhpIuY6ebFPizUlyYI6038NMu8ahLDNF60E97iaGx2vXT9-D05T-YPjdLygvOM2TdJYYkkyUvoHUBjjPHNeK_cyUoiK2p9fPJIPwdGqxVHOIa0sVXNiv6ERp8hJOpBcdjF8M4MwbnmjE7MP65oJSOwm03yErbZKJt7sZDpEMDaVS8ILVivenU21bShL34a8"/><span class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-secondary ring-2 ring-surface-container-lowest"></span></div><div class="flex flex-col min-w-0"><span class="font-label-lg text-label-lg text-on-surface truncate">Lucas M. (Délégué 1CE)</span><span class="font-label-sm text-label-sm text-secondary truncate">🟢 En ligne</span></div></div><div class="flex items-center gap-0.5 flex-shrink-0"><button class="p-1 text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded" type="button"><span class="material-symbols-outlined text-[18px]">mic</span></button><button class="p-1 text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded" type="button"><span class="material-symbols-outlined text-[18px]">settings</span></button></div></div></aside><div class="pl-72"><header class="fixed top-0 left-72 right-0 h-16 bg-surface/80 backdrop-blur-xl z-40 flex items-center justify-between px-space-lg shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="flex items-center gap-space-md flex-1 max-w-lg"><div class="relative w-full"><span class="material-symbols-outlined absolute left-3 top-2.5 text-[20px] text-outline">search</span><input class="w-full h-10 pl-10 pr-space-md bg-surface-container-low rounded-lg font-body-md text-body-md text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-primary-container/20" placeholder="Rechercher des posts, photos, camarades..." type="text"/></div></div><div class="flex items-center gap-space-md"><span class="hidden md:inline font-label-md text-label-md text-on-surface-variant">Mercredi 23 Octobre • 14:32</span><button class="relative p-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low rounded-lg" type="button"><span class="material-symbols-outlined text-[22px]">notifications</span><span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-error"></span></button><button class="flex items-center gap-space-xs px-space-md h-10 bg-primary-container text-on-primary rounded-lg font-label-lg text-label-lg shadow-[0_1px_3px_0_rgba(15,23,42,0.05)] hover:bg-primary transition-all" type="button"><span class="material-symbols-outlined text-[20px]">add_call</span><span>Démarrer un appel</span></button><div class="flex items-center pl-space-xs"><img alt="Profile" class="w-8 h-8 rounded-full object-cover ring-2 ring-primary-container/20" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBUgx4PhE5VErFKowhPWSFSmZSN3Jdxiv004RWr13hWhpIuY6ebFPizUlyYI6038NMu8ahLDNF60E97iaGx2vXT9-D05T-YPjdLygvOM2TdJYYkkyUvoHUBjjPHNeK_cyUoiK2p9fPJIPwdGqxVHOIa0sVXNiv6ERp8hJOpBcdjF8M4MwbnmjE7MP65oJSOwm03yErbZKJt7sZDpEMDaVS8ILVivenU21bShL34a8"/></div></div></header><main class="w-full pt-16 bg-surface"><div class="flex flex-col w-full">
+<div class="p-space-lg max-w-7xl mx-auto w-full space-y-space-lg">
+<!-- Top Action Bar & Partition Switcher -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-md bg-surface-container-lowest p-space-md rounded-xl shadow-sm">
+<div class="flex items-center gap-space-xs">
+<div class="flex p-1 bg-surface-container-low rounded-lg">
+<button class="flex items-center gap-space-xs px-space-md py-space-sm rounded-lg font-label-lg text-label-lg bg-primary-container text-on-primary transition-all shadow-sm" id="tab-posts" onclick="switchView('posts')">
+<span class="material-symbols-outlined text-[18px]">forum</span>
+<span>Fil des Posts de classe</span>
+<span class="ml-1 px-1.5 py-0.5 rounded-full bg-white/20 text-on-primary font-label-sm text-label-sm">14</span>
+</button>
+<button class="flex items-center gap-space-xs px-space-md py-space-sm rounded-lg font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-all" id="tab-albums" onclick="switchView('albums')">
+<span class="material-symbols-outlined text-[18px]">photo_library</span>
+<span>Albums & Souvenirs Photos</span>
+<span class="ml-1 px-1.5 py-0.5 rounded-full bg-surface-container text-primary font-label-sm text-label-sm">86</span>
+</button>
+</div>
+</div>
+<div class="flex items-center gap-space-sm">
+<div class="flex items-center -space-x-2 mr-2">
+<div class="w-7 h-7 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-label-sm text-label-sm font-bold">12</div>
+<div class="w-7 h-7 rounded-full bg-tertiary-fixed text-on-tertiary-fixed flex items-center justify-center font-label-sm text-label-sm font-bold">9</div>
+<div class="w-7 h-7 rounded-full bg-primary-fixed text-on-primary-fixed flex items-center justify-center font-label-sm text-label-sm font-bold">7</div>
+</div>
+<span class="font-label-sm text-label-sm text-on-surface-variant hidden lg:inline">Tous les souvenirs sont vérifiés par l'équipe pédagogique</span>
+<button class="flex items-center gap-space-xs px-space-md py-2 bg-primary-container text-on-primary rounded-lg font-label-lg text-label-lg shadow-sm hover:opacity-95 transition-opacity" type="button">
+<span class="material-symbols-outlined text-[18px]">add_photo_alternate</span>
+<span>Nouveau Souvenir</span>
+</button>
+</div>
+</div>
+<!-- Quick Publishing Station -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm relative overflow-hidden">
+<div class="flex items-start gap-space-md">
+<div class="relative flex-shrink-0">
+<img class="w-11 h-11 rounded-full object-cover" data-alt="Portrait of a smiling 12-year-old middle school class representative boy wearing a navy hoodie in a vibrant high-tech modern classroom, natural window lighting, friendly, Plus Jakarta Sans aesthetic, crisp focus" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYP9uQE4ujiRzJJyRVmlgYG10GDvPKgdtj3rOmpo2eVLcb5vSyjNaRXbgID75l8PpDMUPokM5L_Mr9L2vN8SYjz1ER5TpxLPM55iXQfeYWHBjCLjDjbY98VhPIIMn6y4sqGTvjxpMlT6FRewqvW8_HEUa9rENQcZ4U6PVyJK9fvHNWeyCiXzrKtxy5d3T8x1nX-pTlyeOeP0JGIVFkEw-hUrAid41KOG9tm3Etq6Y"/>
+<span class="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-secondary"></span>
+</div>
+<div class="flex-1 min-w-0 space-y-space-sm">
+<div class="relative">
+<textarea class="w-full p-space-sm bg-surface-container-low text-on-surface rounded-xl font-body-md text-body-md placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest transition-all resize-none" placeholder="Partager un souvenir, une photo de classe, une réussite ou une actualité de la 1CE..." rows="2"></textarea>
+</div>
+<div class="flex flex-wrap items-center justify-between gap-space-sm pt-space-xs">
+<div class="flex flex-wrap items-center gap-space-xs">
+<button class="flex items-center gap-1.5 px-space-sm py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-primary font-label-md text-label-md transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">photo_camera</span>
+<span>Photo / Vidéo</span>
+</button>
+<button class="flex items-center gap-1.5 px-space-sm py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface-variant font-label-md text-label-md transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">poll</span>
+<span>Sondage express</span>
+</button>
+<button class="flex items-center gap-1.5 px-space-sm py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface-variant font-label-md text-label-md transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">folder_special</span>
+<span>Projet de groupe</span>
+</button>
+<button class="flex items-center gap-1.5 px-space-sm py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-tertiary font-label-md text-label-md transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">celebration</span>
+<span>Événement promo</span>
+</button>
+</div>
+<div class="flex items-center gap-space-xs">
+<span class="font-label-sm text-label-sm text-outline">Visibilité : Classe 1CE</span>
+<button class="px-space-md py-2 bg-primary-container text-on-primary rounded-lg font-label-lg text-label-lg hover:opacity-90 transition-opacity" type="button">Publier</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Thematic Albums Horizontal Carousel / Partition Shelf -->
+<div class="space-y-space-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[24px]">collections_bookmark</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Albums Souvenirs de la 1CE</h2>
+<span class="ml-2 font-label-md text-label-md px-2 py-0.5 rounded-full bg-surface-container-high text-on-surface-variant">Année 2024-2025</span>
+</div>
+<div class="flex items-center gap-space-xs">
+<button class="p-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface" onclick="document.getElementById('album-carousel').scrollBy({left: -320, behavior: 'smooth'})" type="button">
+<span class="material-symbols-outlined text-[20px]">chevron_left</span>
+</button>
+<button class="p-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface" onclick="document.getElementById('album-carousel').scrollBy({left: 320, behavior: 'smooth'})" type="button">
+<span class="material-symbols-outlined text-[20px]">chevron_right</span>
+</button>
+</div>
+</div>
+<!-- Albums Row -->
+<div class="flex gap-space-md overflow-x-auto pb-space-sm scroll-smooth" id="album-carousel">
+<!-- Partition 1 -->
+<div class="min-w-[280px] md:min-w-[310px] bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow group flex flex-col cursor-pointer">
+<div class="relative h-44 w-full overflow-hidden">
+<div class="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-500" data-alt="Vibrant group photo of French secondary school students wearing adventure harnesses and climbing helmets standing on a wooden suspension bridge in an autumn forest adventure park, laughing and high-fiving, bright warm sunlight, cinematic style" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCbXiQgEDCd6lUCF3sk2kG9e9vtH8QMscvRpCUEy29bQalfG1thCXCbHCa3kQ17OOxxuBkAYaGBNNJeUHbysRpTDMVySkT8w0eoa88jr4DodkYcFGQWtonYdeI5sAuFCMNt5lHgPLJtXe1j8kezWpHleCglbp78N13QKSoOLpeLWzFBPD2zdGTYWyrX74mPjPq8lO-zSU9LJrDlha71KSWK7yK97UiK8FmFS97r-Xc')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+<span class="absolute top-3 right-3 px-2 py-0.5 rounded-full bg-black/50 backdrop-blur-md text-white font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">photo_camera</span> 24 photos
+            </span>
+<div class="absolute bottom-3 left-3 right-3 text-white">
+<span class="font-label-sm text-label-sm uppercase text-secondary-fixed tracking-wider font-semibold">Semaine 2</span>
+<h3 class="font-title-md text-title-md font-bold leading-tight">Sortie d'intégration au parc d'aventures</h3>
+</div>
+</div>
+<div class="p-space-sm flex items-center justify-between bg-surface-container-lowest">
+<span class="font-label-md text-label-md text-on-surface-variant">Mis à jour le 18 Septembre</span>
+<div class="flex items-center text-primary font-label-md text-label-md gap-0.5">
+<span>Voir tout</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</div>
+</div>
+</div>
+<!-- Partition 2 -->
+<div class="min-w-[280px] md:min-w-[310px] bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow group flex flex-col cursor-pointer">
+<div class="relative h-44 w-full overflow-hidden">
+<div class="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-500" data-alt="Dynamic shot of teenagers playing a team soccer and relay match on a green school field, wearing blue team pinnies, celebrating a goal with raised arms, bright daylight, sporty energetic composition" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBBhh1jV9MEaLI9E_yPo9c_3NJEQIKorhdWou-exxLZk4TGQk6oqMu9mXRAY6HoxZmvHzNlLjutczNT1ycXSS-mbBmgrN7xc1p1rOgmtxCoKssrSrNeug8RR_t62d21_Ji2iq_iJvH_EIGNgvMlGpc91M7KnvEuyqCe6-uEYrrFyMvKFYd71xy83iENjPKTSbg7Lp_LMSPqOHaaBWbWxhOY1DYFwOHbbsv5PDhPn8I')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+<span class="absolute top-3 right-3 px-2 py-0.5 rounded-full bg-black/50 backdrop-blur-md text-white font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">photo_camera</span> 18 photos
+            </span>
+<div class="absolute bottom-3 left-3 right-3 text-white">
+<span class="font-label-sm text-label-sm uppercase text-secondary-fixed tracking-wider font-semibold">Semaine 4</span>
+<h3 class="font-title-md text-title-md font-bold leading-tight">Journée sportive & Tournoi de rentrée</h3>
+</div>
+</div>
+<div class="p-space-sm flex items-center justify-between bg-surface-container-lowest">
+<span class="font-label-md text-label-md text-on-surface-variant">Mis à jour le 29 Septembre</span>
+<div class="flex items-center text-primary font-label-md text-label-md gap-0.5">
+<span>Voir tout</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</div>
+</div>
+</div>
+<!-- Partition 3 -->
+<div class="min-w-[280px] md:min-w-[310px] bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow group flex flex-col cursor-pointer">
+<div class="relative h-44 w-full overflow-hidden">
+<div class="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-500" data-alt="Young middle school students wearing safety goggles in a science laboratory, looking in awe at a glowing blue chemical reaction in an erlenmeyer flask, illuminated faces, modern laboratory background" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAQM7ZFGi6awtPyBWkiN4HsuDauJhsriU61POa8WeAIHBvdSvYIFNKBBUHWAgREoDTeBpt-ii28Wv3m2mz-YQCm03tCU5cSOZx6W3HsxxBp0OPP-DKHmyNVHB44XjXkQL7cefa9EZpAYdfMQbIJ-dBMKT54PXfNsPtkuzU0NKom-jh4EE3pPwmBsb78fVkO56lTyQLAo9apnuh2HC9Y6i_1QTbGVNhjyzWZhtxHPnM')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+<span class="absolute top-3 right-3 px-2 py-0.5 rounded-full bg-black/50 backdrop-blur-md text-white font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">photo_camera</span> 12 photos
+            </span>
+<div class="absolute bottom-3 left-3 right-3 text-white">
+<span class="font-label-sm text-label-sm uppercase text-secondary-fixed tracking-wider font-semibold">Semaine 6</span>
+<h3 class="font-title-md text-title-md font-bold leading-tight">Atelier Sciences & Expériences de labo</h3>
+</div>
+</div>
+<div class="p-space-sm flex items-center justify-between bg-surface-container-lowest">
+<span class="font-label-md text-label-md text-on-surface-variant">Mis à jour le 11 Octobre</span>
+<div class="flex items-center text-primary font-label-md text-label-md gap-0.5">
+<span>Voir tout</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</div>
+</div>
+</div>
+<!-- Partition 4 -->
+<div class="min-w-[280px] md:min-w-[310px] bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow group flex flex-col cursor-pointer">
+<div class="relative h-44 w-full overflow-hidden">
+<div class="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-500" data-alt="Candid classroom laughter moment showing multi-ethnic 12-year-old French students giggling at desks during break, goofy poses, doodles on blackboard, cozy natural lighting, joyful memories" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCeu5vK_GZYJkDfcmyqJWreaSbmEX4pQGsKPEtjISwNWbLh_NLDYLH6wU7eMTejdNdytLA2VP8BxfTmmJSfLsWzhlv7EGYBfh9czIWGdY5NttiduiLeTV-TzZ-PcE9m0uuN-yeTZVK11ciGga4ORMo9IWSHw04CiWw4xRbcHBlIG93gSt-nUhxt1oRx9QW-gAS-qk2eMiQH3YPvrpjxRkmK7A-rTZ4rqm4J8d1jRhY')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+<span class="absolute top-3 right-3 px-2 py-0.5 rounded-full bg-black/50 backdrop-blur-md text-white font-label-sm text-label-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">photo_camera</span> 32 photos
+            </span>
+<div class="absolute bottom-3 left-3 right-3 text-white">
+<span class="font-label-sm text-label-sm uppercase text-secondary-fixed tracking-wider font-semibold">En continu</span>
+<h3 class="font-title-md text-title-md font-bold leading-tight">Moments de classe & Fous rires</h3>
+</div>
+</div>
+<div class="p-space-sm flex items-center justify-between bg-surface-container-lowest">
+<span class="font-label-md text-label-md text-on-surface-variant">Mis à jour hier</span>
+<div class="flex items-center text-primary font-label-md text-label-md gap-0.5">
+<span>Voir tout</span>
+<span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Main Grid: Feed Columns + Side Context Deck -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start">
+<!-- Primary Post Stream (8 cols) -->
+<div class="lg:col-span-8 space-y-space-lg">
+<!-- Post 1: Delegate Announcement with Group Photos -->
+<article class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm space-y-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="relative">
+<img class="w-10 h-10 rounded-full object-cover" data-alt="Profile portrait of teenage class delegate Lucas smiling, short brown hair, wearing school uniform sweater, warm ambient background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDsROVSWb0udwOPyJK8AhxDx9FwfXCG17pQRDVJYgP6QOWl2-RZc6DaqLn26MZUNoSgkoelQORwkgedDhx0CPd7RZ1TVX3UuvGcg8JttVct4_PomJc-fb3u2QPHxHNZOicdomIaeDcv-sVMbnF5auWXrPX3m-3KHUNAkGtFcJH8YnNE98euJlBUGioDf7G150VidqT8HjmeIgwhxkCR7b9VriuPfw5yPSHZFWZZbuo"/>
+<span class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-secondary"></span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs">
+<span class="font-title-md text-title-md text-on-surface">Lucas M.</span>
+<span class="px-2 py-0.5 bg-primary-fixed text-on-primary-fixed rounded-full font-label-sm text-label-sm font-semibold">Délégué 1CE</span>
+</div>
+<span class="font-label-sm text-label-sm text-outline">Publié il y a 3 heures • Visible par toute la 1CE</span>
+</div>
+</div>
+<button class="p-1.5 rounded-lg text-outline hover:text-on-surface hover:bg-surface-container transition-colors" type="button">
+<span class="material-symbols-outlined text-[20px]">more_horiz</span>
+</button>
+</div>
+<div class="space-y-space-xs">
+<p class="font-body-md text-body-md text-on-surface">
+              Bravo à toute la classe pour ce premier mois incroyable en 1ère secondaire ! Voici le récap photo officiel de notre première semaine. Tout le monde a déjà trouvé sa place, et les projets de l'année s'annoncent légendaires. N'hésitez pas à taguer vos photos de groupe en commentaires ! 🚀🎒
+            </p>
+</div>
+<!-- Mosaic of Souvenir Photos -->
+<div class="grid grid-cols-2 gap-space-xs rounded-xl overflow-hidden">
+<div class="relative h-60 col-span-2 overflow-hidden group">
+<div class="w-full h-full bg-cover bg-center group-hover:scale-102 transition-transform duration-300" data-alt="Wide shot of the entire 1CE class of 28 students and their homeroom teacher posing on the grand front steps of a sunny French collège courtyard, making victory peace signs, autumn foliage, vibrant youthful joy" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAeFatWxBymbIG-ZRLbmCF227RNN1aQFhXUDh_5EpO5vfnB4rDw52tdWMrXHGJPIWV-sFEy7Grv0riI7rxxQ7Vg-d-WwcimdEQXQs7M0ARwfyoOufD-56GqRAtbCxYws7qPROcE2tyfzE05L-wzE35s9yHF0Di-IfrGIOvZx9kZHhuCXT7so9MyI3vveBo2CDcAO6Oz5xdBQQTQVA59FQxA1GjCj5LyOJHb9HCbaQ4')"></div>
+<div class="absolute bottom-2 left-2 px-2.5 py-1 rounded-lg bg-black/60 backdrop-blur-sm text-white font-label-sm text-label-sm">
+                Photo officielle de rentrée 1CE
+              </div>
+</div>
+<div class="relative h-36 overflow-hidden group">
+<div class="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-300" data-alt="Close up candid of four classmates sharing cafeteria lunch, laughing over a notebook sketch, brightly lit school refectory" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDNk1cWXdUYqGcsH-gbv4rtk2R3x8zU16xWmlWP0AP2TpxWukqKrDmgXGAsS0XEN014FtYzGiJ8TN01rbX39uTOpnU8RCUb52GO9lyoML_q0Mi7n5UMqJQEtYMohlZRklNJBzXA-YQZW3hn7HA5VfMIIctfpbL5MxhPO0fajf7x4-4ZtJysE2x0NqFZbHaDU0nC8RrL_k3Kf8O2FkN-T_JDFCCwdiXAOIDZQtHj204')"></div>
+<div class="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-black/60 backdrop-blur-sm text-white font-label-sm text-label-sm">
+                Pause midi
+              </div>
+</div>
+<div class="relative h-36 overflow-hidden group">
+<div class="w-full h-full bg-cover bg-center group-hover:scale-105 transition-transform duration-300" data-alt="Two students holding an illustrated banner saying Bienvenue en 1CE inside a colourful decorated locker hallway, smiling widely" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAvrbYdsXuM86RWYGUuCkND2iPW0XaO9DgX8P8xLJ_QN1UmzU2ZSVR9VHExgtlHMQna7C5MxNd9F60qU_VvQbPJOOZa7F4gc3mG6cYmsm1lpWZAXjGhpGHIYPw2G77mwuj9iV1_c_iuORRM1LMaNQgYX9YCEWOjTomdIjugy1z8B5rdyTnlvTcHDryJIAqOCIh0Aaa9wxoJCsU4hvxzKN56Eu4nlla3SHLzXtsc7Fw')"></div>
+<div class="absolute inset-0 bg-primary/20 hover:bg-transparent transition-colors"></div>
+<div class="absolute bottom-2 right-2 px-2 py-0.5 rounded-full bg-surface-container-lowest/90 font-label-sm text-label-sm text-primary font-bold">
+                +8 photos
+              </div>
+</div>
+</div>
+<!-- Reactions & Counter Bar -->
+<div class="flex items-center justify-between pt-space-xs text-on-surface-variant font-label-md text-label-md">
+<div class="flex items-center gap-space-xs">
+<span class="flex items-center -space-x-1">
+<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-primary-container text-on-primary text-[11px]">👏</span>
+<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-secondary-container text-[11px]">❤️</span>
+<span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-tertiary-fixed text-[11px]">🔥</span>
+</span>
+<span class="font-semibold text-on-surface">24 élèves ont réagi</span>
+</div>
+<div class="flex items-center gap-space-md text-outline">
+<span>9 commentaires</span>
+<span>15 partages</span>
+</div>
+</div>
+<!-- Interactive Action Buttons -->
+<div class="flex items-center justify-between pt-space-xs bg-surface-container-low p-space-xs rounded-xl">
+<button class="flex-1 flex items-center justify-center gap-1.5 py-2 text-primary font-label-lg text-label-lg hover:bg-surface-container rounded-lg transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]">thumb_up</span>
+<span>J'adore</span>
+</button>
+<button class="flex-1 flex items-center justify-center gap-1.5 py-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded-lg transition-colors font-label-lg text-label-lg" type="button">
+<span class="material-symbols-outlined text-[18px]">chat_bubble_outline</span>
+<span>Commenter</span>
+</button>
+<button class="flex-1 flex items-center justify-center gap-1.5 py-2 text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded-lg transition-colors font-label-lg text-label-lg" type="button">
+<span class="material-symbols-outlined text-[18px]">bookmark_border</span>
+<span>Sauvegarder</span>
+</button>
+</div>
+<!-- Comment Thread Preview -->
+<div class="space-y-space-sm pt-space-xs">
+<div class="flex items-start gap-space-sm bg-surface-container-low/60 p-space-sm rounded-xl">
+<img class="w-8 h-8 rounded-full object-cover" data-alt="Young female student profile photo with curly hair wearing green sweater, friendly expression" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKsoE3sn4o96TaYgsHH_5zg1CwYDelMku8AKi1ijM_1U7uFICN-TGQTeWuVgu-dt4OtIthV7C-mlMwVPl6mFW5T5KDYyb3MhEJ2KsNnAorB0YJiDwx9U5Y40lOzOdEahzYMvmuDDH61pRmn1dJfzkH5DlrZOWSpqJgipCphpkCkP9tEe2UcIuV3sOtQCLhnT6MVvw55vNBvluE4s4QKDzIn7X1-6eP2jB_UiV47M8"/>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between">
+<span class="font-title-md text-title-md text-on-surface">Camille D.</span>
+<span class="font-label-sm text-label-sm text-outline">Il y a 2h</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Trop fier d'être dans la 1CE ! La photo sur les marches est juste incroyable 😍 Merci Lucas pour le post !</p>
+<div class="flex items-center gap-space-sm mt-1">
+<button class="font-label-sm text-label-sm text-primary font-semibold hover:underline" type="button">Aimer (4)</button>
+<button class="font-label-sm text-label-sm text-outline hover:underline" type="button">Répondre</button>
+</div>
+</div>
+</div>
+<div class="flex items-start gap-space-sm bg-surface-container-low/60 p-space-sm rounded-xl">
+<img class="w-8 h-8 rounded-full object-cover" data-alt="Middle-aged male history geography teacher wearing glasses and cardigan in front of maps, warm professional portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlfvx8zQ1ay7ncN8X6KoF_dTf_Lbz3OjhcsLx8yqRLOCWm_tFAuBEaM-_OT5bA1-l824ZKovHNZw0pRPpQY44_QDjCW_Nh121ruYWCg51znK00irNNUIb8E-AijyNPGjtjSQvfh3uAduYeqGB50RmOOH29ioUCUR4x17B6LxukrGMh0MzuNkBRmfAFs4Q-HTdh4Qu_2vwoYKY5ArjZaomaCnZ_v6KjO3f1-cX-qOU"/>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="font-title-md text-title-md text-on-surface">M. Laurent</span>
+<span class="px-1.5 py-0.2 rounded bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm font-bold">Prof Principal</span>
+</div>
+<span class="font-label-sm text-label-sm text-outline">Il y a 1h</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Excellente cohésion de groupe. Continuez avec cet enthousiasme pour le concours de géographie de vendredi !</p>
+</div>
+</div>
+</div>
+</article>
+<!-- Post 2: Geography Project Mini-Gallery Carousel with Tagged Students -->
+<article class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm space-y-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="relative">
+<img class="w-10 h-10 rounded-full object-cover" data-alt="Profile photo of young teenage girl with glasses and braided hair, smiling brightly in a school library" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3UWvqy1uAthGVauNbeEpIMetYSwU9CLHnLn5URi2F4bxrzQzxbzbtknF_RXmJoX6_pktmfmgHxslylHZRzQ_6N6MI90zxPrn5f7hpCN7R8iTvwBXIBlrsA0en4uW2gVBhaHyiBZW1lGtbQ5HvsBLJ4QGi2EhgRve7BPBOrH_d0zzTrvSja0qTBWTpGGCRVAwY1Fr2UNeMzwck8TEkGqZzAUJws0mcsMFK6RowjWA"/>
+<span class="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-secondary"></span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs">
+<span class="font-title-md text-title-md text-on-surface">Yasmine K.</span>
+<span class="px-2 py-0.5 bg-secondary-container text-on-secondary-container rounded-full font-label-sm text-label-sm font-semibold">Projet Géographie</span>
+</div>
+<span class="font-label-sm text-label-sm text-outline">Publié hier à 17:15 • Sujet : Reliefs & Écosystèmes</span>
+</div>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-outline text-[18px]">public</span>
+</div>
+</div>
+<div class="space-y-space-xs">
+<p class="font-body-md text-body-md text-on-surface">
+              Notre maquette 3D sur les volcans actifs et les plaques tectoniques est enfin terminée ! Un travail d'équipe intense avec <span class="text-primary font-semibold">@Alexandre_T</span>, <span class="text-primary font-semibold">@Ines_B</span> et <span class="text-primary font-semibold">@Mehdi_R</span>. Faites défiler pour voir toutes les étapes de fabrication et le test d'éruption de ce matin ! 🌋🧭
+            </p>
+<!-- Mention Pills -->
+<div class="flex flex-wrap gap-1.5 pt-1">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px] text-primary">person</span> Alexandre T.
+              </span>
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px] text-primary">person</span> Inès B.
+              </span>
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[14px] text-primary">person</span> Mehdi R.
+              </span>
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-surface-container text-secondary font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[14px]">grade</span> Note : 19/20
+              </span>
+</div>
+</div>
+<!-- Carousel Mini-Gallery -->
+<div class="relative rounded-xl overflow-hidden bg-black/90">
+<div class="flex overflow-x-auto snap-x snap-mandatory scroll-smooth h-72" id="carousel-geo">
+<div class="snap-center min-w-full h-full relative">
+<div class="w-full h-full bg-cover bg-center" data-alt="Detailed macro photo of a colorful clay model volcano with realistic painted lava textures, topographic elevation contour lines, and small labeled miniature flags, made by middle schoolers" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCFrRo6f3DeqOMSChCXjfLE4xyIzMfNNBh9bU8B6T1M0XsoLS6_fsyvJNl6-8bjEcTb7A2U3tIgKE3DttoMMRuVBerIbksK-3h14RCHPpHVYmZeTogFmVw9VXqjBiWBwaYdZ59_VDTvIq8T0RHooVbrSnLrRtFYYO_YJfUn-pJTfDntMu9bRZCw2UY-6sehGBNlq9KKCyQccujJePSYCp8Ibh-jf3evfHcmV8llXrc')"></div>
+<div class="absolute bottom-3 left-3 px-3 py-1 rounded-lg bg-black/60 backdrop-blur-md text-white font-label-md text-label-md">
+                  1/3 • Maquette finale avec courbes de niveau
+                </div>
+</div>
+<div class="snap-center min-w-full h-full relative">
+<div class="w-full h-full bg-cover bg-center" data-alt="Three students in a geography classroom carefully applying papier-mache and plaster to a cardboard mountain base, messy hands, laughing and focused" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBC_bdkq5_FX5bbOAeZxHQozMFu73XwtMI1DuPRur_JNGU1MnB1SnVe3_rcY3odArhHPKNd8D0NRMxsPIAboPVNsRLulbX6CanvOyO0b87jf3vi0CclRAMzLoC6SeZOFBBtLGZkbVju1V0k9Dke63g0Cd0yANEJsJU83lDIMYRijhe1rfV0H6qf115HSkzkVtjLd6YlfCC02jXgUiaXTrtCE5nNJVGZacQax5VSENo')"></div>
+<div class="absolute bottom-3 left-3 px-3 py-1 rounded-lg bg-black/60 backdrop-blur-md text-white font-label-md text-label-md">
+                  2/3 • Préparation de la structure en plâtre
+                </div>
+</div>
+<div class="snap-center min-w-full h-full relative">
+<div class="w-full h-full bg-cover bg-center" data-alt="Safe classroom vinegar and baking soda bubbling orange foam eruption demonstration from the volcano crater, students cheering around the table" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDjp48OjaARNEapT1LWpTZ4gvDjDv3Ux1Nu4zvlrNJUoM7yEWYKEaXjXbvxjRW9H95RmAMTtw7r2aztvpMKXfd5HH8PlA6yEvh9JPgj1F-ca3gDfgnas_wXOpkqvArMRFGmxtyLOBOsCyalSh_8d3HY-5OccB4pyr_CFYbHPcFyUi1B1pwkb9X_IqOjPpzKgEyvZPtfCaJppcz8B0E9igrH9SVkHk5v8W9hdGuuPXg')"></div>
+<div class="absolute bottom-3 left-3 px-3 py-1 rounded-lg bg-black/60 backdrop-blur-md text-white font-label-md text-label-md">
+                  3/3 • Test d'éruption réussi devant M. Laurent !
+                </div>
+</div>
+</div>
+<!-- Carousel Controls -->
+<button class="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/80 hover:bg-white text-on-surface flex items-center justify-center shadow-md" onclick="document.getElementById('carousel-geo').scrollBy({left: -400, behavior: 'smooth'})" type="button">
+<span class="material-symbols-outlined text-[18px]">chevron_left</span>
+</button>
+<button class="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/80 hover:bg-white text-on-surface flex items-center justify-center shadow-md" onclick="document.getElementById('carousel-geo').scrollBy({left: 400, behavior: 'smooth'})" type="button">
+<span class="material-symbols-outlined text-[18px]">chevron_right</span>
+</button>
+</div>
+<!-- Bottom bar -->
+<div class="flex items-center justify-between pt-space-xs text-on-surface-variant font-label-md text-label-md">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-secondary text-[20px]">stars</span>
+<span class="font-semibold text-on-surface">Projet coup de cœur de la semaine</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-3 py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-primary font-label-md text-label-md transition-colors flex items-center gap-1" type="button">
+<span class="material-symbols-outlined text-[16px]">favorite</span> 31 félicitations
+              </button>
+</div>
+</div>
+</article>
+</div>
+<!-- Right Lateral Deck: Highlights & Class Rhythms (4 cols) -->
+<div class="lg:col-span-4 space-y-space-lg">
+<!-- Highlight Card: Souvenir Marquant de la Semaine -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm space-y-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-tertiary-container text-[20px]">auto_awesome</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Souvenir de la semaine</h3>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-tertiary-fixed text-on-tertiary-fixed font-label-sm text-label-sm font-bold">Élu par la classe</span>
+</div>
+<div class="relative rounded-xl overflow-hidden group">
+<div class="w-full h-52 bg-cover bg-center group-hover:scale-105 transition-transform duration-500" data-alt="Two 1CE students sitting on an autumn bench outside in the courtyard reading an adventure comic together, bright golden hour sunshine, leaves falling, serene friendship moment" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAzaneHpU1sgMdo4C5N_cYfflk90antIdeXgjpDocfgJkUxs19L2ae6gY_D07TbJabf9u8dhG7GKuG1y5fetDBIwwHTI2e-I6O0UNNV_GFp9z0v9W_ibH8lBSvKVoJ0kf4BsuJGODGgtDFmr8s-XltwFbX_DMPcVeU6PyJ5b-_NCdqZ2SQqRq3WuAciO1vuvYYCpqDsDmKbr-BgdGWgs0rI-VJmUrT8d8SAifBiH_c')"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+<div class="absolute bottom-3 left-3 right-3 text-white">
+<span class="font-label-sm text-label-sm uppercase text-secondary-fixed">Jeudi 17 Octobre</span>
+<p class="font-title-md text-title-md font-bold leading-tight">L'instant lecture au soleil d'automne</p>
+<p class="font-body-sm text-body-sm text-slate-200 mt-1">Photo capturée par Léa pendant la récréation de 10h.</p>
+</div>
+</div>
+<div class="p-space-sm bg-surface-container-low rounded-xl flex items-center justify-between">
+<div class="flex items-center gap-space-xs text-on-surface">
+<span class="material-symbols-outlined text-secondary text-[20px]">favorite</span>
+<span class="font-label-md text-label-md font-semibold">142 votes reçus</span>
+</div>
+<button class="text-primary font-label-md text-label-md font-bold hover:underline" type="button">
+              Voir la galerie du mois
+            </button>
+</div>
+</div>
+<!-- Class Birthdays Card -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm space-y-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-primary text-[20px]">cake</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Anniversaires à venir</h3>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-surface-container text-on-surface-variant font-label-sm text-label-sm">Octobre - Novembre</span>
+</div>
+<div class="space-y-space-sm">
+<!-- Birthday Item 1 -->
+<div class="flex items-center justify-between p-space-sm bg-surface-container-low rounded-xl hover:bg-surface-container transition-colors">
+<div class="flex items-center gap-space-sm">
+<div class="relative">
+<img class="w-9 h-9 rounded-full object-cover" data-alt="Teenage boy with curly black hair smiling warmly, wearing a green sweatshirt" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD2STuwNI8bzQ4PXPtYXBND7AU23K9Z2A-mMk3NjD3FP6xGb_vtVh6jGlEMhi8hRV0BfgpM6KcxGOlN-nZTYcmJntT6Xpqc19i1hrdC1zoaxDSbjQonb8M0Rc-Pl0ONd6RngiErWzJ-Y4i8FhUIPTu1Q5WOty7vqPsfB936w4qLiK-1gKV0zhrv8gKRjplGQLZQiTsgh_LKas9QY81WlZP_4kUUlSikqaxZsasv8rc"/>
+<span class="absolute -top-1 -right-1 text-xs">🎉</span>
+</div>
+<div class="flex flex-col">
+<span class="font-title-md text-title-md text-on-surface">Thomas B.</span>
+<span class="font-label-sm text-label-sm text-outline">Fête ses 13 ans • Ce vendredi 25 Oct.</span>
+</div>
+</div>
+<button class="p-2 rounded-lg bg-surface-container-lowest hover:bg-primary-container hover:text-on-primary text-primary transition-colors" title="Préparer une carte" type="button">
+<span class="material-symbols-outlined text-[18px]">favorite</span>
+</button>
+</div>
+<!-- Birthday Item 2 -->
+<div class="flex items-center justify-between p-space-sm bg-surface-container-low rounded-xl hover:bg-surface-container transition-colors">
+<div class="flex items-center gap-space-sm">
+<div class="relative">
+<img class="w-9 h-9 rounded-full object-cover" data-alt="Smiling teenage girl with ponytail and denim jacket in classroom setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB9WKgCiXJ_3l9cAMXo9iZJnLd0YhrX_HMG2Sw0za00KTeXRajNzrLOTJvbEpYsOEevp5oKk-Jqa4mcDx7zmvYNQ2DlEipHXALUV4mMRDhByo1o7_Vu4lZQGeIXibVqVqovHNiQkhzjC3Kgmp0ax0ZtaXZbUGgPoucavrKnZsSdPqrPSnRxOIsaHxCjCmhoGiRnOKOK9ZaIHTqYbRs2mwoqq51pTzAXsjqTZ06SeEw"/>
+<span class="absolute -top-1 -right-1 text-xs">🎈</span>
+</div>
+<div class="flex flex-col">
+<span class="font-title-md text-title-md text-on-surface">Chloé V.</span>
+<span class="font-label-sm text-label-sm text-outline">Fête ses 12 ans • Dimanche 27 Oct.</span>
+</div>
+</div>
+<button class="p-2 rounded-lg bg-surface-container-lowest hover:bg-primary-container hover:text-on-primary text-primary transition-colors" title="Préparer une carte" type="button">
+<span class="material-symbols-outlined text-[18px]">favorite</span>
+</button>
+</div>
+<!-- Birthday Item 3 -->
+<div class="flex items-center justify-between p-space-sm bg-surface-container-low rounded-xl hover:bg-surface-container transition-colors">
+<div class="flex items-center gap-space-sm">
+<div class="relative">
+<img class="w-9 h-9 rounded-full object-cover" data-alt="Portrait of teenage boy with short blonde hair and cheerful smile wearing orange hoodie" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCeYLiJgIhN9sShw7AhAsHJ1mnRUSQcmDVJ8FzAeEBnE-rfdIRsCNpLkVaOOwQU7HD2BUn0MwA626uz0kn5VMvGxlpdEvrdw7ZxgFKA121ZlJi_Zo90TygQ2AeVSrHXZMNYQgVRHOtiwQNVGgMJxu2bsa0j8iluLqatC1U6_ywb79Fypv_NzwjrTUm5pMNJQ2vhfsanNgkDQxBwux5EYsn1C3ogVrTrO1rNI0-YKeY"/>
+<span class="absolute -top-1 -right-1 text-xs">🎂</span>
+</div>
+<div class="flex flex-col">
+<span class="font-title-md text-title-md text-on-surface">Hugo P.</span>
+<span class="font-label-sm text-label-sm text-outline">Fête ses 13 ans • 4 Novembre</span>
+</div>
+</div>
+<button class="p-2 rounded-lg bg-surface-container-lowest hover:bg-primary-container hover:text-on-primary text-primary transition-colors" title="Préparer une carte" type="button">
+<span class="material-symbols-outlined text-[18px]">favorite</span>
+</button>
+</div>
+</div>
+<div class="text-center pt-space-xs">
+<button class="font-label-md text-label-md text-primary font-semibold hover:underline" type="button">
+              + Ajouter un mot sur le tableau d'anniversaires
+            </button>
+</div>
+</div>
+<!-- Class Pulse / Activity Widget -->
+<div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm space-y-space-sm">
+<div class="flex items-center justify-between">
+<span class="font-title-md text-title-md text-on-surface">Participation Photo</span>
+<span class="font-label-sm text-label-sm text-secondary font-bold">89% active</span>
+</div>
+<div class="w-full bg-surface-container-low rounded-full h-2.5 overflow-hidden">
+<div class="bg-secondary h-full rounded-full" style="width: 89%"></div>
+</div>
+<div class="flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm pt-1">
+<span>25 sur 28 élèves ont partagé un souvenir</span>
+<span class="text-primary font-bold">+6 cette semaine</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+  function switchView(viewName) {
+    const tabPosts = document.getElementById('tab-posts');
+    const tabAlbums = document.getElementById('tab-albums');
+    
+    if (viewName === 'posts') {
+      tabPosts.className = 'flex items-center gap-space-xs px-space-md py-space-sm rounded-lg font-label-lg text-label-lg bg-primary-container text-on-primary transition-all shadow-sm';
+      tabAlbums.className = 'flex items-center gap-space-xs px-space-md py-space-sm rounded-lg font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-all';
+      const albumsSection = document.getElementById('album-carousel');
+      if (albumsSection) {
+        albumsSection.parentElement.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else {
+      tabAlbums.className = 'flex items-center gap-space-xs px-space-md py-space-sm rounded-lg font-label-lg text-label-lg bg-primary-container text-on-primary transition-all shadow-sm';
+      tabPosts.className = 'flex items-center gap-space-xs px-space-md py-space-sm rounded-lg font-label-lg text-label-lg text-on-surface-variant hover:text-on-surface transition-all';
+      const albumsSection = document.getElementById('album-carousel');
+      if (albumsSection) {
+        albumsSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+    }
+  }
+</script></main></div></body></html>
