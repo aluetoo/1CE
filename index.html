@@ -644,6 +644,10 @@
       const typed=prompt('Pour confirmer la suppression définitive, saisis ton adresse e-mail :');
       if(typed===null) return;
       if(typed.trim().toLowerCase()!==(currentUser.email||'').toLowerCase()){alert('Adresse e-mail incorrecte. Aucun compte n’a été supprimé.');return;}
+      const password=prompt('Confirme ton identité en saisissant ton mot de passe actuel :');
+      if(password===null)return;
+      const {data:reauth,error:reauthError}=await supabaseClient.auth.signInWithPassword({email:currentUser.email,password});
+      if(reauthError||reauth?.user?.id!==currentUser.id){alert('Vérification du mot de passe impossible. Aucun compte n’a été supprimé.');return;}
       if(!confirm('Dernière confirmation : supprimer définitivement ton compte et les données associées ?')) return;
       const {data,error}=await supabaseClient.functions.invoke('delete-own-account',{body:{expected_user_id:currentUser.id}});
       if(error || !data?.success){alert(data?.error || error?.message || 'Suppression impossible.');return;}
