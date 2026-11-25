@@ -34,6 +34,16 @@
     .alu-send-btn{display:grid;place-items:center;width:32px;height:32px;border-radius:999px;background:#37393c;color:#9ca3af;transition:background .16s ease,opacity .16s ease}
     .alu-send-btn:not(:disabled){background:#e5e7eb;color:#111827}.alu-send-btn:disabled{opacity:.45;cursor:not-allowed}
     @media(max-width:640px){.alu-composer-wrap{padding-left:7px!important;padding-right:7px!important}.alu-composer{border-radius:16px!important}.alu-textarea{font-size:16px!important}}
+    .call-fullscreen{position:fixed!important;inset:0!important;z-index:90!important;width:100vw!important;height:100dvh!important;max-height:none!important;min-height:0!important;margin:0!important;border-radius:0!important;padding:clamp(14px,3vw,36px)!important;display:flex!important;flex-direction:column!important;justify-content:center!important;overflow:auto!important;background:radial-gradient(ellipse at 50% 0%,#263a70 0%,#0f172a 58%,#020617 100%)!important;animation:callScreenEnter .48s cubic-bezier(.2,.8,.2,1) both}
+    .call-fullscreen .grid{flex:1;min-height:0;align-items:center;max-height:calc(100dvh - 150px)}
+    .call-fullscreen .grid>div{height:100%;min-height:220px!important;border-radius:24px!important;box-shadow:0 18px 55px #0008;animation:callTileEnter .65s cubic-bezier(.2,.8,.2,1) both}
+    .call-fullscreen .grid>div:nth-child(2){animation-delay:.1s}
+    .call-fullscreen video{width:100%;height:100%;object-fit:cover}
+    .call-fullscreen #call-live-status{font-size:13px}
+    @keyframes callScreenEnter{from{opacity:0;transform:scale(.965);filter:blur(8px)}to{opacity:1;transform:scale(1);filter:blur(0)}}
+    @keyframes callTileEnter{from{opacity:0;transform:translateY(24px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+    @media(max-width:640px){.call-fullscreen .grid{grid-template-columns:1fr;grid-template-rows:1fr 1fr;max-height:calc(100dvh - 180px)}.call-fullscreen .grid>div{min-height:0!important}}
+    @media(prefers-reduced-motion:reduce){.call-fullscreen{animation:none!important}.call-fullscreen .grid>div{animation:none!important}}
   </style>
 </head>
 <body class="bg-[#f8f9ff] text-slate-800 antialiased h-screen flex flex-col overflow-hidden">
@@ -1134,6 +1144,7 @@
     const setRoomIdle = (kind, text) => {
       const el = containerFor(kind);
       if (!el) return;
+      el.classList.remove('call-fullscreen');
       if (kind === 'direct') {
         el.classList.add('hidden');
         el.innerHTML = '';
@@ -1169,6 +1180,7 @@
         <div class="flex flex-wrap items-center justify-center gap-2 mt-3">
           <button type="button" id="call-mute-btn" class="px-3 py-2 rounded-full bg-slate-700 text-white text-xs font-semibold">Micro : activé</button>
           <button type="button" id="call-camera-btn" class="px-3 py-2 rounded-full bg-slate-700 text-white text-xs font-semibold" ${call.video ? '' : 'disabled'}>Caméra : activée</button>
+          <button type="button" id="call-fullscreen-btn" class="px-3 py-2 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold">⛶ Plein écran</button>
           <button type="button" id="call-hangup-btn" class="px-4 py-2 rounded-full bg-red-600 hover:bg-red-700 text-white text-xs font-bold">Raccrocher</button>
         </div>
         <p id="call-live-status" class="text-xs text-slate-300 mt-2">Connexion à l’appel…</p>`;
@@ -1176,7 +1188,17 @@
       if (local) local.srcObject = call.stream;
       $('call-mute-btn')?.addEventListener('click', toggleMute);
       $('call-camera-btn')?.addEventListener('click', toggleCamera);
+      $('call-fullscreen-btn')?.addEventListener('click', toggleCallFullscreen);
       $('call-hangup-btn')?.addEventListener('click', () => endCall(true));
+    };
+    const toggleCallFullscreen = () => {
+      if (!call) return;
+      const el = containerFor(call.kind);
+      const button = $('call-fullscreen-btn');
+      if (!el) return;
+      const entering = !el.classList.contains('call-fullscreen');
+      el.classList.toggle('call-fullscreen', entering);
+      if (button) button.textContent = entering ? '↙ Quitter le plein écran' : '⛶ Plein écran';
     };
     const liveStatus = text => {
       const el = $('call-live-status');
