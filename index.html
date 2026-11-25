@@ -314,18 +314,22 @@
     const dateLabel = value => new Date(value).toLocaleString("fr-BE",{dateStyle:"medium",timeStyle:"short"});
 
     async function moderateContent(text, kind, extra = {}) {
-      const response = await fetch(SUPABASE_URL + "/functions/v1/moderate-content", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "apikey": SUPABASE_PUBLISHABLE_KEY,
-          "Authorization": "Bearer " + session.access_token
-        },
-        body: JSON.stringify({ text, kind, ...extra })
-      });
-      const result = await response.json().catch(() => ({}));
-      if (!response.ok) return { ok:false, message:result.reason || result.error || "La modération a refusé l'envoi. Réessaie plus tard." };
-      return { ok:true, text:result.text || text, notice:result.notice || "" };
+      try {
+        const response = await fetch(SUPABASE_URL + "/functions/v1/moderate-content", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "apikey": SUPABASE_PUBLISHABLE_KEY,
+            "Authorization": "Bearer " + session.access_token
+          },
+          body: JSON.stringify({ text, kind, ...extra })
+        });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok) return { ok:false, message:result.reason || result.error || "La modération a refusé l'envoi. Réessaie plus tard." };
+        return { ok:true, text:result.text || text, notice:result.notice || "" };
+      } catch {
+        return { ok:false, message:"Impossible de joindre le service de modération. Réessaie dans un instant." };
+      }
     }
 
     function showState(authorized) {
