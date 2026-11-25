@@ -44,6 +44,41 @@
     @keyframes callTileEnter{from{opacity:0;transform:translateY(24px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
     @media(max-width:640px){.call-fullscreen .grid{grid-template-columns:1fr;grid-template-rows:1fr 1fr;max-height:calc(100dvh - 180px)}.call-fullscreen .grid>div{min-height:0!important}}
     @media(prefers-reduced-motion:reduce){.call-fullscreen{animation:none!important}.call-fullscreen .grid>div{animation:none!important}}
+
+@media(max-width:767px){
+ header{height:60px!important;min-height:60px;padding-left:10px!important;padding-right:10px!important;gap:8px}
+ header>div:last-child{gap:8px!important}
+ #mobile-menu-button{display:grid!important}
+ #global-search-input{display:none}
+ header button[onclick*="startClassCall"]{padding:9px!important;min-width:40px;justify-content:center}
+ header button[onclick*="startClassCall"] span{display:none}
+ header>div:last-child>div[onclick*="switchTab"]{padding-left:8px!important}
+ #mobile-sidebar-backdrop{display:block;position:fixed;inset:60px 0 0;background:rgba(2,6,23,.62);z-index:45;opacity:0;pointer-events:none;transition:opacity .22s ease}
+ aside.mobile-nav-drawer{position:fixed!important;top:60px;bottom:0;left:0;width:min(84vw,320px)!important;height:auto;z-index:50!important;transform:translateX(-105%);transition:transform .24s cubic-bezier(.2,.8,.2,1);box-shadow:16px 0 40px rgba(0,0,0,.28);padding-bottom:env(safe-area-inset-bottom)}
+ body.mobile-sidebar-open aside.mobile-nav-drawer{transform:translateX(0)}
+ body.mobile-sidebar-open #mobile-sidebar-backdrop{opacity:1;pointer-events:auto}
+ body.mobile-sidebar-open{overflow:hidden}
+ .flex-1.flex.overflow-hidden>main{min-width:0;width:100%}
+ #tab-general{min-width:0}
+ #tab-general>div:first-child{min-width:0;width:100%;padding:12px!important}
+ #tab-general>div:first-child>.max-w-4xl{min-width:0}
+ #tab-general>div:last-child{display:none!important}
+ #tab-general .max-w-4xl{gap:12px!important}
+ #tab-general .max-w-4xl>div:first-child{padding:12px!important;align-items:flex-start;gap:10px;flex-direction:column}
+ #tab-general .max-w-4xl>div:first-child>div:last-child{width:100%;display:grid;grid-template-columns:1fr 1fr}
+ #tab-general .max-w-4xl>div:first-child>div:last-child button{justify-content:center;padding:9px 6px;font-size:11px}
+ #tab-general h2{font-size:16px!important;line-height:1.35}
+ #tab-general .alu-composer-wrap{padding-bottom:calc(10px + env(safe-area-inset-bottom,0px))!important}
+ #tab-dms>div:first-child{width:34%!important;min-width:112px}
+ #tab-dms>div:last-child{min-width:0;padding:12px!important}
+ #tab-dms #dm-active-user-header{align-items:flex-start;gap:10px;flex-direction:column;padding:12px}
+ #tab-dms #dm-active-user-header>div:last-child{width:100%}
+ #tab-dms #dm-active-user-header button{padding:8px 6px;font-size:10px}
+ #tab-planning>div,#tab-posts>div,#tab-settings>div{padding:14px!important}
+ .call-fullscreen{z-index:100!important}
+}
+@media(min-width:768px){#mobile-menu-button,#mobile-sidebar-backdrop{display:none!important}}
+
   </style>
 </head>
 <body class="bg-[#f8f9ff] text-slate-800 antialiased h-screen flex flex-col overflow-hidden">
@@ -89,6 +124,7 @@
 
 <!-- Top Global Header -->
 <header class="h-16 border-b border-slate-200 bg-white px-6 flex items-center justify-between shrink-0 z-30 shadow-sm">
+<button id="mobile-menu-button" type="button" aria-label="Ouvrir le menu" aria-controls="class-sidebar" aria-expanded="false" class="hidden place-items-center w-10 h-10 rounded-xl text-slate-600 hover:bg-slate-100" onclick="document.body.classList.add('mobile-sidebar-open');this.setAttribute('aria-expanded','true')"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" stroke-width="2"/></svg></button>
 <div class="flex items-center gap-4 flex-1 max-w-xl">
 <div class="relative w-full">
 <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
@@ -112,14 +148,15 @@
 <span>Démarrer un appel</span>
 </button>
 <!-- Profile Quick View -->
-<div class="flex items-center gap-3 pl-3 border-l border-slate-200 cursor-pointer hover:opacity-80 transition-opacity" onclick="switchTab('settings')">
+<div class="flex items-center gap-3 pl-3 border-l border-slate-200 cursor-pointer hover:opacity-80 transition-opacity" onclick="switchTab('settings');document.body.classList.remove('mobile-sidebar-open');document.getElementById('mobile-menu-button')?.setAttribute('aria-expanded','false')">
 <img alt="Profil" class="w-9 h-9 rounded-full object-cover border-2 border-indigo-200" id="header-user-avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3iRI-CjR7Gm7SFDAoJqxFfozMuAeZPVDWSllX0xnKnuCAPnVka1Sm2cc600Smnkfq50CYpaAtX3muEhalp0z8rQ-0tiBmzEe9ffZl8v2SWg6xyx09rqXr3K0sGjAulmrHAwa85YImabEwApw2dHCBFxbW9t1e0hPgB_1cSGzeJ_IfhW4C4l_0Rw_J7BbmGVs-yU1HnNzexzY3fo6AdFS8iynxvBiI46TKSfeCnL0"/>
 </div>
 </div>
 </header>
 <div class="flex-1 flex overflow-hidden">
+<div id="mobile-sidebar-backdrop" onclick="document.body.classList.remove('mobile-sidebar-open');document.getElementById('mobile-menu-button')?.setAttribute('aria-expanded','false')" aria-hidden="true"></div>
 <!-- Persistent Sidebar Navigation -->
-<aside class="w-64 bg-white border-r border-slate-200 flex flex-col justify-between shrink-0 z-20">
+<aside id="class-sidebar" class="mobile-nav-drawer w-64 bg-white border-r border-slate-200 flex flex-col justify-between shrink-0 z-20">
 <div class="p-5 flex flex-col gap-6 overflow-y-auto custom-scrollbar">
 <!-- Class Brand -->
 <div class="flex items-center gap-3">
@@ -139,14 +176,14 @@
 <div>
 <span class="text-[11px] font-bold tracking-wider text-slate-400 uppercase px-3 block mb-2">Discussions &amp; Salons</span>
 <div class="space-y-1">
-<button class="nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-semibold transition-all bg-indigo-50 text-indigo-600" id="nav-btn-general" onclick="switchTab('general')">
+<button class="nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-semibold transition-all bg-indigo-50 text-indigo-600" id="nav-btn-general" onclick="switchTab('general');document.body.classList.remove('mobile-sidebar-open');document.getElementById('mobile-menu-button')?.setAttribute('aria-expanded','false')">
 <div class="flex items-center gap-3">
 <span class="text-base">#</span>
 <span>Général – Toute la classe</span>
 </div>
 <span class="w-2 h-2 rounded-full bg-indigo-600"></span>
 </button>
-<button class="nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-semibold transition-all text-slate-600 hover:bg-slate-50 hover:text-slate-900" id="nav-btn-dms" onclick="switchTab('dms')">
+<button class="nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-semibold transition-all text-slate-600 hover:bg-slate-50 hover:text-slate-900" id="nav-btn-dms" onclick="switchTab('dms');document.body.classList.remove('mobile-sidebar-open');document.getElementById('mobile-menu-button')?.setAttribute('aria-expanded','false')">
 <div class="flex items-center gap-3">
 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
 <span>Messages privés (DMs)</span>
@@ -158,14 +195,14 @@
 <div>
 <span class="text-[11px] font-bold tracking-wider text-slate-400 uppercase px-3 block mb-2">Activités de classe</span>
 <div class="space-y-1">
-<button class="nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-semibold transition-all text-slate-600 hover:bg-slate-50 hover:text-slate-900" id="nav-btn-planning" onclick="switchTab('planning')">
+<button class="nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-semibold transition-all text-slate-600 hover:bg-slate-50 hover:text-slate-900" id="nav-btn-planning" onclick="switchTab('planning');document.body.classList.remove('mobile-sidebar-open');document.getElementById('mobile-menu-button')?.setAttribute('aria-expanded','false')">
 <div class="flex items-center gap-3">
 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
 <span>Planning &amp; Révisions</span>
 </div>
 <span class="hidden text-xs bg-indigo-100 text-indigo-700 px-1.5 py-0.5 rounded-md font-bold" id="planning-live-badge">Live</span>
 </button>
-<button class="nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-semibold transition-all text-slate-600 hover:bg-slate-50 hover:text-slate-900" id="nav-btn-posts" onclick="switchTab('posts')">
+<button class="nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-semibold transition-all text-slate-600 hover:bg-slate-50 hover:text-slate-900" id="nav-btn-posts" onclick="switchTab('posts');document.body.classList.remove('mobile-sidebar-open');document.getElementById('mobile-menu-button')?.setAttribute('aria-expanded','false')">
 <div class="flex items-center gap-3">
 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
 <span>Fil d'actualité &amp; Posts</span>
@@ -176,7 +213,7 @@
 <div>
 <span class="text-[11px] font-bold tracking-wider text-slate-400 uppercase px-3 block mb-2">Espace Personnel</span>
 <div class="space-y-1">
-<button class="nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-semibold transition-all text-slate-600 hover:bg-slate-50 hover:text-slate-900" id="nav-btn-settings" onclick="switchTab('settings')">
+<button class="nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-semibold transition-all text-slate-600 hover:bg-slate-50 hover:text-slate-900" id="nav-btn-settings" onclick="switchTab('settings');document.body.classList.remove('mobile-sidebar-open');document.getElementById('mobile-menu-button')?.setAttribute('aria-expanded','false')">
 <div class="flex items-center gap-3">
 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
 <span>Paramètres &amp; Profil</span>
@@ -202,14 +239,14 @@
 <button id="sidebar-mic-toggle" class="p-1.5 hover:text-slate-700 hover:bg-slate-200 rounded-lg" title="Micro" type="button">
 <svg class="w-4 h-4 text-slate-500" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
 </button>
-<button class="p-1.5 hover:text-slate-700 hover:bg-slate-200 rounded-lg" onclick="switchTab('settings')" title="Paramètres">
+<button class="p-1.5 hover:text-slate-700 hover:bg-slate-200 rounded-lg" onclick="switchTab('settings');document.body.classList.remove('mobile-sidebar-open');document.getElementById('mobile-menu-button')?.setAttribute('aria-expanded','false')" title="Paramètres">
 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
 </button>
 </div>
 </div>
 </aside>
 <!-- Main Content Area with Tab Switching -->
-<main class="flex-1 flex flex-col overflow-hidden relative">
+<main class="flex-1 min-w-0 flex flex-col overflow-hidden relative">
 <!-- ==================== TAB 1: SALON GENERAL & APPELS COLLECTIFS ==================== -->
 <section class="tab-content flex-1 flex overflow-hidden" id="tab-general">
 <!-- Center Chat & Stream -->
@@ -544,7 +581,7 @@
 <h4 class="font-bold text-indigo-950 text-xs">Informations sur la classe 1CE</h4>
 <p class="text-xs text-indigo-800 mt-0.5">Espace collaboratif de la classe 1CE</p>
 </div>
-<button class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold shadow-sm" onclick="switchTab('planning')">
+<button class="px-4 py-2 bg-indigo-600 text-white rounded-xl text-xs font-semibold shadow-sm" onclick="switchTab('planning');document.body.classList.remove('mobile-sidebar-open');document.getElementById('mobile-menu-button')?.setAttribute('aria-expanded','false')">
                 Planning de classe
               </button>
 </div>
