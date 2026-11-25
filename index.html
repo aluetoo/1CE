@@ -515,7 +515,7 @@
     sidebarClose.addEventListener("click", closeSidebar);
     sidebarBackdrop.addEventListener("click", closeSidebar);
     document.addEventListener("keydown", e => { if(e.key === "Escape") closeSidebar(); });
-    document.querySelectorAll(".nav").forEach(btn => btn.addEventListener("click", () => {
+    document.querySelectorAll(".nav:not(#settingsOpen)").forEach(btn => btn.addEventListener("click", () => {
       closeSidebar();
       document.querySelectorAll(".nav").forEach(x => x.classList.toggle("active", x === btn));
       ["home","photos","posts","chat"].forEach(p => document.getElementById("page-"+p).classList.toggle("hidden", p !== btn.dataset.page));
