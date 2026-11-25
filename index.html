@@ -625,7 +625,7 @@
       loadGeneralMessages(); subscribeToGeneralMessages(); loadClassmates(); loadPlanningSessions(); loadPosts();
     }
     async function sendRecoveryCode(email) {
-      const {error}=await supabaseClient.auth.resetPasswordForEmail(email);
+      const {error}=await supabaseClient.auth.resetPasswordForEmail(email,{redirectTo:location.origin});
       if(error) throw error;
       document.getElementById('auth-reset-verify')?.classList.remove('hidden');
       authMessage('Demande envoyée. Vérifie ta boîte mail et saisis le code reçu. Si le message contient un lien, le modèle e-mail Supabase doit être configuré pour envoyer {{ .Token }}.');
@@ -1055,14 +1055,26 @@
           else{authMessage('Compte créé. Vérifie ton e-mail, confirme ton adresse puis reviens sur cette page pour terminer ton inscription.');}
         }catch(err){authMessage(err.message||'Création du compte impossible.',true);}
       });
+      supabaseClient.auth.onAuthStateChange((event,session)=>{
+        if(event==='PASSWORD_RECOVERY' && session){
+          currentUser=session.user;
+          document.getElementById('auth-gate')?.classList.remove('hidden');
+          showAuthPanel('reset');
+          document.getElementById('auth-reset-email').value=session.user.email||'';
+          document.getElementById('auth-reset-send')?.classList.add('hidden');
+          document.getElementById('auth-reset-token')?.classList.add('hidden');
+          document.getElementById('auth-reset-verify')?.classList.remove('hidden');
+          authMessage('Choisis ton nouveau mot de passe pour terminer la récupération.');
+        }
+      });
       document.getElementById('auth-reset-send')?.addEventListener('click',async()=>{
         const email=document.getElementById('auth-reset-email').value.trim();if(!email){authMessage('Saisis ton adresse e-mail.',true);return;}
         try{await sendRecoveryCode(email);}catch(err){authMessage(err.message||'Envoi du code impossible.',true);}
       });
       document.getElementById('auth-reset-confirm')?.addEventListener('click',async()=>{
         const email=document.getElementById('auth-reset-email').value.trim(),token=document.getElementById('auth-reset-token').value.trim(),password=document.getElementById('auth-reset-new-password').value;
-        if(!email||!token||password.length<8){authMessage('Vérifie l’e-mail, le code et le nouveau mot de passe (8 caractères minimum).',true);return;}
-        try{const {error}=await supabaseClient.auth.verifyOtp({email,token,type:'recovery'});if(error)throw error;const {error:updateError}=await supabaseClient.auth.updateUser({password});if(updateError)throw updateError;authMessage('Mot de passe modifié. Tu peux maintenant te connecter.');await supabaseClient.auth.signOut();showAuthPanel('login');}
+        if(!email||password.length<8){authMessage('Vérifie l’e-mail et le nouveau mot de passe (8 caractères minimum).',true);return;}
+        try{if(token){const {error}=await supabaseClient.auth.verifyOtp({email,token,type:'recovery'});if(error)throw error;}else if(!currentUser){throw new Error('Saisis le code reçu par e-mail ou ouvre le lien de récupération reçu.');}const {error:updateError}=await supabaseClient.auth.updateUser({password});if(updateError)throw updateError;authMessage('Mot de passe modifié. Tu peux maintenant te connecter.');await supabaseClient.auth.signOut();currentUser=null;showAuthPanel('login');}
         catch(err){authMessage(err.message||'Code invalide ou expiré.',true);}
       });
       document.getElementById('notifications-button')?.addEventListener('click', () => alert('Tu es à jour : aucune notification non lue.'));
