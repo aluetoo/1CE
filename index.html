@@ -270,6 +270,54 @@
       #general-messages-list{padding:10px 9px 24px!important}
       #tab-general .alu-composer-wrap{padding:8px 10px calc(45px + env(safe-area-inset-bottom,0px))!important}
     }
+
+    /* Thème Glassmorphism global : cartes, panneaux, navigation et contrôles */
+    body.glass-ui header,
+    body.glass-ui #class-sidebar,
+    body.glass-ui #tab-general .w-72,
+    body.glass-ui #tab-settings .max-w-4xl>div,
+    body.glass-ui #tab-posts .max-w-4xl>div,
+    body.glass-ui #tab-dms .max-w-4xl>div{
+      background:rgba(255,255,255,.58)!important;
+      border-color:rgba(255,255,255,.48)!important;
+      box-shadow:0 8px 28px rgba(15,23,42,.07),inset 0 1px 0 rgba(255,255,255,.58)!important;
+      backdrop-filter:blur(22px) saturate(1.45)!important;
+      -webkit-backdrop-filter:blur(22px) saturate(1.45)!important;
+    }
+    body.glass-ui [class*="bg-white"],
+    body.glass-ui [class*="bg-slate-50"],
+    body.glass-ui [class*="bg-gray-50"],
+    body.glass-ui [class*="bg-indigo-50"]{
+      background-color:rgba(255,255,255,.34)!important;
+      border-color:rgba(255,255,255,.48)!important;
+      box-shadow:0 6px 22px rgba(15,23,42,.055),inset 0 1px 0 rgba(255,255,255,.42);
+      backdrop-filter:blur(18px) saturate(1.4);
+      -webkit-backdrop-filter:blur(18px) saturate(1.4);
+    }
+    body.glass-ui button,
+    body.glass-ui input,
+    body.glass-ui select,
+    body.glass-ui textarea{
+      border-color:rgba(255,255,255,.38);
+      backdrop-filter:blur(14px) saturate(1.35);
+      -webkit-backdrop-filter:blur(14px) saturate(1.35);
+    }
+    body.glass-ui .nav-btn{background-color:rgba(255,255,255,.20)!important}
+    body.glass-ui .nav-btn:hover{background-color:rgba(255,255,255,.42)!important}
+    body.glass-ui .wa-bubble{
+      backdrop-filter:blur(16px) saturate(1.35);
+      -webkit-backdrop-filter:blur(16px) saturate(1.35);
+      border:1px solid rgba(255,255,255,.12);
+    }
+    body.glass-ui .general-call-dock{background:transparent!important;box-shadow:none!important}
+    body.glass-ui .general-call-dock button{
+      backdrop-filter:blur(22px) saturate(1.6)!important;
+      -webkit-backdrop-filter:blur(22px) saturate(1.6)!important;
+    }
+    body.glass-ui #tab-settings .max-w-4xl>div,
+    body.glass-ui #tab-general .w-72{
+      border-radius:22px;
+    }
   </style>
 </head>
 <body class="bg-[#f8f9ff] text-slate-800 antialiased h-screen flex flex-col overflow-hidden">
@@ -721,7 +769,7 @@
   <div class="p-4 bg-slate-50 rounded-2xl border border-slate-200 flex items-center justify-between gap-4">
     <div>
       <p class="font-bold text-slate-800 text-xs">Glassmorphism</p>
-      <p class="text-slate-500 text-xs mt-1">Active ou désactive les effets de verre sur les boutons d’appel et la barre de message.</p>
+      <p class="text-slate-500 text-xs mt-1">Active ou désactive les effets de verre sur l’ensemble de l’interface : panneaux, cartes, menus, champs et commandes.</p>
     </div>
     <label class="flex items-center gap-2 shrink-0 text-xs font-semibold text-slate-700">
       <input id="settings-glass-ui" type="checkbox" class="w-4 h-4 accent-indigo-600" checked/>
