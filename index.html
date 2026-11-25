@@ -1177,6 +1177,11 @@
     const initCallInbox = () => {
       if (!currentUser || inbox) return;
       inbox = supabaseClient.channel('call-inbox-'+currentUser.id)
+        .on('broadcast',{event:'incoming-call-response'},async ({payload}) => {
+          if (!call || call.kind !== 'direct' || payload.from !== call.targetId) return;
+          if (payload.kind === 'busy') await endCall(false, 'Ce camarade est déjà en appel.');
+          else if (payload.kind === 'declined') await endCall(false, 'L’appel a été refusé.');
+        })
         .on('broadcast',{event:'incoming-call'},async ({payload}) => {
           if (call) {
             const busy = supabaseClient.channel('call-inbox-'+payload.from);
@@ -1190,7 +1195,7 @@
           else {
             const reply=supabaseClient.channel('call-inbox-'+payload.from);
             await new Promise(resolve=>reply.subscribe(status=>{if(status==='SUBSCRIBED')resolve();}));
-            await reply.send({type:'broadcast',event:'signal',payload:{kind:'decline',from:currentUser.id,to:payload.from}});
+            await reply.send({type:'broadcast',event:'incoming-call-response',payload:{kind:'declined',from:currentUser.id}});
             supabaseClient.removeChannel(reply);
           }
         }).subscribe();
