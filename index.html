@@ -1,8 +1,833 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>1CE — Espace de classe</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><style>:root{font-family:system-ui,sans-serif;color:#eaf1ff;background:#0b1220}*{box-sizing:border-box}body{margin:0;background:linear-gradient(135deg,#0b1220,#15233a);min-height:100vh}main{max-width:1050px;margin:auto;padding:28px 18px}.top{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:24px}.brand{display:flex;align-items:center;gap:12px}.logo{display:grid;place-items:center;width:46px;height:46px;border-radius:14px;background:#9ce7c8;color:#102033;font-weight:900}.muted{color:#aebbd0;font-size:13px}.panel{background:#142238;border:1px solid #2b3d58;border-radius:20px;padding:22px;margin-bottom:18px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.full{grid-column:1/-1}h1,h2{margin:0 0 8px}h1{font-size:24px}h2{font-size:20px}.field{width:100%;padding:12px;margin:7px 0;border:1px solid #3a4d69;border-radius:10px;background:#0c1728;color:#fff}.button{padding:11px 15px;border:0;border-radius:10px;background:#9ce7c8;color:#102033;font-weight:800;cursor:pointer}.secondary{background:transparent;color:#dce7f5;border:1px solid #3a4d69}.row{display:flex;gap:9px;flex-wrap:wrap}.item{padding:14px 0;border-top:1px solid #2b3d58}.content{white-space:pre-wrap;line-height:1.55}.status{min-height:20px;margin-top:10px;color:#f6cc75;font-size:13px}.hidden{display:none!important}.photo{width:100%;max-height:280px;object-fit:cover;border-radius:12px;margin-top:10px}@media(max-width:700px){.grid{grid-template-columns:1fr}.full{grid-column:auto}.top{align-items:flex-start;flex-direction:column}}
-</style></head><body><main><header class="top"><div class="brand"><div class="logo">1CE</div><div><h1>Espace de classe</h1><div class="muted">1ère secondaire · contenus réels de la classe</div></div></div><button id="logout" class="button secondary hidden">Se déconnecter</button></header><section id="auth" class="panel"><h2>Connexion</h2><p class="muted">Connecte-toi avec ton compte de classe.</p><input id="email" class="field" type="email" placeholder="Adresse e-mail"><input id="password" class="field" type="password" placeholder="Mot de passe"><div class="row"><button id="login" class="button">Se connecter</button><button id="signup" class="button secondary">Créer un compte</button></div><div id="authStatus" class="status"></div></section><section id="app" class="hidden"><div class="grid"><article class="panel"><h2>Fil de la classe</h2><form id="postForm"><textarea id="postContent" class="field" rows="3" maxlength="3000" placeholder="Partager une information réelle…"></textarea><button class="button">Publier</button></form><div id="postStatus" class="status"></div><div id="posts"></div></article><article class="panel"><h2>Salon 1CE</h2><form id="messageForm"><input id="messageContent" class="field" maxlength="1000" placeholder="Écrire un message…"><button class="button">Envoyer</button></form><div id="messageStatus" class="status"></div><div id="messages"></div></article><article class="panel full"><h2>Photos de la classe</h2><div id="photos"></div></article></div></section></main><script>
-const db=supabase.createClient('https://fbqxuqkbywqvvynektqb.supabase.co','sb_publishable_VC3uEiNgvTX_2-L4DcKmVw_LwAVJuB8');let session=null;const $=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),date=s=>new Date(s).toLocaleString('fr-BE',{dateStyle:'short',timeStyle:'short'});const msg=(id,t)=>$(id).textContent=t||'';
-async function credentials(){const email=$('email').value.trim(),password=$('password').value;if(!email||!password){msg('authStatus','Remplis ton e-mail et ton mot de passe.');return null}return{email,password}}$('login').onclick=async()=>{const a=await credentials();if(a){const{error}=await db.auth.signInWithPassword(a);msg('authStatus',error?.message)}};$('signup').onclick=async()=>{const a=await credentials();if(a){const{error}=await db.auth.signUp(a);msg('authStatus',error?.message||'Compte créé. Vérifie ton e-mail si nécessaire.')}};$('logout').onclick=()=>db.auth.signOut();
-async function loadPosts(){const{data,error}=await db.from('posts').select('content,author_name,created_at').order('created_at',{ascending:false}).limit(30);$('posts').innerHTML=error?'<p class="muted">Impossible de charger les publications.</p>':(data||[]).map(p=>`<div class="item"><b>${esc(p.author_name||'Membre')}</b> <span class="muted">· ${date(p.created_at)}</span><div class="content">${esc(p.content)}</div></div>`).join('')||'<p class="muted">Aucune publication.</p>'}async function loadMessages(){const{data,error}=await db.from('messages').select('content,author_name,created_at').order('created_at',{ascending:false}).limit(40);$('messages').innerHTML=error?'<p class="muted">Impossible de charger les messages.</p>':(data||[]).map(m=>`<div class="item"><b>${esc(m.author_name||'Membre')}</b> <span class="muted">· ${date(m.created_at)}</span><div class="content">${esc(m.content)}</div></div>`).join('')||'<p class="muted">Aucun message.</p>'}async function loadPhotos(){const{data,error}=await db.from('photos').select('object_path,caption,created_at').order('created_at',{ascending:false}).limit(24);if(error){$('photos').innerHTML='<p class="muted">Impossible de charger les photos.</p>';return}const a=[];for(const p of data||[]){const{data:u}=await db.storage.from('class-photos').createSignedUrl(p.object_path,3600);a.push(`<div class="item"><b>${esc(p.caption||'Photo de la classe')}</b> <span class="muted">· ${date(p.created_at)}</span>${u?.signedUrl?`<img class="photo" src="${u.signedUrl}" alt="Photo 1CE">`:''}</div>`)}$('photos').innerHTML=a.join('')||'<p class="muted">Aucune photo.</p>'}
-$('postForm').onsubmit=async e=>{e.preventDefault();const content=$('postContent').value.trim();if(!content)return;const{error}=await db.from('posts').insert({author_id:session.user.id,content});msg('postStatus',error?.message||'Publication enregistrée.');if(!error){$('postContent').value='';loadPosts()}};$('messageForm').onsubmit=async e=>{e.preventDefault();const content=$('messageContent').value.trim();if(!content)return;const{error}=await db.from('messages').insert({author_id:session.user.id,content});msg('messageStatus',error?.message||'Message envoyé.');if(!error){$('messageContent').value='';loadMessages()}};async function render(s){session=s;$('auth').classList.toggle('hidden',!!s);$('app').classList.toggle('hidden',!s);$('logout').classList.toggle('hidden',!s);if(s)await Promise.all([loadPosts(),loadMessages(),loadPhotos()])}db.auth.getSession().then(({data})=>render(data.session));db.auth.onAuthStateChange((_,s)=>render(s));
-</script></body></html>
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101827">
+  <meta name="description" content="L’espace privé de la classe 1CE.">
+  <title>1CE — Notre classe</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{color-scheme:dark;--bg:#0c1320;--panel:#141e2e;--panel2:#1a273a;--line:#26364d;--muted:#9aabc1;--text:#f4f7fb;--mint:#8ce5c0;--blue:#8db7ff}
+    *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 12% 0%,#1a3150 0,transparent 38%),var(--bg);color:var(--text);font-family:"DM Sans",sans-serif;min-height:100vh}
+    button,input{font:inherit}button{cursor:pointer}.shell{max-width:1180px;margin:auto;padding:24px}.top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:26px}.compact-top{min-height:34px;margin-bottom:12px}.compact-top .menu-toggle{margin-right:auto}.sidebrand-mark{display:flex;align-items:center;gap:9px;padding:5px 9px;border:1px solid var(--line);border-radius:999px;background:rgba(140,229,192,.07)}.sidebrand-mark strong{width:27px;height:27px;border-radius:50%;font-size:11px}.sidebrand-mark span{font-size:11px;color:var(--text);font-weight:700}.brand{display:flex;align-items:center;gap:12px}.logo{width:46px;height:46px;border-radius:15px;background:linear-gradient(135deg,#8ce5c0,#8db7ff);display:grid;place-items:center;color:#102033;font:800 18px Manrope}.brand h1{font:800 20px Manrope;margin:0}.brand p{margin:3px 0 0;color:var(--muted);font-size:12px}.topnote{color:var(--muted);font-size:13px}
+    .hero{border:1px solid #31435b;border-radius:26px;padding:34px;background:linear-gradient(115deg,rgba(140,229,192,.13),rgba(141,183,255,.08)),var(--panel);position:relative;overflow:hidden;margin-bottom:22px}.hero:after{content:"1CE";position:absolute;right:25px;top:-26px;font:800 130px Manrope;color:#ffffff08}.eyebrow{color:var(--mint);font-weight:700;font-size:12px;letter-spacing:.14em;text-transform:uppercase}.hero h2{font:800 clamp(28px,5vw,46px) Manrope;line-height:1.08;max-width:600px;margin:12px 0}.hero p{color:#c1cede;max-width:520px;line-height:1.6;margin:0}
+    .layout{display:grid;grid-template-columns:220px minmax(0,1fr);gap:20px}.side,.card{background:rgba(20,30,46,.92);border:1px solid var(--line);border-radius:20px}.side{padding:12px;height:max-content;position:sticky;top:18px}.nav{width:100%;border:0;background:transparent;color:#b8c6d8;padding:13px 14px;text-align:left;border-radius:12px;font-weight:600;margin:2px 0}.nav.active,.nav:hover{background:var(--panel2);color:var(--mint)}.side small{display:block;color:var(--muted);padding:16px 14px 5px;text-transform:uppercase;letter-spacing:.1em;font-size:10px}
+    .content{min-width:0}.sectionhead{display:flex;justify-content:space-between;align-items:center;margin:0 0 14px}.sectionhead h3{font:700 19px Manrope;margin:0}.sectionhead span{color:var(--muted);font-size:12px}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.card{padding:19px}.card h4{margin:0 0 7px;font:700 15px Manrope}.card p{color:var(--muted);font-size:13px;line-height:1.55;margin:0}.tile{min-height:135px;background:linear-gradient(145deg,#1d3444,#1b2940);display:flex;flex-direction:column;justify-content:space-between}.tile .symbol{font-size:25px}.wide{grid-column:1/-1}.feed{display:grid;gap:12px}.empty{padding:30px;text-align:center;border:1px dashed #3b506b;border-radius:17px;color:var(--muted);font-size:13px}.login{max-width:440px;margin:50px auto;padding:26px}.login label{display:block;font-size:12px;color:#c5d1e0;margin:14px 0 7px}.login input{width:100%;border:1px solid var(--line);background:#0d1726;color:white;border-radius:11px;padding:13px;outline:none}.login input:focus{border-color:var(--mint)}.primary{border:0;border-radius:12px;padding:12px 17px;background:var(--mint);color:#102033;font-weight:800}.mutedbtn{background:transparent;color:var(--muted);border:1px solid var(--line);border-radius:11px;padding:9px 12px}.status{font-size:12px;color:var(--muted);margin-top:12px;min-height:18px}.hidden{display:none!important}.footer{text-align:center;color:#71839a;font-size:11px;padding:30px 0 12px}.field{width:100%;border:1px solid var(--line);background:#0d1726;color:white;border-radius:11px;padding:12px;outline:none;margin:8px 0 12px}.field:focus{border-color:var(--mint)}.formcard{margin-bottom:14px}.postmeta,.muted{color:var(--muted);font-size:12px}.postbody{white-space:pre-wrap;line-height:1.6;margin:12px 0}.postactions{display:flex;gap:8px;align-items:center;margin:10px 0}.comment{border-top:1px solid var(--line);padding:10px 0;font-size:13px}.photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}.photo-grid img{width:100%;height:170px;object-fit:cover;border-radius:13px}.chatlist{display:grid;gap:9px;margin-bottom:14px}.bubble{background:var(--panel2);border:1px solid var(--line);border-radius:14px;padding:11px 14px;max-width:85%}.bubble.mine{margin-left:auto;border-color:#456b68}.bubble p{margin:5px 0 0;color:#e3eaf4}.inlineform{display:flex;gap:8px}.inlineform .field{margin:0}.notice{color:var(--muted);font-size:12px;line-height:1.5;margin:10px 0}
 
+    /* Navigation latérale repliable */
+    .menu-toggle{display:inline-flex;align-items:center;justify-content:center;min-width:44px;font-size:19px}
+    .side{transition:width .22s ease,transform .22s ease;overflow:hidden}
+    .sidebrand{display:flex;align-items:center;gap:10px;padding:10px 12px 18px;border-bottom:1px solid var(--line);margin-bottom:10px}
+    .sidebrand strong{display:grid;place-items:center;width:34px;height:34px;border-radius:11px;background:linear-gradient(135deg,var(--mint),var(--blue));color:#102033}
+    .sidebrand span{font-size:12px;color:var(--muted)}
+    .layout.sidebar-collapsed{grid-template-columns:0 minmax(0,1fr);gap:0}
+    .layout.sidebar-collapsed .side{width:0;padding:0;border:0;opacity:0;pointer-events:none}
+    /* Interface de discussion façon Discord */
+    .discord-shell{display:grid;grid-template-columns:205px minmax(0,1fr);min-height:560px;border:1px solid var(--line);border-radius:19px;overflow:hidden;background:#111a29}
+    .channelrail{background:#101827;border-right:1px solid var(--line);padding:17px 12px;display:flex;flex-direction:column}
+    .rail-title{font-size:10px;letter-spacing:.12em;color:#8496ad;font-weight:800;padding:4px 8px 13px}
+    .channel{padding:11px 12px;border-radius:9px;color:#b8c6d8;font-weight:700;background:#233449}
+    .channel span{margin-left:5px}
+    .rail-hint{font-size:11px;color:#8496ad;line-height:1.5;padding:12px 8px}
+    .rail-bottom{margin-top:auto;border-top:1px solid var(--line);padding:14px 7px 2px;color:#b8c6d8;font-size:11px}
+    .online-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#62d69b;margin-right:6px}
+    .discord-main{min-width:0;display:flex;flex-direction:column}
+    .discord-head{height:64px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 18px;gap:10px}
+    .discord-head strong{display:block}.discord-head small{display:block;color:var(--muted);font-size:11px;margin-top:3px}
+    .online-pill{font-size:10px;color:#8ce5c0;background:#1b352f;border-radius:20px;padding:7px 10px;white-space:nowrap}
+    .discord-main .chatlist{padding:18px;display:flex;flex-direction:column;gap:12px;min-height:360px;max-height:480px;overflow:auto}
+    .discord-main .bubble{max-width:min(78%,560px);border-radius:14px 14px 14px 4px;background:#1b293c;padding:11px 14px}
+    .discord-main .bubble.mine{border-radius:14px 14px 4px 14px;background:#1c3a3a;border-color:#315f58}
+    .discord-main .bubble p{overflow-wrap:anywhere}
+    .discord-compose{display:flex;gap:9px;padding:12px 15px;border-top:1px solid var(--line);align-items:center}
+    .discord-compose .field{margin:0;border-radius:13px}.discord-compose .primary{min-width:46px;padding:12px}
+    /* Fil de publications façon réseau social */
+    #page-posts{max-width:790px;margin:auto}
+    #page-posts .formcard{border-radius:18px}
+    #page-posts .feed>.card{border-radius:18px;padding:20px 22px}
+    #page-posts .postmeta strong{color:#eef4fb;font-size:13px}
+    #page-posts .postbody{font-size:15px;margin:14px 0;overflow-wrap:anywhere}
+    #page-posts .postactions{border-top:1px solid var(--line);padding-top:11px;margin-bottom:0}
+    #page-posts .likebtn{border:0;background:transparent}
+    /* Galerie façon Google Photos */
+    #page-photos .photo-grid{grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:4px}
+    #page-photos .photo-grid .card{position:relative;padding:0;border:0;background:transparent;min-width:0;overflow:hidden;border-radius:5px;aspect-ratio:1/1}
+    #page-photos .photo-grid img{width:100%;height:100%;object-fit:cover;border-radius:5px;display:block;transition:transform .25s ease}
+    #page-photos .photo-grid .card:hover img{transform:scale(1.045)}
+    #page-photos .photo-grid .card p,#page-photos .photo-grid .photoby{position:absolute;left:0;right:0;margin:0;padding:22px 10px 9px;background:linear-gradient(transparent,rgba(0,0,0,.78));color:white;font-size:11px;opacity:0;transition:opacity .2s ease}
+    #page-photos .photo-grid .card p{bottom:25px;font-size:12px}
+    #page-photos .photo-grid .photoby{bottom:0;padding-top:8px;color:#e8edf4}
+    #page-photos .photo-grid .photoby strong{color:white}
+    #page-photos .photo-grid .card:hover p,#page-photos .photo-grid .card:hover .photoby{opacity:1}
+    #page-addphotos{max-width:760px!important;margin:0 auto!important}
+    #page-addphotos .formcard{padding:24px;border-radius:18px}
+    @media(hover:none){#page-photos .photo-grid .card p,#page-photos .photo-grid .photoby{opacity:1}}
+    @media(max-width:720px){
+      .menu-toggle{display:inline-flex!important}
+      .layout{display:block}
+      .layout .side{position:fixed;z-index:30;left:12px;top:76px;bottom:12px;width:245px;max-height:none;display:block;overflow:auto;box-shadow:0 18px 60px #0009;transform:translateX(-120%);opacity:1;padding:12px}
+      .layout.mobile-sidebar-open .side{transform:translateX(0)}
+      .layout.sidebar-collapsed .side{width:245px;padding:12px;border:1px solid var(--line);opacity:1}
+      .discord-shell{grid-template-columns:1fr;min-height:500px}
+      .channelrail{display:none}
+      .discord-main .chatlist{min-height:330px}
+      #page-photos .photo-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:3px}
+      #page-photos .photo-grid .card{aspect-ratio:1/1}
+    }
+
+    @media(max-width:720px){.shell{padding:16px}.layout{grid-template-columns:1fr}.side{position:static;display:flex;overflow:auto;gap:4px}.side small{display:none}.nav{white-space:nowrap;width:auto}.grid{grid-template-columns:1fr}.hero{padding:25px}.topnote{display:none}.wide{grid-column:auto}}
+
+    /* Rubriques en pleine largeur, sans cadre étroit centré */
+    .shell:has(#appview:not(.hidden)){max-width:none;width:100%;padding:24px clamp(16px,3vw,48px)}
+    #appview{width:100%;min-height:calc(100dvh - 100px)}
+    #appview .content{width:100%;max-width:none;min-width:0}
+    #appview.page-fullscreen .content{min-height:calc(100dvh - 100px)}
+    #page-chat .discord-shell{width:100%;min-height:calc(100dvh - 190px);height:calc(100dvh - 190px)}
+    #page-chat .discord-main{min-height:0}
+    #page-chat .discord-main .chatlist{flex:1;min-height:0;overflow-y:auto}
+    @media(max-width:720px){
+      #appview.page-fullscreen .content{min-height:calc(100dvh - 90px)}
+      #page-chat .discord-shell{height:calc(100dvh - 150px);min-height:480px}
+      .shell:has(#appview:not(.hidden)){padding:12px}
+    }
+
+    /* Vrai tiroir latéral pleine hauteur : même comportement desktop et mobile */
+    .layout{display:block!important;position:relative}
+    #mainSidebar.side{
+      position:fixed!important;z-index:1001!important;left:0!important;top:0!important;bottom:0!important;
+      width:min(340px,86vw)!important;height:100dvh!important;max-height:none!important;
+      overflow-y:auto!important;overflow-x:hidden!important;border-radius:0 22px 22px 0!important;
+      padding:22px 16px!important;background:#111c2d!important;
+      box-shadow:18px 0 60px #0008!important;transform:translateX(-110%)!important;
+      opacity:1!important;pointer-events:none!important;transition:transform .28s cubic-bezier(.2,.8,.2,1)!important;
+    }
+    #appview.sidebar-open #mainSidebar.side{transform:translateX(0)!important;pointer-events:auto!important}
+    #appview .sidebar-backdrop{
+      display:block;position:fixed;inset:0;z-index:1000;background:rgba(3,8,16,.68);
+      opacity:0;visibility:hidden;pointer-events:none;transition:opacity .25s ease,visibility .25s ease;
+      backdrop-filter:blur(3px);
+    }
+    #appview.sidebar-open .sidebar-backdrop{opacity:1;visibility:visible;pointer-events:auto}
+    .sidebrand{display:flex!important;align-items:center;justify-content:space-between;gap:10px;padding:6px 4px 20px!important;margin-bottom:16px!important}
+    .sidebrand-mark{display:flex;align-items:center;gap:10px}
+    .sidebar-close{width:38px;height:38px;border:1px solid var(--line);border-radius:11px;background:#1a273a;color:#eef4fb;font-size:17px;cursor:pointer}
+    #mainSidebar .nav{display:block;width:100%;padding:15px 14px;margin:5px 0;font-size:14px}
+    #mainSidebar small{padding:10px 14px 8px}
+    #sidebarToggle{display:inline-flex!important;align-items:center;justify-content:center;min-width:46px;min-height:42px;font-size:20px}
+    body.sidebar-lock{overflow:hidden}
+    @media(max-width:720px){
+      #mainSidebar.side{width:min(320px,88vw)!important}
+      #appview .content{width:100%;min-width:0}
+    }
+
+
+    /* Mode plein écran réel : la rubrique occupe toute la fenêtre */
+    body:has(#appview:not(.hidden)){overflow:hidden}
+    .shell:has(#appview:not(.hidden)){max-width:none;width:100%;margin:0;padding:0}
+    .shell:has(#appview:not(.hidden)) > .top{
+      position:fixed;z-index:1002;top:0;left:0;right:0;
+      margin:0;padding:12px 22px;background:rgba(12,19,32,.97);
+      border-bottom:1px solid var(--line);backdrop-filter:blur(12px)
+    }
+    #appview:not(.hidden){
+      position:fixed!important;inset:0!important;z-index:900!important;
+      display:block!important;width:100vw!important;height:100dvh!important;
+      min-height:100dvh!important;max-width:none!important;margin:0!important;
+      padding:86px 24px 24px!important;overflow-y:auto!important;overflow-x:hidden!important;
+      background:var(--bg)!important;border:0!important;border-radius:0!important;
+    }
+    #appview.hidden{display:none!important}
+    #appview .content{display:block!important;width:100%!important;max-width:none!important;min-width:0!important;margin:0!important}
+    #appview .content > div:not(.hidden){width:100%!important;max-width:none!important}
+    #appview.page-fullscreen .content{min-height:calc(100dvh - 110px)}
+    #page-chat .discord-shell{
+      width:100%!important;max-width:none!important;
+      height:calc(100dvh - 120px)!important;min-height:0!important;
+      border-radius:0!important
+    }
+    #page-chat .discord-main{min-height:0}
+    #page-chat .discord-main .chatlist{flex:1;min-height:0;overflow-y:auto}
+    #sidebarToggle{position:relative;z-index:1003}
+    @media(max-width:720px){
+      .shell:has(#appview:not(.hidden)) > .top{padding:10px 12px}
+      #appview:not(.hidden){padding:72px 12px 12px!important}
+      #appview.page-fullscreen .content{min-height:calc(100dvh - 84px)}
+      #page-chat .discord-shell{height:calc(100dvh - 84px)!important;min-height:0!important}
+    }
+
+
+    /* Pleine largeur bord à bord sous l’en-tête fixe */
+    #appview:not(.hidden){
+      position:fixed!important;inset:0!important;
+      width:100vw!important;height:100vh!important;height:100dvh!important;
+      max-width:none!important;min-height:0!important;margin:0!important;
+      padding:70px 0 0!important;overflow-x:hidden!important;overflow-y:auto!important;
+      display:block!important;border:0!important;border-radius:0!important;
+    }
+    #appview .content,
+    #appview .content > div:not(.hidden){
+      display:block!important;width:100%!important;max-width:none!important;
+      min-width:0!important;margin:0!important;
+    }
+    #appview #page-home,
+    #appview #page-photos,
+    #appview #page-addphotos,
+    #appview #page-posts,
+    #appview #page-chat{padding:0!important}
+    #appview #page-posts{max-width:none!important}
+    #appview #page-chat .discord-shell{
+      width:100%!important;max-width:none!important;margin:0!important;
+      height:calc(100dvh - 70px)!important;min-height:0!important;
+      border:0!important;border-radius:0!important;
+    }
+    #appview #page-chat .discord-main{min-height:0!important}
+    #appview #page-chat .discord-main .chatlist{flex:1!important;min-height:0!important;max-height:none!important;overflow-y:auto!important}
+    @media(max-width:720px){
+      #appview:not(.hidden){padding:62px 0 0!important}
+      #appview #page-chat .discord-shell{height:calc(100dvh - 62px)!important}
+      #appview #page-home .hero{border-radius:0!important;margin:0 0 14px!important}
+      #appview #page-home .sectionhead,
+      #appview #page-home .grid,
+      #appview #page-photos > *,
+      #appview #page-addphotos > *,
+      #appview #page-posts > *{margin-left:12px!important;margin-right:12px!important}
+      #appview #page-chat .discord-shell{height:calc(100dvh - 62px)!important}
+    }
+
+
+    .online-pill{border:1px solid var(--line)!important;background:#1a273a!important;color:#dce6f2!important;border-radius:999px;padding:8px 12px;cursor:pointer;font:600 12px "DM Sans",sans-serif}
+    .online-pill:hover{background:#26364d!important}
+    .typing-indicator{min-height:22px;padding:0 18px;color:#aebdd0;font-size:12px}
+    .online-panel{position:absolute;z-index:20;right:18px;top:58px;min-width:220px;max-width:min(320px,80vw);padding:14px;background:#172438;border:1px solid var(--line);border-radius:14px;box-shadow:0 12px 34px #0008;color:var(--text)}
+    .discord-main{position:relative}
+    .online-panel strong{display:block;margin-bottom:10px;font-size:13px}
+    .online-member{padding:7px 0;border-top:1px solid #293950;color:#dce6f2;font-size:12px}
+    .online-empty{color:var(--muted);font-size:12px}
+    /* Paramètres en plein écran */
+    #settings-screen{position:fixed;inset:0;z-index:1100;display:flex;flex-direction:column;background:#131314;color:#f4f4f5;transform:translateX(100%);visibility:hidden;transition:transform .28s ease,visibility .28s ease}
+    #settings-screen.open{transform:translateX(0);visibility:visible}
+    .settings-header{min-height:68px;display:flex;align-items:center;gap:14px;padding:12px 22px;border-bottom:1px solid #343438}
+    .settings-header h2{font:700 19px Manrope;margin:0}
+    .settings-back{width:40px;height:40px;border:1px solid #414148;border-radius:12px;background:#202024;color:#f4f4f5;font-size:20px}
+    .settings-content{width:min(760px,100%);margin:0 auto;padding:24px 18px 48px;overflow:auto}
+    .settings-group{margin:0 0 22px;padding:18px;border:1px solid #35353b;border-radius:17px;background:#1b1b1f}
+    .settings-group h3{font:700 15px Manrope;margin:0 0 8px}
+    .settings-group p{color:#b8b8c2;font-size:13px;line-height:1.6;margin:0}
+    .settings-row{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid #343438}
+    .settings-row:first-of-type{border-top:0}
+    .settings-icon{width:38px;height:38px;display:grid;place-items:center;border-radius:12px;background:#29292f}
+    .settings-row strong{display:block;font-size:13px}.settings-row small{display:block;color:#a5a5af;font-size:11px;margin-top:4px}
+    @media(max-width:600px){.settings-header{padding:10px 14px}.settings-content{padding:18px 12px 36px}}
+\n.photo-grid .photo-thumb{cursor:zoom-in}.photo-lightbox{position:fixed;inset:0;z-index:1500;background:#000f;display:flex;align-items:center;justify-content:center;padding:60px 70px}.photo-lightbox.hidden{display:none!important}.photo-lightbox figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:12px}.photo-lightbox img{max-width:86vw;max-height:78dvh;object-fit:contain}.photo-lightbox figcaption{color:white}.lightbox-close,.lightbox-arrow{position:absolute;border:1px solid #ffffff35;background:#20242c;color:white;border-radius:50%;width:46px;height:46px;font-size:30px}.lightbox-close{right:22px;top:18px}.lightbox-arrow.prev{left:20px}.lightbox-arrow.next{right:20px}.lightbox-count{position:absolute;bottom:18px;color:#ddd}.add-choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;max-width:850px}.add-choice{display:flex;flex-direction:column;align-items:flex-start;gap:10px;text-align:left;padding:24px;border:1px solid var(--line);border-radius:18px;background:var(--panel);color:var(--text);min-height:150px}.add-choice>span{font-size:30px}.add-choice small{color:var(--muted)}.add-back{margin:4px 0 14px}.settings-organized{display:flex;flex-direction:column;gap:14px}.settings-category-menu{display:flex;flex-direction:column;gap:10px}.settings-category-tile{display:flex;align-items:center;gap:14px;width:100%;padding:17px;border:1px solid #30343b;border-radius:15px;background:#1b1b1f;color:#f4f4f5;text-align:left}.settings-category-tile>span:first-child{font-size:23px;color:var(--mint)}.settings-category-tile>span:nth-child(2){display:flex;flex:1;flex-direction:column;gap:4px}.settings-category-tile small,.settings-glass-row small{display:block;color:#a5a5af;font-size:12px;margin-top:4px}.settings-panel{padding:20px;border:1px solid #35353b;border-radius:17px;background:#1b1b1f;color:#f4f4f5}.settings-panel h3{margin:0 0 16px}.settings-panel p{color:#bbb;font-size:13px}.settings-lang-grid{display:flex;flex-wrap:wrap;gap:10px}.settings-lang{padding:12px 15px;border-radius:12px;background:#24252a;border:1px solid #3a3b42;color:white}.settings-lang.active{border-color:var(--mint);color:var(--mint)}.settings-color-grid{display:grid;grid-template-columns:repeat(4,52px);gap:16px}.settings-color{width:48px;height:48px;border-radius:50%;background:var(--swatch);border:3px solid transparent}.settings-color.active{border-color:white;box-shadow:0 0 0 3px #ffffff35}.settings-glass-row{display:flex;justify-content:space-between;align-items:center;gap:16px}body.glass-mode .card,body.glass-mode .side{backdrop-filter:blur(18px);background:rgba(25,38,57,.72)}@media(max-width:600px){.add-choices{grid-template-columns:1fr}.photo-lightbox{padding:60px 12px}.photo-lightbox img{max-width:94vw;max-height:72dvh}}
+.account-security-modal{position:fixed;inset:0;z-index:1600;background:#000b;display:flex;align-items:center;justify-content:center;padding:18px}.account-security-modal.hidden{display:none!important}.account-security-card{width:min(460px,100%);max-height:90dvh;overflow:auto;padding:22px;border:1px solid #45464a;border-radius:18px;background:#1b1b1f;color:#f4f4f5}.account-security-card h3{margin:0 0 8px}.account-security-card p{color:#bbb;font-size:13px;line-height:1.5}.account-security-card label{display:block;font-size:12px;margin:12px 0 6px}.account-security-card button{margin-top:10px;width:100%}.account-security-card .field{width:100%}.settings-panel button{margin:6px 6px 6px 0}.settings-panel button:disabled{opacity:.45;cursor:not-allowed}body.glass-mode .settings-category-tile,body.glass-mode .settings-panel,body.glass-mode .account-security-card{backdrop-filter:blur(18px);background:rgba(30,34,42,.72)}
+  
+    /* En-tête du chat adapté aux petits écrans */
+    #appview #page-chat .discord-main{min-width:0;width:100%}
+    #appview #page-chat .discord-head{box-sizing:border-box;min-width:0}
+    #appview #page-chat .discord-head > div{min-width:0}
+    #appview #page-chat .discord-head strong{overflow-wrap:anywhere}
+    #appview #page-chat .online-pill{flex:0 0 auto;max-width:100%;white-space:normal;line-height:1.35}
+    @media(max-width:520px){
+      #appview #page-chat .discord-head{
+        height:auto!important;min-height:0!important;flex-direction:column!important;
+        align-items:flex-start!important;justify-content:center!important;
+        gap:9px!important;padding:13px 14px!important;
+      }
+      #appview #page-chat .discord-head > div{width:100%;min-width:0}
+      #appview #page-chat .discord-head strong{font-size:15px;line-height:1.35}
+      #appview #page-chat .discord-head small{font-size:12px;line-height:1.4;white-space:normal}
+      #appview #page-chat .online-pill{
+        align-self:flex-start!important;font-size:11px!important;
+        padding:7px 10px!important;min-height:34px;
+      }
+      #appview #page-chat .discord-main{min-width:0}
+      #appview #page-chat .discord-main .chatlist{padding:12px!important}
+      #appview #page-chat .discord-compose{padding:10px!important;gap:7px!important}
+      #appview #page-chat .discord-compose .field{min-width:0;width:0;flex:1 1 auto}
+    }
+
+    /* En-tête réduit au seul bouton rond du menu latéral */
+    .shell > .top.compact-top{
+      position:fixed!important;z-index:1003!important;top:10px!important;left:12px!important;
+      right:auto!important;width:42px!important;height:42px!important;min-height:0!important;
+      margin:0!important;padding:0!important;background:transparent!important;
+      border:0!important;box-shadow:none!important;backdrop-filter:none!important;
+    }
+    #sidebarToggle{
+      display:inline-flex!important;width:42px!important;height:42px!important;
+      min-width:42px!important;min-height:42px!important;padding:0!important;
+      align-items:center!important;justify-content:center!important;
+      border:1px solid var(--line)!important;border-radius:50%!important;
+      background:rgba(20,30,46,.96)!important;color:var(--text)!important;
+      font-size:18px!important;box-shadow:0 4px 16px #0005!important;
+    }
+    #appview:not(.hidden){padding-top:54px!important}
+    @media(max-width:720px){#appview:not(.hidden){padding-top:54px!important}}
+
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="top compact-top"><button class="mutedbtn menu-toggle" id="sidebarToggle" type="button" aria-label="Ouvrir le menu">☰</button></header>
+    <section id="loginview" class="card login">
+      <div class="eyebrow">Accès membres</div><h3 style="font:800 24px Manrope;margin:8px 0">Bienvenue dans la 1CE</h3>
+      <p style="color:var(--muted);font-size:13px;line-height:1.5">Tu peux créer ton compte directement ici, puis rejoindre l’espace avec le code de la classe.</p>
+      <div id="authchoices" style="display:flex;gap:8px;margin:18px 0">
+        <button class="primary" id="showlogin" type="button">Se connecter</button>
+        <button class="mutedbtn" id="showsignup" type="button">Créer un compte</button>
+      </div>
+      <form id="loginform">
+        <label for="email">Adresse e-mail</label><input id="email" type="email" autocomplete="username" required>
+        <label for="password">Mot de passe</label><input id="password" type="password" autocomplete="current-password" required>
+        <div style="margin-top:18px"><button class="primary" type="submit">Se connecter</button></div>
+        <button class="mutedbtn" id="forgotpassword" type="button" style="margin-top:12px">Mot de passe oublié ?</button>
+      </form>
+      <form id="resetrequestform" class="hidden">
+        <h3 style="font:800 20px Manrope;margin:8px 0">Réinitialiser le mot de passe</h3>
+        <p style="color:var(--muted);font-size:13px;line-height:1.5">Entre ton adresse e-mail. Nous t’enverrons un lien pour choisir un nouveau mot de passe.</p>
+        <label for="resetemail">Adresse e-mail</label><input id="resetemail" type="email" autocomplete="email" required>
+        <div style="margin-top:18px"><button class="primary" type="submit">Envoyer le lien</button> <button class="mutedbtn" id="cancelreset" type="button">Retour</button></div>
+      </form>
+      <form id="newpasswordform" class="hidden">
+        <h3 style="font:800 20px Manrope;margin:8px 0">Choisir un nouveau mot de passe</h3>
+        <label for="newpassword">Nouveau mot de passe</label><input id="newpassword" type="password" minlength="8" autocomplete="new-password" required>
+        <label for="newpasswordconfirm">Confirmer le mot de passe</label><input id="newpasswordconfirm" type="password" minlength="8" autocomplete="new-password" required>
+        <div style="margin-top:18px"><button class="primary" type="submit">Enregistrer le nouveau mot de passe</button></div>
+      </form>
+      <form id="signupform" class="hidden">
+        <label for="signupname">Ton prénom ou nom d’affichage</label><input id="signupname" maxlength="60" autocomplete="nickname" required>
+        <label for="signupemail">Adresse e-mail</label><input id="signupemail" type="email" autocomplete="email" required>
+        <label for="signuppassword">Choisis un mot de passe (8 caractères minimum)</label><input id="signuppassword" type="password" minlength="8" autocomplete="new-password" required>
+        <label for="signupcode">Code d’accès de la classe</label><input id="signupcode" autocomplete="off" required>
+        <div style="margin-top:18px"><button class="primary" type="submit">Créer mon compte</button></div>
+      </form>
+      <form id="joinform" class="hidden">
+        <h3 style="font:800 21px Manrope;margin:8px 0">Rejoindre la classe</h3>
+        <p style="color:var(--muted);font-size:13px">Ton compte est créé. Indique ton nom d’affichage et le code transmis par la classe.</p>
+        <label for="joinname">Nom d’affichage</label><input id="joinname" maxlength="60" required>
+        <label for="joincode">Code d’accès de la classe</label><input id="joincode" autocomplete="off" required>
+        <div style="margin-top:18px"><button class="primary" type="submit">Rejoindre la 1CE</button></div>
+      </form>
+      <div class="status" id="loginstatus" role="status"></div>
+    </section>
+    <section id="appview" class="layout hidden">
+      <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+      <aside class="side" id="mainSidebar"><div class="sidebrand"><div class="sidebrand-mark"><strong>1CE</strong><span>Notre classe</span></div><button class="sidebar-close" id="sidebarClose" type="button" aria-label="Fermer le menu">✕</button></div><small>Explorer</small><button class="nav active" data-page="home">⌂ &nbsp; Accueil</button><button class="nav" data-page="photos">▦ &nbsp; Souvenirs</button><button class="nav" data-page="addphotos">＋ &nbsp; Ajouter</button><button class="nav" data-page="posts">▤ &nbsp; Publications</button><button class="nav" data-page="chat">◌ &nbsp; Discussions</button><button class="nav" id="settingsOpen" type="button">⚙ &nbsp; Paramètres</button></aside>
+      <main class="content">
+        <div id="page-home">
+        <div class="sectionhead"><h3>Le coin de la classe</h3><span>Bienvenue 👋</span></div><div class="grid"><article class="card tile"><div class="symbol">📸</div><div><h4>Nos souvenirs</h4><p>Les moments et photos partagés par la classe.</p></div></article><article class="card tile"><div class="symbol">💬</div><div><h4>Le fil de la 1CE</h4><p>Les nouvelles et les discussions du groupe.</p></div></article><article class="card wide"><h4>À la une</h4><p>Bienvenue dans l’espace de la 1CE ! Retrouvez les photos, les nouvelles et les discussions de la classe depuis le menu.</p></article></div></div>
+        <div id="page-photos" class="hidden">
+    <div class="sectionhead"><h3>Souvenirs</h3><span>Galerie privée de la 1CE</span></div>
+    <div class="photo-grid" id="photogrid"><div class="empty">Les photos de la classe apparaîtront ici.</div></div>
+  </div>
+  <div id="page-addphotos" class="hidden"><div class="sectionhead"><h3>Ajouter</h3><span>Partager avec la classe</span></div>
+    <div class="add-choices" id="addChoices"><button class="add-choice" type="button" data-add-kind="photo"><span>📷</span><strong>Ajouter une photo</strong><small>Partager un souvenir dans la galerie</small></button><button class="add-choice" type="button" data-add-kind="post"><span>✍️</span><strong>Créer une publication</strong><small>Partager une nouvelle avec la classe</small></button></div>
+    <div id="add-photo-panel" class="hidden"><button class="mutedbtn add-back" type="button">← Retour</button><form id="photoform" class="card formcard"><h4>Ajouter une photo</h4><input class="field" id="photofile" type="file" accept="image/jpeg,image/png,image/webp,image/gif" required><input class="field" id="photocaption" maxlength="240" placeholder="Une petite légende (facultatif)"><label class="notice"><input id="photoconsent" type="checkbox" required> J’ai l’accord des personnes reconnaissables sur cette photo avant de la partager.</label><button class="primary" type="submit">Partager la photo</button><div class="status" id="photostatus" role="status"></div></form></div>
+    <div id="add-post-panel" class="hidden"><button class="mutedbtn add-back" type="button">← Retour</button><form id="postform" class="card formcard"><h4>Créer une publication</h4><textarea class="field" id="postcontent" rows="4" maxlength="3000" placeholder="Quoi de neuf dans la 1CE ?" required></textarea><button class="primary" type="submit">Publier</button><div class="status" id="poststatus" role="status"></div></form></div></div>
+        <div id="page-posts" class="hidden">
+    <div class="sectionhead"><h3>Publications</h3><span>Le fil de la classe</span></div>
+    
+    <div class="feed" id="posts"><div class="empty">Chargement des publications…</div></div>
+  </div>
+        <div id="page-chat" class="hidden"><div class="discord-shell"><aside class="channelrail"><div class="rail-title">SALONS TEXTUELS</div><div class="channel active"># <span>général</span></div><div class="rail-hint">Un salon commun pour toute la 1CE</div><div class="rail-bottom">Salon de la classe</div></aside><section class="discord-main"><div class="discord-head"><div><strong># général</strong><small>Les discussions de la classe</small></div><button class="online-pill" id="onlineToggle" type="button" aria-expanded="false">Membres en ligne · <span id="onlineCount">0</span></button></div><div class="chatlist" id="chatlist"><div class="empty">Les messages apparaîtront ici.</div></div><div id="typingIndicator" class="typing-indicator" aria-live="polite"></div><div id="onlinePanel" class="online-panel hidden"><strong>Membres connectés</strong><div id="onlineList"></div></div><form id="chatform" class="discord-compose"><input class="field" id="chatcontent" maxlength="1000" placeholder="Écrire dans #général…" required><button class="primary" type="submit" aria-label="Envoyer">➤</button></form><div class="status" id="chatstatus" role="status"></div></section></div></div>
+      </main>
+    </section>
+    <section id="settings-screen" aria-hidden="true"><header class="settings-header"><button class="settings-back" id="settingsBack" type="button">‹</button><button class="settings-back hidden" id="settingsCategoryBack" type="button">‹</button><h2 id="settingsTitle">Paramètres</h2></header><div class="settings-content settings-organized">
+    <div class="settings-category-menu" id="settingsCategoryMenu">
+    <button class="settings-category-tile" data-settings-category="account"><span>👤</span><span><strong>Compte</strong><small>Informations et sécurité du compte</small></span><b>›</b></button>
+    <button class="settings-category-tile" data-settings-category="language"><span>🌐</span><span><strong>Langue</strong><small>Choisir la langue de l’application</small></span><b>›</b></button>
+    <button class="settings-category-tile" data-settings-category="colors"><span>🎨</span><span><strong>Couleur d’accentuation</strong><small>Personnaliser les couleurs</small></span><b>›</b></button>
+    <button class="settings-category-tile" data-settings-category="appearance"><span>✨</span><span><strong>Apparence</strong><small>Transparence et effet verre dépoli</small></span><b>›</b></button></div>
+    <section class="settings-panel hidden" data-settings-panel="account"><h3 data-i18n="account">Compte</h3><p><span data-i18n="name">Nom</span> : <strong id="settingsAccountName">—</strong></p><p>E-mail : <strong id="settingsAccountEmail">—</strong></p><p>Google : <strong id="settingsGoogleStatus">—</strong></p><button class="mutedbtn" id="settingsGoogleUnlink" type="button" disabled>Déconnecter Google</button><button class="mutedbtn" id="settingsChangePassword" type="button">Changer mon mot de passe</button><button class="mutedbtn" id="settingsLogout" type="button">Se déconnecter</button><button class="mutedbtn" id="settingsDeleteAccount" type="button" disabled title="La suppression sécurisée du compte n’est pas configurée pour ce site.">Supprimer mon compte (indisponible)</button><p class="notice">La suppression du compte est désactivée tant qu’une procédure serveur sécurisée n’est pas configurée.</p></section>
+    <section class="settings-panel hidden" data-settings-panel="language"><h3 data-i18n="language">Langue</h3><div class="settings-lang-grid"><button class="settings-lang" data-lang="fr">🇫🇷 Français</button><button class="settings-lang" data-lang="pl">🇵🇱 Polski</button><button class="settings-lang" data-lang="en">🇬🇧 English</button><button class="settings-lang" data-lang="nl">🇳🇱 Nederlands</button><button class="settings-lang" data-lang="de">🇩🇪 Deutsch</button><button class="settings-lang" data-lang="es">🇪🇸 Español</button><button class="settings-lang" data-lang="it">🇮🇹 Italiano</button></div><p class="notice" id="languageNotice">La langue sélectionnée est appliquée aux menus et paramètres.</p></section>
+    <section class="settings-panel hidden" data-settings-panel="colors"><h3>Couleur d’accentuation</h3><div class="settings-color-grid"><button class="settings-color" data-color="white" style="--swatch:#e3e3e3" aria-label="Blanc"></button><button class="settings-color" data-color="red" style="--swatch:#ef4444" aria-label="Rouge"></button><button class="settings-color" data-color="green" style="--swatch:#22c55e" aria-label="Vert"></button><button class="settings-color" data-color="blue" style="--swatch:#3b82f6" aria-label="Bleu"></button><button class="settings-color" data-color="mauve" style="--swatch:#a78bfa" aria-label="Mauve"></button><button class="settings-color" data-color="pink" style="--swatch:#ec4899" aria-label="Rose"></button><button class="settings-color" data-color="turquoise" style="--swatch:#14b8a6" aria-label="Turquoise"></button><button class="settings-color" data-color="orange" style="--swatch:#f97316" aria-label="Orange"></button></div></section>
+    <section class="settings-panel hidden" data-settings-panel="appearance"><h3>Apparence</h3><label class="settings-glass-row"><span><strong id="glassLabel">Effet glassmorphism</strong><small>Panneaux translucides et floutés</small></span><input id="glassModeToggle" type="checkbox"></label></section></div></section>
+<div class="account-security-modal hidden" id="accountSecurityModal" role="dialog" aria-modal="true" aria-labelledby="accountSecurityTitle"><div class="account-security-card"><h3 id="accountSecurityTitle">Changer le mot de passe</h3><p id="accountSecurityDescription">Un code de vérification va être envoyé à ton adresse e-mail.</p><label for="accountSecurityEmail">Adresse e-mail</label><input id="accountSecurityEmail" class="field" type="email" readonly><button class="primary" id="accountSendCode" type="button">Envoyer le code</button><div id="accountCodeStep" class="hidden"><label for="accountSecurityCode">Code reçu par e-mail</label><input id="accountSecurityCode" class="field" inputmode="numeric" autocomplete="one-time-code" maxlength="8" placeholder="Code de vérification"><button class="primary" id="accountVerifyCode" type="button">Vérifier le code</button></div><div id="accountPasswordStep" class="hidden"><label for="accountNewPassword">Nouveau mot de passe</label><input id="accountNewPassword" class="field" type="password" minlength="8" autocomplete="new-password"><label for="accountConfirmPassword">Confirmer le mot de passe</label><input id="accountConfirmPassword" class="field" type="password" minlength="8" autocomplete="new-password"><button class="primary" id="accountSavePassword" type="button">Enregistrer</button></div><button class="mutedbtn" id="accountSecurityCancel" type="button">Annuler</button><p class="status" id="accountSecurityStatus" role="status"></p></div></div>
+    <div class="photo-lightbox hidden" id="photoLightbox" role="dialog" aria-modal="true" aria-label="Visionneuse de photos"><button class="lightbox-close" id="lightboxClose">×</button><button class="lightbox-arrow prev" id="lightboxPrev">‹</button><figure><img id="lightboxImage" alt="Photo agrandie"><figcaption id="lightboxCaption"></figcaption></figure><button class="lightbox-arrow next" id="lightboxNext">›</button><div class="lightbox-count" id="lightboxCount"></div></div>
+    <footer class="footer">1CE · Espace privé de classe · Partage uniquement avec l’accord des personnes concernées</footer>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = "https://fbqxuqkbywqvvynektqb.supabase.co";
+    const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_VC3uEiNgvTX_2-L4DcKmVw_LwAVJuB8";
+    const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+    const loginView = document.getElementById("loginview");
+    const appView = document.getElementById("appview");
+    const statusEl = document.getElementById("loginstatus");
+    let session = null;
+    let member = null;
+
+    const esc = value => String(value ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+    const dateLabel = value => new Date(value).toLocaleString("fr-BE",{dateStyle:"medium",timeStyle:"short"});
+
+    async function moderateContent(text, kind, extra = {}) {
+      try {
+        const response = await fetch(SUPABASE_URL + "/functions/v1/moderate-content", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "apikey": SUPABASE_PUBLISHABLE_KEY,
+            "Authorization": "Bearer " + session.access_token
+          },
+          body: JSON.stringify({ text, kind, ...extra })
+        });
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok) return { ok:false, message:result.reason || result.error || "La modération a refusé l'envoi. Réessaie plus tard." };
+        return { ok:true, text:result.text || text, notice:result.notice || "" };
+      } catch {
+        return { ok:false, message:"Impossible de joindre le service de modération. Réessaie dans un instant." };
+      }
+    }
+
+    function showState(authorized) {
+      loginView.classList.toggle("hidden", !!authorized);
+      appView.classList.toggle("hidden", !authorized);
+      document.getElementById("topnote").textContent = authorized
+        ? "Connecté à l’espace privé de la classe"
+        : "Un endroit à nous, pour nos souvenirs.";
+    }
+
+    async function enter(s) {
+      if (passwordRecoveryMode) { session = s || session; showState(false); return; }
+      session = s;
+      member = null;
+      if (!s) { showState(false); return; }
+      const {data, error} = await client.from("class_members")
+        .select("display_name,role").eq("user_id", s.user.id).maybeSingle();
+      if (error || !data) {
+        showState(false);
+        document.getElementById("loginform").classList.add("hidden");
+        document.getElementById("signupform").classList.add("hidden");
+        document.getElementById("authchoices").classList.add("hidden");
+        document.getElementById("joinform").classList.remove("hidden");
+        document.getElementById("joinname").value = s.user.user_metadata?.display_name || "";
+        statusEl.textContent = "Compte créé : dernière étape, rejoindre la classe.";
+        return;
+      }
+      document.getElementById("joinform").classList.add("hidden");
+      member = data;
+      showState(true);
+      // L'affichage de la page ne doit pas attendre les chargements réseau.
+      Promise.allSettled([loadPosts(), loadMessages(), loadPhotos()]);
+      startChatRealtime().catch(error => console.warn("Chat temps réel indisponible :", error));
+    }
+
+    const loginForm = document.getElementById("loginform");
+    const signupForm = document.getElementById("signupform");
+    const resetRequestForm = document.getElementById("resetrequestform");
+    const newPasswordForm = document.getElementById("newpasswordform");
+    // Détecter le lien de récupération avant INITIAL_SESSION pour éviter que enter() masque le formulaire.
+    let passwordRecoveryMode = /type=recovery/i.test(window.location.hash + window.location.search);
+
+    function showAuthForm(form) {
+      [loginForm, signupForm, document.getElementById("joinform"), resetRequestForm, newPasswordForm]
+        .forEach(item => item.classList.toggle("hidden", item !== form));
+      document.getElementById("authchoices").classList.toggle("hidden", form === resetRequestForm || form === newPasswordForm || form === document.getElementById("joinform"));
+      statusEl.textContent = "";
+    }
+
+    document.getElementById("forgotpassword").addEventListener("click", () => {
+      document.getElementById("resetemail").value = document.getElementById("email").value.trim();
+      showAuthForm(resetRequestForm);
+    });
+    document.getElementById("cancelreset").addEventListener("click", () => showAuthForm(loginForm));
+
+    resetRequestForm.addEventListener("submit", async e => {
+      e.preventDefault();
+      statusEl.textContent = "Envoi du lien…";
+      const email = document.getElementById("resetemail").value.trim();
+      const {error} = await client.auth.resetPasswordForEmail(email, {
+        redirectTo: window.location.origin + window.location.pathname
+      });
+      if (error) {
+        const code = error.code || "";
+        const message = error.message || "";
+        if (code === "over_email_send_rate_limit" || message.toLowerCase().includes("rate limit")) {
+          statusEl.textContent = "La limite d’envoi d’e-mails de Supabase est atteinte. Attends que la limite se réinitialise, ou demande à la personne responsable de configurer un service e-mail dédié.";
+        } else if (code === "email_address_not_authorized") {
+          statusEl.textContent = "L’envoi d’e-mails est limité aux adresses autorisées du projet. Un service e-mail dédié doit être configuré pour envoyer aux élèves.";
+        } else {
+          statusEl.textContent = "Erreur d’envoi : " + message + (code ? " (" + code + ")" : "");
+        }
+      } else {
+        statusEl.textContent = "Si un compte correspond à cette adresse, un e-mail de réinitialisation vient d’être envoyé. Vérifie aussi tes courriers indésirables.";
+      }
+    });
+
+    newPasswordForm.addEventListener("submit", async e => {
+      e.preventDefault();
+      const password = document.getElementById("newpassword").value;
+      const confirmation = document.getElementById("newpasswordconfirm").value;
+      if (password.length < 8) { statusEl.textContent = "Le mot de passe doit contenir au moins 8 caractères."; return; }
+      if (password !== confirmation) { statusEl.textContent = "Les deux mots de passe ne correspondent pas."; return; }
+      statusEl.textContent = "Enregistrement…";
+      const {error} = await client.auth.updateUser({password});
+      if (error) { statusEl.textContent = "Impossible de modifier le mot de passe. Demande un nouveau lien et réessaie."; return; }
+      passwordRecoveryMode = false;
+      await client.auth.signOut();
+      session = null; member = null;
+      showState(false);
+      showAuthForm(loginForm);
+      statusEl.textContent = "Ton mot de passe a été modifié. Tu peux maintenant te connecter.";
+      newPasswordForm.reset();
+    });
+
+    function showPasswordRecovery() {
+      passwordRecoveryMode = true;
+      showState(false);
+      showAuthForm(newPasswordForm);
+      statusEl.textContent = "Choisis un nouveau mot de passe pour ton compte.";
+    }
+    document.getElementById("showlogin").addEventListener("click", () => {
+      loginForm.classList.remove("hidden"); signupForm.classList.add("hidden");
+      document.getElementById("showlogin").className = "primary";
+      document.getElementById("showsignup").className = "mutedbtn";
+      statusEl.textContent = "";
+    });
+    document.getElementById("showsignup").addEventListener("click", () => {
+      loginForm.classList.add("hidden"); signupForm.classList.remove("hidden");
+      document.getElementById("showlogin").className = "mutedbtn";
+      document.getElementById("showsignup").className = "primary";
+      statusEl.textContent = "";
+    });
+
+    loginForm.addEventListener("submit", async e => {
+      e.preventDefault();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+      statusEl.textContent = "Connexion à Supabase…";
+      const submit = loginForm.querySelector('button[type="submit"]');
+      if (submit) submit.disabled = true;
+      try {
+        const {data,error} = await client.auth.signInWithPassword({ email, password });
+        if (error) {
+          console.warn("Échec Supabase Auth :", error.code || error.name, error.message);
+          const message = (error.message || "").toLowerCase();
+          if (message.includes("email not confirmed")) {
+            statusEl.textContent = "Ton compte existe, mais l’adresse e-mail n’a pas encore été confirmée. Ouvre le mail de Supabase puis réessaie.";
+          } else if (message.includes("invalid login credentials")) {
+            statusEl.textContent = "Supabase ne reconnaît pas cette combinaison e-mail/mot de passe. Vérifie l’adresse exacte et utilise « Mot de passe oublié » si nécessaire.";
+          } else {
+            statusEl.textContent = "Erreur Supabase (" + (error.code || "auth") + ") : " + (error.message || "connexion refusée");
+          }
+          return;
+        }
+        if (!data.session) {
+          statusEl.textContent = "Connexion reçue, mais Supabase n’a pas renvoyé de session. Vérifie la confirmation de ton e-mail.";
+          return;
+        }
+        await enter(data.session);
+      } catch (error) {
+        console.error("Erreur inattendue pendant la connexion :", error);
+        statusEl.textContent = "Impossible de contacter Supabase : " + (error?.message || "erreur réseau");
+      } finally {
+        if (submit) submit.disabled = false;
+      }
+    });
+
+    signupForm.addEventListener("submit", async e => {
+      e.preventDefault();
+      statusEl.textContent = "Création du compte…";
+      const displayName = document.getElementById("signupname").value.trim();
+      const email = document.getElementById("signupemail").value.trim();
+      const password = document.getElementById("signuppassword").value;
+      const code = document.getElementById("signupcode").value.trim();
+      const {data,error} = await client.auth.signUp({
+        email, password,
+        options: { data: { display_name: displayName }, emailRedirectTo: window.location.origin + window.location.pathname }
+      });
+      if (error) { statusEl.textContent = "Création impossible : " + error.message; return; }
+      if (!data.session) {
+        statusEl.textContent = "Compte créé ! Vérifie ta boîte e-mail et confirme ton adresse. Ensuite, connecte-toi pour rejoindre la classe.";
+        return;
+      }
+      const {error:joinError} = await client.rpc("join_class",{p_display_name:displayName,p_access_code:code});
+      if (joinError) {
+        document.getElementById("loginform").classList.add("hidden");
+        signupForm.classList.add("hidden");
+        document.getElementById("authchoices").classList.add("hidden");
+        document.getElementById("joinform").classList.remove("hidden");
+        document.getElementById("joinname").value = displayName;
+        statusEl.textContent = "Compte créé, mais le code de classe doit être vérifié.";
+        return;
+      }
+      await enter(data.session);
+    });
+
+    document.getElementById("joinform").addEventListener("submit", async e => {
+      e.preventDefault();
+      statusEl.textContent = "Vérification du code…";
+      const {error} = await client.rpc("join_class",{
+        p_display_name:document.getElementById("joinname").value.trim(),
+        p_access_code:document.getElementById("joincode").value.trim()
+      });
+      if (error) { statusEl.textContent = "Impossible de rejoindre la classe : vérifie le code."; return; }
+      statusEl.textContent = "Bienvenue dans la 1CE !";
+      await enter(session);
+    });
+
+    const settingsScreen=document.getElementById("settings-screen");
+    const settingsTranslations={
+      fr:{settings:"Paramètres",account:"Compte",language:"Langue",colors:"Couleur d’accentuation",appearance:"Apparence",name:"Nom",email:"E-mail",google:"Google",connected:"Connecté",notConnected:"Non connecté",unlink:"Déconnecter Google",changePassword:"Changer mon mot de passe",logout:"Se déconnecter",deleteAccount:"Supprimer mon compte (indisponible)",glass:"Effet glassmorphism",languageNotice:"La langue sélectionnée est appliquée aux menus et paramètres.",add:"Ajouter",posts:"Publications",chat:"Discussions"},
+      en:{settings:"Settings",account:"Account",language:"Language",colors:"Accent colour",appearance:"Appearance",name:"Name",email:"Email",google:"Google",connected:"Connected",notConnected:"Not connected",unlink:"Disconnect Google",changePassword:"Change my password",logout:"Log out",deleteAccount:"Delete my account (unavailable)",glass:"Glassmorphism effect",languageNotice:"The selected language is applied to menus and settings.",add:"Add",posts:"Posts",chat:"Discussions"},
+      nl:{settings:"Instellingen",account:"Account",language:"Taal",colors:"Accentkleur",appearance:"Weergave",name:"Naam",email:"E-mail",google:"Google",connected:"Verbonden",notConnected:"Niet verbonden",unlink:"Google loskoppelen",changePassword:"Mijn wachtwoord wijzigen",logout:"Uitloggen",deleteAccount:"Account verwijderen (niet beschikbaar)",glass:"Glassmorphism-effect",languageNotice:"De gekozen taal wordt toegepast op menu's en instellingen.",add:"Toevoegen",posts:"Berichten",chat:"Chats"},
+      de:{settings:"Einstellungen",account:"Konto",language:"Sprache",colors:"Akzentfarbe",appearance:"Darstellung",name:"Name",email:"E-Mail",google:"Google",connected:"Verbunden",notConnected:"Nicht verbunden",unlink:"Google trennen",changePassword:"Passwort ändern",logout:"Abmelden",deleteAccount:"Konto löschen (nicht verfügbar)",glass:"Glassmorphism-Effekt",languageNotice:"Die gewählte Sprache wird auf Menüs und Einstellungen angewendet.",add:"Hinzufügen",posts:"Beiträge",chat:"Chats"},
+      es:{settings:"Ajustes",account:"Cuenta",language:"Idioma",colors:"Color de acento",appearance:"Apariencia",name:"Nombre",email:"Correo",google:"Google",connected:"Conectado",notConnected:"No conectado",unlink:"Desconectar Google",changePassword:"Cambiar mi contraseña",logout:"Cerrar sesión",deleteAccount:"Eliminar mi cuenta (no disponible)",glass:"Efecto glassmorphism",languageNotice:"El idioma elegido se aplica a los menús y ajustes.",add:"Añadir",posts:"Publicaciones",chat:"Chats"},
+      it:{settings:"Impostazioni",account:"Account",language:"Lingua",colors:"Colore di accento",appearance:"Aspetto",name:"Nome",email:"E-mail",google:"Google",connected:"Connesso",notConnected:"Non connesso",unlink:"Scollega Google",changePassword:"Cambia password",logout:"Esci",deleteAccount:"Elimina account (non disponibile)",glass:"Effetto glassmorphism",languageNotice:"La lingua scelta viene applicata ai menu e alle impostazioni.",add:"Aggiungi",posts:"Pubblicazioni",chat:"Chat"},
+      pl:{settings:"Ustawienia",account:"Konto",language:"Język",colors:"Kolor akcentu",appearance:"Wygląd",name:"Imię",email:"E-mail",google:"Google",connected:"Połączono",notConnected:"Niepołączono",unlink:"Odłącz Google",changePassword:"Zmień hasło",logout:"Wyloguj",deleteAccount:"Usuń konto (niedostępne)",glass:"Efekt glassmorphism",languageNotice:"Wybrany język jest stosowany w menu i ustawieniach.",add:"Dodaj",posts:"Publikacje",chat:"Dyskusje"}
+    };
+    function applySettingsLanguage(lang){
+      const t=settingsTranslations[lang]||settingsTranslations.fr;document.documentElement.lang=lang;localStorage.setItem("1ce-lang",lang);
+      document.getElementById("settingsTitle").textContent=t.settings;
+      document.querySelectorAll("[data-settings-category]").forEach(b=>{const key=b.dataset.settingsCategory;const strong=b.querySelector("strong");if(strong)strong.textContent=t[key];});
+      document.querySelectorAll("[data-i18n]").forEach(el=>{const k=el.dataset.i18n;if(t[k])el.textContent=t[k];});
+      document.getElementById("settingsGoogleUnlink").textContent=t.unlink;document.getElementById("settingsChangePassword").textContent=t.changePassword;document.getElementById("settingsLogout").textContent=t.logout;document.getElementById("settingsDeleteAccount").textContent=t.deleteAccount;document.getElementById("languageNotice").textContent=t.languageNotice;
+      const title=document.getElementById("settingsTitle");const panel=document.querySelector("[data-settings-panel]:not(.hidden)");if(panel)title.textContent=t[panel.dataset.settingsPanel]||t.settings;
+      document.querySelectorAll(".settings-lang").forEach(x=>x.classList.toggle("active",x.dataset.lang===lang));
+      const nav=document.querySelectorAll(".nav");nav.forEach(b=>{if(b.dataset.page==="addphotos")b.lastChild.textContent=" "+t.add;if(b.dataset.page==="posts")b.lastChild.textContent=" "+t.posts;if(b.dataset.page==="chat")b.lastChild.textContent=" "+t.chat;});
+      document.getElementById("glassLabel").textContent=t.glass;
+    }
+    function resetSettings(){document.getElementById("settingsCategoryMenu").classList.remove("hidden");document.querySelectorAll("[data-settings-panel]").forEach(p=>p.classList.add("hidden"));document.getElementById("settingsCategoryBack").classList.add("hidden");document.getElementById("settingsTitle").textContent=(settingsTranslations[localStorage.getItem("1ce-lang")||"fr"]||settingsTranslations.fr).settings;}
+    function showSettingsCategory(n){document.getElementById("settingsCategoryMenu").classList.add("hidden");document.querySelectorAll("[data-settings-panel]").forEach(p=>p.classList.toggle("hidden",p.dataset.settingsPanel!==n));document.getElementById("settingsCategoryBack").classList.remove("hidden");const t=settingsTranslations[localStorage.getItem("1ce-lang")||"fr"]||settingsTranslations.fr;document.getElementById("settingsTitle").textContent=t[n];if(n==="account")refreshAccountSettings();}
+    async function refreshAccountSettings(){document.getElementById("settingsAccountName").textContent=member?.display_name||session?.user?.user_metadata?.display_name||"—";document.getElementById("settingsAccountEmail").textContent=session?.user?.email||"—";const status=document.getElementById("settingsGoogleStatus"),button=document.getElementById("settingsGoogleUnlink");button.disabled=true;try{const {data,error}=await client.auth.getUser();if(error)throw error;const ids=data.user?.identities||[],google=ids.find(i=>i.provider==="google");const t=settingsTranslations[localStorage.getItem("1ce-lang")||"fr"]||settingsTranslations.fr;status.textContent=google?t.connected:t.notConnected;button.disabled=!google||ids.length<2;button.title=google&&ids.length<2?"Ajoute une autre méthode de connexion avant de déconnecter Google.":"";}catch(e){status.textContent="—";console.warn("Account settings:",e);}}
+    document.querySelectorAll("[data-settings-category]").forEach(b=>b.addEventListener("click",()=>showSettingsCategory(b.dataset.settingsCategory)));
+    document.getElementById("settingsCategoryBack").addEventListener("click",resetSettings);
+    document.getElementById("settingsOpen").addEventListener("click",()=>{closeSidebar();settingsScreen.classList.add("open");settingsScreen.setAttribute("aria-hidden","false");resetSettings();});
+    document.getElementById("settingsBack").addEventListener("click",()=>{settingsScreen.classList.remove("open");settingsScreen.setAttribute("aria-hidden","true");resetSettings();});
+    document.getElementById("settingsLogout").addEventListener("click",async()=>{const {error}=await client.auth.signOut();if(error)alert(error.message);});
+    document.getElementById("settingsGoogleUnlink").addEventListener("click",async()=>{if(!confirm("Déconnecter Google de ce compte ?"))return;const {data,error}=await client.auth.getUser();if(error){alert(error.message);return;}const ids=data.user?.identities||[],google=ids.find(i=>i.provider==="google");if(!google||ids.length<2){alert("Ajoute une autre méthode de connexion avant de déconnecter Google.");return;}const result=await client.auth.unlinkIdentity(google);if(result.error)alert(result.error.message);else refreshAccountSettings();});
+    const securityModal=document.getElementById("accountSecurityModal");let verifiedPasswordNonce=null;
+    document.getElementById("settingsChangePassword").addEventListener("click",()=>{document.getElementById("accountSecurityEmail").value=session?.user?.email||"";document.getElementById("accountSecurityCode").value="";document.getElementById("accountNewPassword").value="";document.getElementById("accountConfirmPassword").value="";document.getElementById("accountCodeStep").classList.add("hidden");document.getElementById("accountPasswordStep").classList.add("hidden");document.getElementById("accountSendCode").classList.remove("hidden");document.getElementById("accountSecurityStatus").textContent="";verifiedPasswordNonce=null;securityModal.classList.remove("hidden");});
+    document.getElementById("accountSendCode").addEventListener("click",async()=>{const btn=document.getElementById("accountSendCode"),status=document.getElementById("accountSecurityStatus");btn.disabled=true;status.textContent="Envoi du code…";try{if(!session?.user?.email)throw new Error("Reconnecte-toi avant de modifier ton mot de passe.");const {error}=await client.auth.reauthenticate();if(error)throw error;document.getElementById("accountCodeStep").classList.remove("hidden");status.textContent="Code envoyé. Vérifie ta boîte e-mail.";}catch(e){status.textContent=e.message||"Impossible d’envoyer le code.";}finally{btn.disabled=false;}});
+    document.getElementById("accountVerifyCode").addEventListener("click",async()=>{const token=document.getElementById("accountSecurityCode").value.replace(/\D/g,"").trim(),status=document.getElementById("accountSecurityStatus");if(!token){status.textContent="Saisis le code reçu.";return;}verifiedPasswordNonce=token;document.getElementById("accountCodeStep").classList.add("hidden");document.getElementById("accountPasswordStep").classList.remove("hidden");status.textContent="Code saisi. Choisis un nouveau mot de passe."});
+    document.getElementById("accountSavePassword").addEventListener("click",async()=>{const status=document.getElementById("accountSecurityStatus"),password=document.getElementById("accountNewPassword").value,confirmPassword=document.getElementById("accountConfirmPassword").value,btn=document.getElementById("accountSavePassword");if(!verifiedPasswordNonce){status.textContent="Vérifie d’abord le code reçu.";return;}if(password.length<8||password!==confirmPassword){status.textContent=password.length<8?"8 caractères minimum.":"Les mots de passe ne correspondent pas.";return;}btn.disabled=true;try{const {error}=await client.auth.updateUser({password,nonce:verifiedPasswordNonce});if(error)throw error;verifiedPasswordNonce=null;securityModal.classList.add("hidden");alert("Mot de passe modifié.");}catch(e){status.textContent=e.message||"La modification a échoué.";}finally{btn.disabled=false;}});
+    document.getElementById("accountSecurityCancel").addEventListener("click",()=>{securityModal.classList.add("hidden");verifiedPasswordNonce=null;});
+    document.querySelectorAll(".add-choice").forEach(b=>b.addEventListener("click",()=>{document.getElementById("addChoices").classList.add("hidden");document.getElementById("add-photo-panel").classList.toggle("hidden",b.dataset.addKind!=="photo");document.getElementById("add-post-panel").classList.toggle("hidden",b.dataset.addKind!=="post");}));
+    document.querySelectorAll(".add-back").forEach(b=>b.addEventListener("click",()=>{document.getElementById("addChoices").classList.remove("hidden");document.getElementById("add-photo-panel").classList.add("hidden");document.getElementById("add-post-panel").classList.add("hidden");}));
+    const lb=document.getElementById("photoLightbox");let lbIndex=0;
+    function showPhoto(i){const a=window.classPhotos||[];if(!a.length)return;lbIndex=(i+a.length)%a.length;const p=a[lbIndex];document.getElementById("lightboxImage").src=p.url;document.getElementById("lightboxCaption").textContent=p.caption+" · "+p.by+" · "+p.date;document.getElementById("lightboxCount").textContent=(lbIndex+1)+" / "+a.length;lb.classList.remove("hidden");}
+    function closePhoto(){lb.classList.add("hidden");document.getElementById("lightboxImage").src="";}
+    document.getElementById("photogrid").addEventListener("click",e=>{const el=e.target.closest("[data-photo-index]");if(el)showPhoto(Number(el.dataset.photoIndex));});
+    document.getElementById("lightboxClose").addEventListener("click",closePhoto);document.getElementById("lightboxPrev").addEventListener("click",()=>showPhoto(lbIndex-1));document.getElementById("lightboxNext").addEventListener("click",()=>showPhoto(lbIndex+1));lb.addEventListener("click",e=>{if(e.target===lb)closePhoto();});
+    document.addEventListener("keydown",e=>{if(lb.classList.contains("hidden"))return;if(e.key==="Escape")closePhoto();if(e.key==="ArrowLeft")showPhoto(lbIndex-1);if(e.key==="ArrowRight")showPhoto(lbIndex+1);});
+    const colors={white:{accent:"#e3e3e3",strong:"#ffffff",soft:"rgba(227,227,227,.14)"},red:{accent:"#f87171",strong:"#ef4444",soft:"rgba(239,68,68,.14)"},green:{accent:"#4ade80",strong:"#22c55e",soft:"rgba(34,197,94,.14)"},blue:{accent:"#8ab4f8",strong:"#3b82f6",soft:"rgba(59,130,246,.14)"},mauve:{accent:"#c4b5fd",strong:"#a78bfa",soft:"rgba(167,139,250,.14)"},pink:{accent:"#f472b6",strong:"#ec4899",soft:"rgba(236,72,153,.14)"},turquoise:{accent:"#2dd4bf",strong:"#14b8a6",soft:"rgba(20,184,166,.14)"},orange:{accent:"#fb923c",strong:"#f97316",soft:"rgba(249,115,22,.14)"}};
+    function applyColor(n){const t=colors[n]||colors.white;document.documentElement.style.setProperty("--mint",t.accent);document.documentElement.style.setProperty("--blue",t.strong);document.documentElement.style.setProperty("--accent-soft",t.soft);document.querySelectorAll(".settings-color").forEach(x=>x.classList.toggle("active",x.dataset.color===n));localStorage.setItem("1ce-accent",n);}
+    document.querySelectorAll(".settings-color").forEach(b=>b.addEventListener("click",()=>applyColor(b.dataset.color)));
+    document.querySelectorAll(".settings-lang").forEach(b=>b.addEventListener("click",()=>applySettingsLanguage(b.dataset.lang)));
+    const glass=document.getElementById("glassModeToggle");glass.addEventListener("change",()=>{document.documentElement.classList.toggle("glass-mode",glass.checked);document.body.classList.toggle("glass-mode",glass.checked);localStorage.setItem("1ce-glass",glass.checked?"1":"0");});
+    applyColor(localStorage.getItem("1ce-accent")||"white");const lang=localStorage.getItem("1ce-lang")||"fr";applySettingsLanguage(lang);glass.checked=localStorage.getItem("1ce-glass")==="1";document.documentElement.classList.toggle("glass-mode",glass.checked);document.body.classList.toggle("glass-mode",glass.checked);
+
+
+    const sidebarToggle = document.getElementById("sidebarToggle");
+    const sidebarLayout = document.getElementById("appview");
+    const sidebarBackdrop = document.getElementById("sidebarBackdrop");
+    const sidebarClose = document.getElementById("sidebarClose");
+    function openSidebar(){ sidebarLayout.classList.add("sidebar-open"); document.body.classList.add("sidebar-lock"); sidebarToggle.setAttribute("aria-expanded","true"); }
+    function closeSidebar(){ sidebarLayout.classList.remove("sidebar-open"); document.body.classList.remove("sidebar-lock"); sidebarToggle.setAttribute("aria-expanded","false"); }
+    sidebarToggle.addEventListener("click", () => sidebarLayout.classList.contains("sidebar-open") ? closeSidebar() : openSidebar());
+    sidebarClose.addEventListener("click", closeSidebar);
+    sidebarBackdrop.addEventListener("click", closeSidebar);
+    document.addEventListener("keydown", e => { if(e.key === "Escape") closeSidebar(); });
+    document.querySelectorAll(".nav:not(#settingsOpen)").forEach(btn => btn.addEventListener("click", () => {
+      closeSidebar();
+      document.querySelectorAll(".nav").forEach(x => x.classList.toggle("active", x === btn));
+      ["home","photos","addphotos","posts","chat"].forEach(p => document.getElementById("page-"+p).classList.toggle("hidden", p !== btn.dataset.page));
+      if(btn.dataset.page==="addphotos"){document.getElementById("addChoices").classList.remove("hidden");document.getElementById("add-photo-panel").classList.add("hidden");document.getElementById("add-post-panel").classList.add("hidden");}
+      appView.classList.toggle("page-fullscreen", btn.dataset.page !== "home");
+    }));
+
+    async function loadPosts() {
+      const root = document.getElementById("posts");
+      const {data:posts,error} = await client.from("posts").select("id,content,author_name,created_at").order("created_at",{ascending:false}).limit(40);
+      if (error) { root.innerHTML = '<div class="empty">Impossible de charger les publications pour le moment.</div>'; return; }
+      if (!posts?.length) { root.innerHTML = '<div class="empty">Pas encore de publication. Lance le fil de la classe !</div>'; return; }
+      const ids = posts.map(p => p.id);
+      const [{data:likes}, {data:comments}] = await Promise.all([
+        client.from("reactions").select("post_id,user_id").in("post_id",ids),
+        client.from("comments").select("id,post_id,author_name,content,created_at").in("post_id",ids).order("created_at",{ascending:true})
+      ]);
+      root.innerHTML = posts.map(p => {
+        const postLikes = (likes||[]).filter(x => x.post_id === p.id);
+        const liked = postLikes.some(x => x.user_id === session.user.id);
+        const postComments = (comments||[]).filter(x => x.post_id === p.id);
+        return `<article class="card">
+          <div class="postmeta"><strong>${esc(p.author_name)}</strong> · ${dateLabel(p.created_at)}</div>
+          <div class="postbody">${esc(p.content)}</div>
+          <div class="postactions"><button class="mutedbtn likebtn" data-id="${p.id}">${liked ? "♥" : "♡"} J’aime · ${postLikes.length}</button></div>
+          <div>${postComments.map(c => `<div class="comment"><strong>${esc(c.author_name)}</strong> <span class="muted">· ${dateLabel(c.created_at)}</span><div>${esc(c.content)}</div></div>`).join("")}</div>
+          <form class="inlineform commentform" data-id="${p.id}"><input class="field" maxlength="1000" placeholder="Ajouter un commentaire…" required><button class="mutedbtn" type="submit">Envoyer</button></form>
+        </article>`;
+      }).join("");
+      root.querySelectorAll(".likebtn").forEach(btn => btn.addEventListener("click", async () => {
+        const postId = btn.dataset.id;
+        const {data:existing} = await client.from("reactions").select("post_id").eq("post_id",postId).eq("user_id",session.user.id).maybeSingle();
+        if (existing) await client.from("reactions").delete().eq("post_id",postId).eq("user_id",session.user.id);
+        else await client.from("reactions").insert({post_id:postId,user_id:session.user.id});
+        await loadPosts();
+      }));
+      root.querySelectorAll(".commentform").forEach(form => form.addEventListener("submit", async e => {
+        e.preventDefault();
+        const input = form.querySelector("input");
+        const content = input.value.trim();
+        if (!content) return;
+        const moderation = await moderateContent(content,"comment",{post_id:form.dataset.id});
+        if (!moderation.ok) { alert(moderation.message); return; }
+        if (moderation.notice) alert(moderation.notice);
+        await loadPosts();
+      }));
+    }
+
+    document.getElementById("postform").addEventListener("submit", async e => {
+      e.preventDefault();
+      const status = document.getElementById("poststatus");
+      const content = document.getElementById("postcontent").value.trim();
+      if (!content) return;
+      status.textContent = "Publication…";
+      status.textContent = "Vérification du contenu…";
+      const moderation = await moderateContent(content,"post");
+      if (!moderation.ok) { status.textContent = moderation.message; return; }
+      document.getElementById("postcontent").value = "";
+      status.textContent = moderation.notice || "Publié !";
+      await loadPosts();
+    });
+
+
+    let chatRealtimeChannel = null;
+    let typingStopTimer = null;
+    const typingMembers = new Map();
+    let onlinePeople = [];
+    function renderOnlinePeople(){
+      const count=document.getElementById("onlineCount"),list=document.getElementById("onlineList");
+      if(count)count.textContent=String(onlinePeople.length);
+      if(list)list.innerHTML=onlinePeople.length
+        ?onlinePeople.map(p=>'<div class="online-member">'+esc(p.display_name||"Membre")+(p.user_id===session?.user?.id?' (toi)':'')+'</div>').join("")
+        :'<div class="online-empty">Personne de connecté pour le moment.</div>';
+    }
+    function renderTypingPeople(){
+      const el=document.getElementById("typingIndicator");if(!el)return;
+      const names=[...typingMembers.values()].filter(p=>p.user_id!==session?.user?.id).map(p=>p.display_name||"Un membre");
+      el.textContent=names.length?(names.length===1?names[0]+" écrit…":names.join(", ")+" écrivent…"):"";
+    }
+    async function stopChatRealtime(){
+      if(typingStopTimer)clearTimeout(typingStopTimer);typingStopTimer=null;
+      if(chatRealtimeChannel){const old=chatRealtimeChannel;chatRealtimeChannel=null;await client.removeChannel(old);}
+      onlinePeople=[];typingMembers.clear();renderOnlinePeople();renderTypingPeople();
+    }
+    async function startChatRealtime(){
+      await stopChatRealtime();if(!session||!member)return;
+      const myId=session.user.id;
+      const channel=client.channel("class-1ce-chat",{config:{private:true,presence:{key:myId}}});
+      chatRealtimeChannel=channel;
+      channel
+        .on("presence",{event:"sync"},()=>{
+          const people=[];
+          Object.values(channel.presenceState()).forEach(entries=>(entries||[]).forEach(p=>{
+            if(p.user_id&&!people.some(x=>x.user_id===p.user_id))people.push(p);
+          }));
+          onlinePeople=people;renderOnlinePeople();
+        })
+        .on("broadcast",{event:"typing"},({payload})=>{
+          if(!payload?.user_id||payload.user_id===myId)return;
+          if(payload.is_typing){
+            typingMembers.set(payload.user_id,{user_id:payload.user_id,display_name:payload.display_name});renderTypingPeople();
+            setTimeout(()=>{typingMembers.delete(payload.user_id);renderTypingPeople();},3500);
+          }else{typingMembers.delete(payload.user_id);renderTypingPeople();}
+        })
+        .on("broadcast",{event:"new-message"},()=>loadMessages())
+        .subscribe(async status=>{
+          if(status==="SUBSCRIBED")await channel.track({user_id:myId,display_name:member.display_name,online_at:new Date().toISOString()});
+        });
+    }
+    async function broadcastTyping(isTyping){
+      if(!chatRealtimeChannel||!member||!session)return;
+      await chatRealtimeChannel.send({type:"broadcast",event:"typing",payload:{user_id:session.user.id,display_name:member.display_name,is_typing:isTyping}});
+    }
+    document.getElementById("onlineToggle").addEventListener("click",()=>{
+      const panel=document.getElementById("onlinePanel"),button=document.getElementById("onlineToggle");
+      const opening=panel.classList.contains("hidden");panel.classList.toggle("hidden",!opening);
+      button.setAttribute("aria-expanded",String(opening));renderOnlinePeople();
+    });
+    document.getElementById("chatcontent").addEventListener("input",()=>{
+      broadcastTyping(true);if(typingStopTimer)clearTimeout(typingStopTimer);
+      typingStopTimer=setTimeout(()=>broadcastTyping(false),1400);
+    });
+
+    async function loadMessages() {
+      const root = document.getElementById("chatlist");
+      const {data,error} = await client.from("messages").select("id,author_id,author_name,content,created_at").order("created_at",{ascending:false}).limit(80);
+      if (error) { root.innerHTML = '<div class="empty">Impossible de charger les discussions.</div>'; return; }
+      if (!data?.length) { root.innerHTML = '<div class="empty">La discussion est encore vide.</div>'; return; }
+      root.innerHTML = data.reverse().map(m => `<div class="bubble ${m.author_id===session.user.id?"mine":""}"><div class="postmeta"><strong>${esc(m.author_name)}</strong> · ${dateLabel(m.created_at)}</div><p>${esc(m.content)}</p></div>`).join("");
+      root.scrollTop = root.scrollHeight;
+    }
+    document.getElementById("chatform").addEventListener("submit", async e => {
+      e.preventDefault();
+      const input = document.getElementById("chatcontent");
+      const status = document.getElementById("chatstatus");
+      const content = input.value.trim();
+      if (!content) return;
+      status.textContent = "Vérification du message…";
+      const moderation = await moderateContent(content,"message");
+      if (!moderation.ok) { status.textContent = moderation.message; return; }
+      status.textContent = moderation.notice || "";
+      {
+        input.value = "";
+        if (chatRealtimeChannel) await chatRealtimeChannel.send({type:"broadcast",event:"new-message",payload:{sent_at:new Date().toISOString()}});
+        await loadMessages();
+      }
+    });
+
+    async function loadPhotos() {
+      const root = document.getElementById("photogrid");
+      const {data,error} = await client.from("photos").select("id,object_path,caption,created_at,uploader_id").order("created_at",{ascending:false}).limit(60);
+      if (error) { root.innerHTML = '<div class="empty">Impossible de charger la galerie.</div>'; return; }
+      if (!data?.length) { root.innerHTML = '<div class="empty">Pas encore de photo partagée.</div>'; return; }
+      const uploaderIds = [...new Set(data.map(p => p.uploader_id).filter(Boolean))];
+      const {data:uploaders} = uploaderIds.length
+        ? await client.from("class_members").select("user_id,display_name").in("user_id",uploaderIds)
+        : {data:[]};
+      const uploaderNames = new Map((uploaders||[]).map(u => [u.user_id,u.display_name]));
+      window.classPhotos=await Promise.all(data.map(async p=>{const {data:link}=await client.storage.from("class-photos").createSignedUrl(p.object_path,3600);return {url:link?.signedUrl||"",caption:p.caption||"Souvenir de la classe",by:uploaderNames.get(p.uploader_id)||"Membre de la 1CE",date:dateLabel(p.created_at)};}));
+      root.innerHTML=window.classPhotos.map((p,i)=>`<article class="card" data-photo-index="${i}">${p.url?`<img class="photo-thumb" data-photo-index="${i}" src="${p.url}" alt="Photo partagée dans la galerie 1CE">`:'<div class="empty">Aperçu indisponible</div>'}<p>${esc(p.caption)}</p><div class="photoby">Ajoutée par <strong>${esc(p.by)}</strong> · ${p.date}</div></article>`).join("");
+    }
+
+    document.getElementById("photoform").addEventListener("submit", async e => {
+      e.preventDefault();
+      const status = document.getElementById("photostatus");
+      const file = document.getElementById("photofile").files[0];
+      if (!file || !document.getElementById("photoconsent").checked) return;
+      if (file.size > 10*1024*1024) { status.textContent = "La photo doit faire 10 Mo maximum."; return; }
+      const captionInput = document.getElementById("photocaption");
+      const caption = captionInput.value.trim();
+      status.textContent = "Envoi de la photo…";
+      const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g,"_");
+      const path = session.user.id + "/" + Date.now() + "-" + safeName;
+      const {error:uploadError} = await client.storage.from("class-photos").upload(path,file,{contentType:file.type,upsert:false});
+      if (uploadError) { status.textContent = "La photo n’a pas pu être envoyée."; return; }
+      status.textContent = "Vérification de la légende…";
+      const moderation = await moderateContent(caption,"caption",{object_path:path});
+      if (!moderation.ok) {
+        await client.storage.from("class-photos").remove([path]);
+        status.textContent = moderation.message;
+        return;
+      }
+      status.textContent = moderation.notice || "Photo ajoutée à la galerie.";
+      e.target.reset();
+      await loadPhotos();
+    });
+
+    client.auth.getSession().then(({data}) => {
+      if (window.location.hash.includes("type=recovery")) showPasswordRecovery();
+      else enter(data.session);
+    });
+    client.auth.onAuthStateChange((event,s) => {
+      if (event === "PASSWORD_RECOVERY") { session=s; showPasswordRecovery(); return; }
+      if (!s) { session=null; member=null; stopChatRealtime(); if (!passwordRecoveryMode) showState(false); }
+      else if (event !== "INITIAL_SESSION" || !passwordRecoveryMode) enter(s);
+    });
+  </script>
+</body>
+</html>
