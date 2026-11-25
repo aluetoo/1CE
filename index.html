@@ -634,6 +634,9 @@
       const email=currentUser?.email || document.getElementById('auth-login-email')?.value || '';
       document.getElementById('auth-reset-email').value=email;
       document.getElementById('auth-gate')?.classList.remove('hidden');
+      document.getElementById('auth-reset-send')?.classList.remove('hidden');
+      document.getElementById('auth-reset-token')?.classList.remove('hidden');
+      document.getElementById('auth-reset-verify')?.classList.add('hidden');
       showAuthPanel('reset');
     }
     async function deleteOwnAccount() {
