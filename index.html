@@ -248,7 +248,26 @@
       #appview #page-chat .discord-compose{padding:10px!important;gap:7px!important}
       #appview #page-chat .discord-compose .field{min-width:0;width:0;flex:1 1 auto}
     }
-</style>
+
+    /* En-tête réduit au seul bouton rond du menu latéral */
+    .shell > .top.compact-top{
+      position:fixed!important;z-index:1003!important;top:10px!important;left:12px!important;
+      right:auto!important;width:42px!important;height:42px!important;min-height:0!important;
+      margin:0!important;padding:0!important;background:transparent!important;
+      border:0!important;box-shadow:none!important;backdrop-filter:none!important;
+    }
+    #sidebarToggle{
+      display:inline-flex!important;width:42px!important;height:42px!important;
+      min-width:42px!important;min-height:42px!important;padding:0!important;
+      align-items:center!important;justify-content:center!important;
+      border:1px solid var(--line)!important;border-radius:50%!important;
+      background:rgba(20,30,46,.96)!important;color:var(--text)!important;
+      font-size:18px!important;box-shadow:0 4px 16px #0005!important;
+    }
+    #appview:not(.hidden){padding-top:54px!important}
+    @media(max-width:720px){#appview:not(.hidden){padding-top:54px!important}}
+
+  </style>
 </head>
 <body>
   <div class="shell">
