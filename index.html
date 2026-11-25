@@ -221,7 +221,8 @@
     .settings-icon{width:38px;height:38px;display:grid;place-items:center;border-radius:12px;background:#29292f}
     .settings-row strong{display:block;font-size:13px}.settings-row small{display:block;color:#a5a5af;font-size:11px;margin-top:4px}
     @media(max-width:600px){.settings-header{padding:10px 14px}.settings-content{padding:18px 12px 36px}}
-\n  </style>
+\n.photo-grid .photo-thumb{cursor:zoom-in}.photo-lightbox{position:fixed;inset:0;z-index:1500;background:#000f;display:flex;align-items:center;justify-content:center;padding:60px 70px}.photo-lightbox.hidden{display:none!important}.photo-lightbox figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:12px}.photo-lightbox img{max-width:86vw;max-height:78dvh;object-fit:contain}.photo-lightbox figcaption{color:white}.lightbox-close,.lightbox-arrow{position:absolute;border:1px solid #ffffff35;background:#20242c;color:white;border-radius:50%;width:46px;height:46px;font-size:30px}.lightbox-close{right:22px;top:18px}.lightbox-arrow.prev{left:20px}.lightbox-arrow.next{right:20px}.lightbox-count{position:absolute;bottom:18px;color:#ddd}.add-choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;max-width:850px}.add-choice{display:flex;flex-direction:column;align-items:flex-start;gap:10px;text-align:left;padding:24px;border:1px solid var(--line);border-radius:18px;background:var(--panel);color:var(--text);min-height:150px}.add-choice>span{font-size:30px}.add-choice small{color:var(--muted)}.add-back{margin:4px 0 14px}.settings-organized{display:flex;flex-direction:column;gap:14px}.settings-category-menu{display:flex;flex-direction:column;gap:10px}.settings-category-tile{display:flex;align-items:center;gap:14px;width:100%;padding:17px;border:1px solid #30343b;border-radius:15px;background:#1b1b1f;color:#f4f4f5;text-align:left}.settings-category-tile>span:first-child{font-size:23px;color:var(--mint)}.settings-category-tile>span:nth-child(2){display:flex;flex:1;flex-direction:column;gap:4px}.settings-category-tile small,.settings-glass-row small{display:block;color:#a5a5af;font-size:12px;margin-top:4px}.settings-panel{padding:20px;border:1px solid #35353b;border-radius:17px;background:#1b1b1f;color:#f4f4f5}.settings-panel h3{margin:0 0 16px}.settings-panel p{color:#bbb;font-size:13px}.settings-lang-grid{display:flex;flex-wrap:wrap;gap:10px}.settings-lang{padding:12px 15px;border-radius:12px;background:#24252a;border:1px solid #3a3b42;color:white}.settings-lang.active{border-color:var(--mint);color:var(--mint)}.settings-color-grid{display:grid;grid-template-columns:repeat(4,52px);gap:16px}.settings-color{width:48px;height:48px;border-radius:50%;background:var(--swatch);border:3px solid transparent}.settings-color.active{border-color:white;box-shadow:0 0 0 3px #ffffff35}.settings-glass-row{display:flex;justify-content:space-between;align-items:center;gap:16px}body.glass-mode .card,body.glass-mode .side{backdrop-filter:blur(18px);background:rgba(25,38,57,.72)}@media(max-width:600px){.add-choices{grid-template-columns:1fr}.photo-lightbox{padding:60px 12px}.photo-lightbox img{max-width:94vw;max-height:72dvh}}
+  </style>
 </head>
 <body>
   <div class="shell">
@@ -269,7 +270,7 @@
     </section>
     <section id="appview" class="layout hidden">
       <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
-      <aside class="side" id="mainSidebar"><div class="sidebrand"><div class="sidebrand-mark"><strong>1CE</strong><span>Espace de classe</span></div><button class="sidebar-close" id="sidebarClose" type="button" aria-label="Fermer le menu">✕</button></div><small>Explorer</small><button class="nav active" data-page="home">⌂ &nbsp; Accueil</button><button class="nav" data-page="photos">▦ &nbsp; Souvenirs</button><button class="nav" data-page="addphotos">＋ &nbsp; Ajouter photos</button><button class="nav" data-page="posts">▤ &nbsp; Publications</button><button class="nav" data-page="chat">◌ &nbsp; Discussions</button><button class="nav" id="settingsOpen" type="button">⚙ &nbsp; Paramètres</button></aside>
+      <aside class="side" id="mainSidebar"><div class="sidebrand"><div class="sidebrand-mark"><strong>1CE</strong><span>Espace de classe</span></div><button class="sidebar-close" id="sidebarClose" type="button" aria-label="Fermer le menu">✕</button></div><small>Explorer</small><button class="nav active" data-page="home">⌂ &nbsp; Accueil</button><button class="nav" data-page="photos">▦ &nbsp; Souvenirs</button><button class="nav" data-page="addphotos">＋ &nbsp; Ajouter</button><button class="nav" data-page="posts">▤ &nbsp; Publications</button><button class="nav" data-page="chat">◌ &nbsp; Discussions</button><button class="nav" id="settingsOpen" type="button">⚙ &nbsp; Paramètres</button></aside>
       <main class="content">
         <div id="page-home"><section class="hero"><div class="eyebrow">Bienvenue dans notre espace</div><h2>Les souvenirs de la 1CE, tous ensemble.</h2><p>Retrouve les photos, les nouvelles et les discussions de la classe dans un espace réservé aux membres.</p></section>
         <div class="sectionhead"><h3>Le coin de la classe</h3><span>Bienvenue 👋</span></div><div class="grid"><article class="card tile"><div class="symbol">📸</div><div><h4>Nos souvenirs</h4><p>Les moments et photos partagés par la classe.</p></div></article><article class="card tile"><div class="symbol">💬</div><div><h4>Le fil de la 1CE</h4><p>Les nouvelles et les discussions du groupe.</p></div></article><article class="card wide"><h4>À la une</h4><p>Bienvenue dans l’espace de la 1CE ! Retrouvez les photos, les nouvelles et les discussions de la classe depuis le menu.</p></article></div></div>
@@ -277,37 +278,29 @@
     <div class="sectionhead"><h3>Souvenirs</h3><span>Galerie privée de la 1CE</span></div>
     <div class="photo-grid" id="photogrid"><div class="empty">Les photos de la classe apparaîtront ici.</div></div>
   </div>
-  <div id="page-addphotos" class="hidden">
-    <div class="sectionhead"><h3>Ajouter des photos</h3><span>Partager un moment avec la classe</span></div>
-    <form id="photoform" class="card formcard">
-      <h4>Ajouter un souvenir</h4>
-      <input class="field" id="photofile" type="file" accept="image/jpeg,image/png,image/webp,image/gif" required>
-      <input class="field" id="photocaption" maxlength="240" placeholder="Une petite légende (facultatif)">
-      <label class="notice"><input id="photoconsent" type="checkbox" required> J’ai l’accord des personnes reconnaissables sur cette photo avant de la partager.</label>
-      <button class="primary" type="submit">Partager la photo</button><div class="status" id="photostatus" role="status"></div>
-    </form>
-  </div>
+  <div id="page-addphotos" class="hidden"><div class="sectionhead"><h3>Ajouter</h3><span>Partager avec la classe</span></div>
+    <div class="add-choices" id="addChoices"><button class="add-choice" type="button" data-add-kind="photo"><span>📷</span><strong>Ajouter une photo</strong><small>Partager un souvenir dans la galerie</small></button><button class="add-choice" type="button" data-add-kind="post"><span>✍️</span><strong>Créer une publication</strong><small>Partager une nouvelle avec la classe</small></button></div>
+    <div id="add-photo-panel" class="hidden"><button class="mutedbtn add-back" type="button">← Retour</button><form id="photoform" class="card formcard"><h4>Ajouter une photo</h4><input class="field" id="photofile" type="file" accept="image/jpeg,image/png,image/webp,image/gif" required><input class="field" id="photocaption" maxlength="240" placeholder="Une petite légende (facultatif)"><label class="notice"><input id="photoconsent" type="checkbox" required> J’ai l’accord des personnes reconnaissables sur cette photo avant de la partager.</label><button class="primary" type="submit">Partager la photo</button><div class="status" id="photostatus" role="status"></div></form></div>
+    <div id="add-post-panel" class="hidden"><button class="mutedbtn add-back" type="button">← Retour</button><form id="postform" class="card formcard"><h4>Créer une publication</h4><textarea class="field" id="postcontent" rows="4" maxlength="3000" placeholder="Quoi de neuf dans la 1CE ?" required></textarea><button class="primary" type="submit">Publier</button><div class="status" id="poststatus" role="status"></div></form></div></div>
         <div id="page-posts" class="hidden">
     <div class="sectionhead"><h3>Publications</h3><span>Le fil de la classe</span></div>
-    <form id="postform" class="card formcard"><h4>Écrire une publication</h4><textarea class="field" id="postcontent" rows="3" maxlength="3000" placeholder="Quoi de neuf dans la 1CE ?" required></textarea><button class="primary" type="submit">Publier</button><div class="status" id="poststatus" role="status"></div></form>
+    
     <div class="feed" id="posts"><div class="empty">Chargement des publications…</div></div>
   </div>
         <div id="page-chat" class="hidden"><div class="discord-shell"><aside class="channelrail"><div class="rail-title">SALONS TEXTUELS</div><div class="channel active"># <span>général</span></div><div class="rail-hint">Un salon commun pour toute la 1CE</div><div class="rail-bottom">Salon de la classe</div></aside><section class="discord-main"><div class="discord-head"><div><strong># général</strong><small>Les discussions de la classe</small></div><button class="online-pill" id="onlineToggle" type="button" aria-expanded="false">Membres en ligne · <span id="onlineCount">0</span></button></div><div class="chatlist" id="chatlist"><div class="empty">Les messages apparaîtront ici.</div></div><div id="typingIndicator" class="typing-indicator" aria-live="polite"></div><div id="onlinePanel" class="online-panel hidden"><strong>Membres connectés</strong><div id="onlineList"></div></div><form id="chatform" class="discord-compose"><input class="field" id="chatcontent" maxlength="1000" placeholder="Écrire dans #général…" required><button class="primary" type="submit" aria-label="Envoyer">➤</button></form><div class="status" id="chatstatus" role="status"></div></section></div></div>
       </main>
     </section>
-    <section id="settings-screen" aria-hidden="true">
-      <header class="settings-header"><button class="settings-back" id="settingsBack" type="button" aria-label="Retour">‹</button><h2>Paramètres</h2></header>
-      <div class="settings-content">
-        <div class="eyebrow">Ton espace 1CE</div>
-        <section class="settings-group"><h3>Modération intelligente</h3><p>Les messages, publications, commentaires et légendes sont vérifiés avant leur envoi pour garder un espace respectueux.</p>
-          <div class="settings-row"><span class="settings-icon">✦</span><div><strong>Assistant de modération IA</strong><small>Actif · vérification avant publication</small></div></div>
-          <div class="settings-row"><span class="settings-icon">✎</span><div><strong>Langage grossier</strong><small>Les jurons légers sont partiellement masqués.</small></div></div>
-          <div class="settings-row"><span class="settings-icon">⏱</span><div><strong>Contenu très inapproprié</strong><small>Envoi refusé et suspension temporaire de 30 minutes.</small></div></div>
-        </section>
-        <section class="settings-group"><h3>Confidentialité</h3><p>La clé Groq reste sur le serveur Supabase. Elle n'est jamais envoyée au navigateur. Les textes sont transmis à Groq pour leur analyse de modération.</p></section>
-        <section class="settings-group"><h3>À savoir</h3><p>La modération analyse actuellement les textes et les légendes, pas le contenu visuel des images elles-mêmes. En cas d'erreur du service, l'envoi est mis en pause plutôt que de publier un texte non vérifié.</p></section>
-      </div>
-    </section>
+    <section id="settings-screen" aria-hidden="true"><header class="settings-header"><button class="settings-back" id="settingsBack" type="button">‹</button><button class="settings-back hidden" id="settingsCategoryBack" type="button">‹</button><h2 id="settingsTitle">Paramètres</h2></header><div class="settings-content settings-organized">
+    <div class="settings-category-menu" id="settingsCategoryMenu">
+    <button class="settings-category-tile" data-settings-category="account"><span>👤</span><span><strong>Compte</strong><small>Informations et sécurité du compte</small></span><b>›</b></button>
+    <button class="settings-category-tile" data-settings-category="language"><span>🌐</span><span><strong>Langue</strong><small>Choisir la langue de l’application</small></span><b>›</b></button>
+    <button class="settings-category-tile" data-settings-category="colors"><span>🎨</span><span><strong>Couleur d’accentuation</strong><small>Personnaliser les couleurs</small></span><b>›</b></button>
+    <button class="settings-category-tile" data-settings-category="appearance"><span>✨</span><span><strong>Apparence</strong><small>Transparence et effet verre dépoli</small></span><b>›</b></button></div>
+    <section class="settings-panel hidden" data-settings-panel="account"><h3>Compte</h3><p>Nom : <strong id="settingsAccountName">—</strong></p><p>E-mail : <strong id="settingsAccountEmail">—</strong></p><p>Google : <strong id="settingsGoogleStatus">—</strong></p><button class="mutedbtn" id="settingsLogout" type="button">Se déconnecter</button><p class="notice">La suppression du compte nécessite une procédure sécurisée pour protéger les données de la classe.</p></section>
+    <section class="settings-panel hidden" data-settings-panel="language"><h3>Langue</h3><div class="settings-lang-grid"><button class="settings-lang" data-lang="fr">🇫🇷 Français</button><button class="settings-lang" data-lang="pl">🇵🇱 Polski</button><button class="settings-lang" data-lang="en">🇬🇧 English</button><button class="settings-lang" data-lang="nl">🇳🇱 Nederlands</button><button class="settings-lang" data-lang="de">🇩🇪 Deutsch</button><button class="settings-lang" data-lang="es">🇪🇸 Español</button><button class="settings-lang" data-lang="it">🇮🇹 Italiano</button></div></section>
+    <section class="settings-panel hidden" data-settings-panel="colors"><h3>Couleur d’accentuation</h3><div class="settings-color-grid"><button class="settings-color" data-color="white" style="--swatch:#e3e3e3" aria-label="Blanc"></button><button class="settings-color" data-color="red" style="--swatch:#ef4444" aria-label="Rouge"></button><button class="settings-color" data-color="green" style="--swatch:#22c55e" aria-label="Vert"></button><button class="settings-color" data-color="blue" style="--swatch:#3b82f6" aria-label="Bleu"></button><button class="settings-color" data-color="mauve" style="--swatch:#a78bfa" aria-label="Mauve"></button><button class="settings-color" data-color="pink" style="--swatch:#ec4899" aria-label="Rose"></button><button class="settings-color" data-color="turquoise" style="--swatch:#14b8a6" aria-label="Turquoise"></button><button class="settings-color" data-color="orange" style="--swatch:#f97316" aria-label="Orange"></button></div></section>
+    <section class="settings-panel hidden" data-settings-panel="appearance"><h3>Apparence</h3><label class="settings-glass-row"><span><strong>Effet glassmorphism</strong><small>Panneaux translucides et floutés</small></span><input id="glassModeToggle" type="checkbox"></label></section></div></section>
+    <div class="photo-lightbox hidden" id="photoLightbox" role="dialog" aria-modal="true" aria-label="Visionneuse de photos"><button class="lightbox-close" id="lightboxClose">×</button><button class="lightbox-arrow prev" id="lightboxPrev">‹</button><figure><img id="lightboxImage" alt="Photo agrandie"><figcaption id="lightboxCaption"></figcaption></figure><button class="lightbox-arrow next" id="lightboxNext">›</button><div class="lightbox-count" id="lightboxCount"></div></div>
     <footer class="footer">1CE · Espace privé de classe · Partage uniquement avec l’accord des personnes concernées</footer>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -512,16 +505,29 @@
       session = null; member = null; await stopChatRealtime(); statusEl.textContent = ""; showState(false);
     });
 
-    const settingsScreen = document.getElementById("settings-screen");
-    document.getElementById("settingsOpen").addEventListener("click", () => {
-      closeSidebar();
-      settingsScreen.classList.add("open");
-      settingsScreen.setAttribute("aria-hidden","false");
-    });
-    document.getElementById("settingsBack").addEventListener("click", () => {
-      settingsScreen.classList.remove("open");
-      settingsScreen.setAttribute("aria-hidden","true");
-    });
+    const settingsScreen=document.getElementById("settings-screen");
+    function resetSettings(){document.getElementById("settingsCategoryMenu").classList.remove("hidden");document.querySelectorAll("[data-settings-panel]").forEach(p=>p.classList.add("hidden"));document.getElementById("settingsCategoryBack").classList.add("hidden");document.getElementById("settingsTitle").textContent="Paramètres";}
+    function showSettingsCategory(n){document.getElementById("settingsCategoryMenu").classList.add("hidden");document.querySelectorAll("[data-settings-panel]").forEach(p=>p.classList.toggle("hidden",p.dataset.settingsPanel!==n));document.getElementById("settingsCategoryBack").classList.remove("hidden");document.getElementById("settingsTitle").textContent=({account:"Compte",language:"Langue",colors:"Couleur d’accentuation",appearance:"Apparence"})[n];}
+    document.querySelectorAll("[data-settings-category]").forEach(b=>b.addEventListener("click",()=>showSettingsCategory(b.dataset.settingsCategory)));
+    document.getElementById("settingsCategoryBack").addEventListener("click",resetSettings);
+    document.getElementById("settingsOpen").addEventListener("click",()=>{closeSidebar();document.getElementById("settingsAccountName").textContent=member?.display_name||"—";document.getElementById("settingsAccountEmail").textContent=session?.user?.email||"—";document.getElementById("settingsGoogleStatus").textContent=session?.user?.app_metadata?.provider==="google"?"Connecté":"Non connecté";settingsScreen.classList.add("open");settingsScreen.setAttribute("aria-hidden","false");resetSettings();});
+    document.getElementById("settingsBack").addEventListener("click",()=>{settingsScreen.classList.remove("open");settingsScreen.setAttribute("aria-hidden","true");resetSettings();});
+    document.getElementById("settingsLogout").addEventListener("click",()=>client.auth.signOut());
+    document.querySelectorAll(".add-choice").forEach(b=>b.addEventListener("click",()=>{document.getElementById("addChoices").classList.add("hidden");document.getElementById("add-photo-panel").classList.toggle("hidden",b.dataset.addKind!=="photo");document.getElementById("add-post-panel").classList.toggle("hidden",b.dataset.addKind!=="post");}));
+    document.querySelectorAll(".add-back").forEach(b=>b.addEventListener("click",()=>{document.getElementById("addChoices").classList.remove("hidden");document.getElementById("add-photo-panel").classList.add("hidden");document.getElementById("add-post-panel").classList.add("hidden");}));
+    const lb=document.getElementById("photoLightbox");let lbIndex=0;
+    function showPhoto(i){const a=window.classPhotos||[];if(!a.length)return;lbIndex=(i+a.length)%a.length;const p=a[lbIndex];document.getElementById("lightboxImage").src=p.url;document.getElementById("lightboxCaption").textContent=p.caption+" · "+p.by+" · "+p.date;document.getElementById("lightboxCount").textContent=(lbIndex+1)+" / "+a.length;lb.classList.remove("hidden");}
+    function closePhoto(){lb.classList.add("hidden");document.getElementById("lightboxImage").src="";}
+    document.getElementById("photogrid").addEventListener("click",e=>{const el=e.target.closest("[data-photo-index]");if(el)showPhoto(Number(el.dataset.photoIndex));});
+    document.getElementById("lightboxClose").addEventListener("click",closePhoto);document.getElementById("lightboxPrev").addEventListener("click",()=>showPhoto(lbIndex-1));document.getElementById("lightboxNext").addEventListener("click",()=>showPhoto(lbIndex+1));lb.addEventListener("click",e=>{if(e.target===lb)closePhoto();});
+    document.addEventListener("keydown",e=>{if(lb.classList.contains("hidden"))return;if(e.key==="Escape")closePhoto();if(e.key==="ArrowLeft")showPhoto(lbIndex-1);if(e.key==="ArrowRight")showPhoto(lbIndex+1);});
+    const colors={white:"#e3e3e3",red:"#ef4444",green:"#22c55e",blue:"#3b82f6",mauve:"#a78bfa",pink:"#ec4899",turquoise:"#14b8a6",orange:"#f97316"};
+    function applyColor(n){const v=colors[n]||colors.green;document.documentElement.style.setProperty("--mint",v);document.documentElement.style.setProperty("--blue",v);document.querySelectorAll(".settings-color").forEach(x=>x.classList.toggle("active",x.dataset.color===n));localStorage.setItem("1ce-accent",n);}
+    document.querySelectorAll(".settings-color").forEach(b=>b.addEventListener("click",()=>applyColor(b.dataset.color)));
+    document.querySelectorAll(".settings-lang").forEach(b=>b.addEventListener("click",()=>{localStorage.setItem("1ce-lang",b.dataset.lang);document.documentElement.lang=b.dataset.lang;document.querySelectorAll(".settings-lang").forEach(x=>x.classList.toggle("active",x===b));}));
+    const glass=document.getElementById("glassModeToggle");glass.addEventListener("change",()=>{document.body.classList.toggle("glass-mode",glass.checked);localStorage.setItem("1ce-glass",glass.checked?"1":"0");});
+    applyColor(localStorage.getItem("1ce-accent")||"green");const lang=localStorage.getItem("1ce-lang")||"fr";document.documentElement.lang=lang;document.querySelectorAll(".settings-lang").forEach(x=>x.classList.toggle("active",x.dataset.lang===lang));glass.checked=localStorage.getItem("1ce-glass")==="1";document.body.classList.toggle("glass-mode",glass.checked);
+
 
     const sidebarToggle = document.getElementById("sidebarToggle");
     const sidebarLayout = document.getElementById("appview");
@@ -537,6 +543,7 @@
       closeSidebar();
       document.querySelectorAll(".nav").forEach(x => x.classList.toggle("active", x === btn));
       ["home","photos","addphotos","posts","chat"].forEach(p => document.getElementById("page-"+p).classList.toggle("hidden", p !== btn.dataset.page));
+      if(btn.dataset.page==="addphotos"){document.getElementById("addChoices").classList.remove("hidden");document.getElementById("add-photo-panel").classList.add("hidden");document.getElementById("add-post-panel").classList.add("hidden");}
       appView.classList.toggle("page-fullscreen", btn.dataset.page !== "home");
     }));
 
@@ -691,11 +698,8 @@
         ? await client.from("class_members").select("user_id,display_name").in("user_id",uploaderIds)
         : {data:[]};
       const uploaderNames = new Map((uploaders||[]).map(u => [u.user_id,u.display_name]));
-      const cards = await Promise.all(data.map(async p => {
-        const {data:link} = await client.storage.from("class-photos").createSignedUrl(p.object_path,3600);
-        return `<article class="card">${link?.signedUrl ? `<img src="${link.signedUrl}" alt="Photo partagée dans la galerie 1CE">` : '<div class="empty">Aperçu indisponible</div>'}<p>${esc(p.caption || "Souvenir de la classe")}</p><div class="photoby">Ajoutée par <strong>${esc(uploaderNames.get(p.uploader_id) || "Membre de la 1CE")}</strong> · ${dateLabel(p.created_at)}</div></article>`;
-      }));
-      root.innerHTML = cards.join("");
+      window.classPhotos=await Promise.all(data.map(async p=>{const {data:link}=await client.storage.from("class-photos").createSignedUrl(p.object_path,3600);return {url:link?.signedUrl||"",caption:p.caption||"Souvenir de la classe",by:uploaderNames.get(p.uploader_id)||"Membre de la 1CE",date:dateLabel(p.created_at)};}));
+      root.innerHTML=window.classPhotos.map((p,i)=>`<article class="card" data-photo-index="${i}">${p.url?`<img class="photo-thumb" data-photo-index="${i}" src="${p.url}" alt="Photo partagée dans la galerie 1CE">`:'<div class="empty">Aperçu indisponible</div>'}<p>${esc(p.caption)}</p><div class="photoby">Ajoutée par <strong>${esc(p.by)}</strong> · ${p.date}</div></article>`).join("");
     }
 
     document.getElementById("photoform").addEventListener("submit", async e => {
