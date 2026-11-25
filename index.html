@@ -372,6 +372,7 @@
     }
 
     async function enter(s) {
+      if (passwordRecoveryMode) { session = s || session; showState(false); return; }
       session = s;
       member = null;
       if (!s) { showState(false); return; }
@@ -399,7 +400,8 @@
     const signupForm = document.getElementById("signupform");
     const resetRequestForm = document.getElementById("resetrequestform");
     const newPasswordForm = document.getElementById("newpasswordform");
-    let passwordRecoveryMode = false;
+    // Détecter le lien de récupération avant INITIAL_SESSION pour éviter que enter() masque le formulaire.
+    let passwordRecoveryMode = /type=recovery/i.test(window.location.hash + window.location.search);
 
     function showAuthForm(form) {
       [loginForm, signupForm, document.getElementById("joinform"), resetRequestForm, newPasswordForm]
