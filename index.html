@@ -496,6 +496,17 @@
 </div>
 </nav>
 </div>
+<div>
+<span class="text-[11px] font-bold tracking-wider text-slate-400 uppercase px-3 block mb-2">Intelligence artificielle</span>
+<div class="space-y-1">
+<button class="nav-btn w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-semibold transition-all text-slate-600 hover:bg-slate-50 hover:text-slate-900" id="nav-btn-aluetoo-ai" onclick="switchTab('aluetoo-ai');document.body.classList.remove('mobile-sidebar-open');document.getElementById('mobile-menu-button')?.setAttribute('aria-expanded','false')">
+<div class="flex items-center gap-3">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 3v2m0 14v2M3 12h2m14 0h2M5.64 5.64l1.42 1.42m9.88 9.88 1.42 1.42m0-12.72-1.42 1.42m-9.88 9.88-1.42 1.42M8 9a4 4 0 0 1 8 0c0 1.5-.8 2.4-2 3.2-.8.5-1 1.1-1 1.8h-2c0-1.4.5-2.3 1.8-3.2C13.5 10.2 14 9.7 14 9a2 2 0 0 0-4 0m2 7v.01"/></svg>
+<span>Aluetoo AI</span>
+</div>
+</button>
+</div>
+</div>
 <!-- Current User Micro Widget -->
 <div class="p-3 border-t border-slate-200 bg-slate-50/60 m-2 rounded-2xl flex items-center justify-between">
 <div class="flex items-center gap-2.5 min-w-0">
@@ -855,6 +866,17 @@
 </div>
 </div>
 </div>
+</section>
+<!-- ==================== TAB ALUETOO AI ==================== -->
+<section class="tab-content flex-1 min-h-0 hidden overflow-hidden" id="tab-aluetoo-ai">
+<iframe
+  src="https://aluetoo.github.io/aluetoo-mobile/"
+  title="Aluetoo AI"
+  class="block w-full h-full flex-1 border-0 bg-white"
+  style="min-height:0"
+  referrerpolicy="strict-origin-when-cross-origin"
+  allow="fullscreen"
+></iframe>
 </section>
 </main>
 </div>
