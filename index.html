@@ -407,7 +407,18 @@
     #call-ended-toast.is-visible{animation:callEndedToast 3s cubic-bezier(.2,.8,.2,1) both}
     @keyframes callEndedToast{0%{opacity:0;transform:translateX(-50%) translateY(-140%)}12%,78%{opacity:1;transform:translateX(-50%) translateY(0)}100%{opacity:0;transform:translateX(-50%) translateY(-140%)}}
 
-</style>
+
+    .dm-read-receipt{color:#64748b!important;font-size:11px!important;font-weight:800!important;letter-spacing:-2px}
+    .dm-read-receipt.is-read{color:#2563eb!important}
+    .dm-own-message{touch-action:pan-y;user-select:none;-webkit-user-select:none}
+    .wa-message-actions-overlay{position:fixed;inset:0;z-index:250;display:grid;place-items:center;padding:20px;background:rgba(15,23,42,.42);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px)}
+    .wa-message-actions{width:min(320px,100%);padding:16px;border-radius:20px;background:#fff;box-shadow:0 20px 60px rgba(0,0,0,.24);display:grid;gap:9px}
+    .wa-message-actions p{margin:0 0 4px;font-size:13px;font-weight:700;color:#334155}
+    .wa-message-actions button{min-height:44px;border-radius:12px;font-size:14px;font-weight:700}
+    .wa-message-delete{background:#fee2e2;color:#b91c1c}
+    .wa-message-cancel{background:#f1f5f9;color:#334155}
+
+  </style>
 </head>
 <body class="bg-[#f8f9ff] text-slate-800 antialiased h-screen flex flex-col overflow-hidden">
 <!-- Authentification obligatoire -->
@@ -974,6 +985,10 @@
     let currentUser = null;
     let activeDmUserId = null;
     let classPresenceChannel = null;
+    let dmRealtimeChannel = null;
+    let dmMessageInteractionsReady = false;
+    let dmMessagePressTimer = null;
+    let dmMessagePressOrigin = null;
     let authenticatedAppPromise = null;
     let authenticatedAppUserId = null;
 
@@ -1098,6 +1113,8 @@
       window.initCallInbox?.();
       await loadOwnProfile();
       startClassPresence();
+      startDmRealtime();
+      initDmMessageInteractions();
       const emailLabel=document.getElementById('settings-account-email'); if(emailLabel) emailLabel.textContent=currentUser.app_metadata?.account_type==='special_guest'?'Compte spécial temporaire (sans e-mail)':(currentUser.email||'');
       loadGeneralMessages(); subscribeToGeneralMessages(); loadClassmates(); loadPlanningSessions(); loadPosts();
     }
@@ -1367,15 +1384,24 @@
 
     async function loadDirectMessages(recipientId) {
       const container = document.getElementById('dm-messages-list');
-      if (!currentUser || !recipientId) return;
+      if (!currentUser || !recipientId || !container) return;
       try {
         const { data, error } = await supabaseClient
           .from('direct_messages')
-          .select('*')
+          .select('id, sender_id, receiver_id, content, created_at, read_at')
           .or(`and(sender_id.eq.${currentUser.id},receiver_id.eq.${recipientId}),and(sender_id.eq.${recipientId},receiver_id.eq.${currentUser.id})`)
           .order('created_at', { ascending: true });
-
         if (error) throw error;
+
+        const unreadIds = (data || []).filter(msg => msg.receiver_id === currentUser.id && !msg.read_at).map(msg => msg.id);
+        if (unreadIds.length) {
+          const readAt = new Date().toISOString();
+          const { error: readError } = await supabaseClient.from('direct_messages')
+            .update({ read_at: readAt })
+            .in('id', unreadIds).eq('receiver_id', currentUser.id).is('read_at', null);
+          if (readError) console.warn('Confirmation de lecture non enregistrée :', readError.message);
+          else (data || []).forEach(msg => { if (unreadIds.includes(msg.id)) msg.read_at = readAt; });
+        }
 
         if (!data || data.length === 0) {
           container.innerHTML = '<div class="bg-white p-8 rounded-2xl border border-slate-200 text-center text-sm text-slate-500">Aucun message pour le moment.</div>';
@@ -1391,21 +1417,116 @@
           const senderProfile = profileById.get(msg.sender_id);
           const senderName = isMe ? (senderProfile?.full_name || currentUser.user_metadata?.full_name || 'Moi') : (senderProfile?.full_name || 'Participant');
           const time = new Date(msg.created_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+          const receipt = isMe
+            ? (msg.read_at
+              ? '<span class="dm-read-receipt is-read" aria-label="Lu" title="Lu">✓✓</span>'
+              : '<span class="dm-read-receipt" aria-label="Envoyé" title="Envoyé">✓✓</span>')
+            : '';
           return `
             <div class="wa-message-row ${isMe ? 'wa-message-out' : 'wa-message-in'}">
               ${isMe ? '' : profileAvatarMarkup(senderProfile, senderName, 'w-8 h-8')}
-              <div class="wa-bubble ${isMe ? 'wa-bubble-out' : 'wa-bubble-in'}">
+              <div class="wa-bubble ${isMe ? 'wa-bubble-out dm-own-message' : 'wa-bubble-in'}" ${isMe ? `data-dm-message-id="${escapeMessageHtml(msg.id)}" data-own-message="true"` : ''}>
                 ${isMe ? '' : `<div class="wa-author">${escapeMessageHtml(senderName)}</div>`}
                 <p class="whitespace-pre-wrap break-words">${escapeMessageHtml(msg.content || '')}</p>
-                <span class="wa-time">${time} ${isMe ? '<span aria-label="Envoyé">✓✓</span>' : ''}</span>
+                <span class="wa-time">${time} ${receipt}</span>
               </div>
               ${isMe ? profileAvatarMarkup(senderProfile, senderName, 'w-7 h-7') : ''}
             </div>
           `;
         }).join('');
+        container.scrollTop = container.scrollHeight;
       } catch (err) {
         console.error('Erreur loadDirectMessages:', err.message);
+        container.innerHTML = '<div class="bg-white p-5 rounded-2xl text-center text-sm text-rose-600">Impossible de charger les messages. Vérifie ta connexion puis réessaie.</div>';
       }
+    }
+
+    function startDmRealtime() {
+      if (!currentUser) return;
+      if (dmRealtimeChannel) supabaseClient.removeChannel(dmRealtimeChannel);
+      const channel = supabaseClient.channel('dm-messages-' + currentUser.id)
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'direct_messages' }, payload => {
+          const row = payload.new || payload.old;
+          if (!row || !activeDmUserId) return;
+          if (row.sender_id === activeDmUserId || row.receiver_id === activeDmUserId) loadDirectMessages(activeDmUserId);
+        })
+        .subscribe();
+      dmRealtimeChannel = channel;
+    }
+
+    function closeDmMessageActions() {
+      document.querySelector('.wa-message-actions-overlay')?.remove();
+    }
+
+    function showDmMessageActions(messageId) {
+      closeDmMessageActions();
+      const overlay = document.createElement('div');
+      overlay.className = 'wa-message-actions-overlay';
+      overlay.setAttribute('role', 'presentation');
+      const panel = document.createElement('div');
+      panel.className = 'wa-message-actions';
+      panel.setAttribute('role', 'dialog');
+      panel.setAttribute('aria-label', 'Actions du message');
+      const heading = document.createElement('p');
+      heading.textContent = 'Que veux-tu faire ?';
+      const remove = document.createElement('button');
+      remove.type = 'button';
+      remove.className = 'wa-message-delete';
+      remove.textContent = 'Supprimer';
+      const cancel = document.createElement('button');
+      cancel.type = 'button';
+      cancel.className = 'wa-message-cancel';
+      cancel.textContent = 'Annuler';
+      remove.addEventListener('click', async () => {
+        remove.disabled = true;
+        remove.textContent = 'Suppression…';
+        try {
+          const { data, error } = await supabaseClient.from('direct_messages').delete()
+            .eq('id', messageId).eq('sender_id', currentUser.id).select('id');
+          if (error) throw error;
+          if (!data?.length) throw new Error('Ce message ne peut pas être supprimé.');
+          closeDmMessageActions();
+          if (activeDmUserId) await loadDirectMessages(activeDmUserId);
+        } catch (err) {
+          closeDmMessageActions();
+          alert(err.message || 'Impossible de supprimer ce message.');
+        }
+      });
+      cancel.addEventListener('click', closeDmMessageActions);
+      overlay.addEventListener('click', event => { if (event.target === overlay) closeDmMessageActions(); });
+      panel.append(heading, remove, cancel);
+      overlay.appendChild(panel);
+      document.body.appendChild(overlay);
+      cancel.focus();
+    }
+
+    function initDmMessageInteractions() {
+      const container = document.getElementById('dm-messages-list');
+      if (!container || dmMessageInteractionsReady) return;
+      dmMessageInteractionsReady = true;
+      const clearPress = () => { if (dmMessagePressTimer) clearTimeout(dmMessagePressTimer); dmMessagePressTimer = null; dmMessagePressOrigin = null; };
+      container.addEventListener('pointerdown', event => {
+        const bubble = event.target.closest('[data-dm-message-id][data-own-message="true"]');
+        if (!bubble || event.button > 0) return;
+        clearPress();
+        dmMessagePressOrigin = { x: event.clientX, y: event.clientY };
+        const messageId = bubble.dataset.dmMessageId;
+        dmMessagePressTimer = setTimeout(() => { dmMessagePressTimer = null; showDmMessageActions(messageId); }, 550);
+      });
+      container.addEventListener('pointerup', clearPress);
+      container.addEventListener('pointercancel', clearPress);
+      container.addEventListener('pointerleave', clearPress);
+      container.addEventListener('pointermove', event => {
+        if (!dmMessagePressTimer || !dmMessagePressOrigin) return;
+        if (Math.hypot(event.clientX - dmMessagePressOrigin.x, event.clientY - dmMessagePressOrigin.y) > 12) clearPress();
+      });
+      container.addEventListener('contextmenu', event => {
+        const bubble = event.target.closest('[data-dm-message-id][data-own-message="true"]');
+        if (!bubble) return;
+        event.preventDefault();
+        showDmMessageActions(bubble.dataset.dmMessageId);
+      });
+      document.addEventListener('keydown', event => { if (event.key === 'Escape') closeDmMessageActions(); });
     }
 
     async function sendDirectMessage(recipientId, content) {
