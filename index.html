@@ -47,7 +47,7 @@
 
 @media(max-width:767px){
  :root{--mobile-safe-top:max(env(safe-area-inset-top,0px),28px)}
- header{height:calc(60px + var(--mobile-safe-top))!important;min-height:calc(60px + var(--mobile-safe-top))!important;box-sizing:border-box!important;padding-top:var(--mobile-safe-top)!important;padding-left:10px!important;padding-right:10px!important;gap:8px}
+ header{touch-action:manipulation;-webkit-tap-highlight-color:transparent;height:calc(60px + var(--mobile-safe-top))!important;min-height:calc(60px + var(--mobile-safe-top))!important;box-sizing:border-box!important;padding-top:var(--mobile-safe-top)!important;padding-left:10px!important;padding-right:10px!important;gap:8px}
  header>div:last-child{gap:8px!important}
  #mobile-menu-button{display:grid!important}
  #global-search-input{display:none}
