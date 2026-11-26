@@ -303,6 +303,38 @@
       #tab-general .alu-composer-wrap{padding:8px 10px calc(45px + env(safe-area-inset-bottom,0px))!important}
     }
 
+    /* Conversations : panneaux flexibles et zones de messages réellement défilables */
+    #tab-dms>div:last-child{min-height:0!important;overflow:hidden!important;padding:0!important}
+    #tab-dms>div:last-child>.max-w-4xl{
+      width:100%!important;max-width:none!important;height:100%!important;min-height:0!important;
+      display:flex!important;flex-direction:column!important;gap:0!important;overflow:hidden!important;
+    }
+    #dm-active-user-header{flex:0 0 auto!important;margin:0!important;border-radius:0!important}
+    #dm-video-container{flex:0 0 auto!important;margin:8px 12px!important}
+    #dm-messages-list{
+      display:flex!important;flex:1 1 0!important;flex-direction:column!important;gap:10px!important;
+      min-height:0!important;overflow-y:auto!important;overflow-x:hidden!important;
+      overscroll-behavior:contain!important;-webkit-overflow-scrolling:touch!important;
+      padding:14px clamp(10px,3vw,28px)!important;
+    }
+    #tab-dms .alu-composer-wrap{
+      position:sticky!important;bottom:0!important;z-index:6!important;flex:0 0 auto!important;
+      margin:0!important;padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px))!important;
+      background:rgba(247,245,240,.96)!important;border-top:1px solid rgba(0,0,0,.07)!important;
+    }
+    #dm-message-input{min-height:38px!important;max-height:120px!important;overflow-y:auto!important}
+    #dm-users-list button[hidden]{display:none!important}
+    #tab-general>div:first-child{min-height:0!important}
+    #general-messages-list{min-height:0!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch!important}
+    #tab-general .alu-composer-wrap{flex:0 0 auto!important}
+    @media(max-width:767px){
+      #tab-dms>div:last-child>.max-w-4xl{height:100%!important}
+      #dm-active-user-header{padding:9px!important}
+      #dm-messages-list{padding:10px 9px 18px!important}
+      #tab-dms .alu-composer-wrap{padding:7px 8px calc(7px + env(safe-area-inset-bottom,0px))!important}
+      #tab-dms .alu-textarea{font-size:16px!important}
+    }
+
     /* Thème Glassmorphism global : cartes, panneaux, navigation et contrôles */
     body.glass-ui header,
     body.glass-ui #class-sidebar,
@@ -1377,23 +1409,29 @@
     }
 
     async function sendDirectMessage(recipientId, content) {
-      if (!content.trim() || !currentUser || !recipientId) return;
-      try {
-        const { error } = await supabaseClient
-          .from('direct_messages')
-          .insert([{ sender_id: currentUser.id, receiver_id: recipientId, content: content.trim() }]);
-        if (error) throw error;
-        loadDirectMessages(recipientId);
-      } catch (err) {
-        console.error('Erreur sendDirectMessage:', err.message);
-      }
+      if (!content.trim() || !currentUser || !recipientId) throw new Error('Sélectionne une conversation et écris un message.');
+      const { error } = await supabaseClient
+        .from('direct_messages')
+        .insert([{ sender_id: currentUser.id, receiver_id: recipientId, content: content.trim() }]);
+      if (error) throw error;
+      await loadDirectMessages(recipientId);
     }
 
-    function handleSendDirectMessage() {
+    async function handleSendDirectMessage() {
       const input = document.getElementById('dm-message-input');
-      if (input && input.value.trim() && activeDmUserId) {
-        sendDirectMessage(activeDmUserId, input.value);
-        input.value = '';
+      const button = document.getElementById('dm-send-btn');
+      const value = input?.value.trim();
+      if (!value || !activeDmUserId || button?.disabled) return;
+      if (button) button.disabled = true;
+      try {
+        await sendDirectMessage(activeDmUserId, value);
+        if (input.value.trim() === value) input.value = '';
+        input.style.height = 'auto';
+      } catch (err) {
+        console.error('Erreur sendDirectMessage:', err.message);
+        alert(err.message || 'Le message privé n’a pas pu être envoyé. Vérifie ta connexion et réessaie.');
+      } finally {
+        if (button) button.disabled = !input?.value.trim();
       }
     }
 
@@ -1739,6 +1777,18 @@
         }
       });
       document.getElementById('dm-new-conversation')?.addEventListener('click', () => { switchTab('dms'); document.getElementById('dm-search-input')?.focus(); });
+      document.getElementById('dm-search-input')?.addEventListener('input', event => {
+        const query = event.target.value.trim().toLocaleLowerCase('fr');
+        document.querySelectorAll('#dm-users-list button').forEach(button => {
+          button.hidden = !button.textContent.toLocaleLowerCase('fr').includes(query);
+        });
+      });
+      document.getElementById('dm-message-input')?.addEventListener('keydown', event => {
+        if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); handleSendDirectMessage(); }
+      });
+      document.getElementById('general-message-input')?.addEventListener('keydown', event => {
+        if (event.key === 'Enter' && !event.shiftKey) { event.preventDefault(); handleSendGeneralMessage(); }
+      });
       document.getElementById('dm-audio-call')?.addEventListener('click', () => window.startDirectCall?.(false));
       document.getElementById('dm-video-call')?.addEventListener('click', () => window.startDirectCall?.(true));
       document.getElementById('sidebar-mic-toggle')?.addEventListener('click', () => { if(window.toggleClassMic) window.toggleClassMic(); else alert('Démarre d’abord un appel vocal.'); });
