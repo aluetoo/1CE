@@ -368,6 +368,7 @@
       <input id="auth-signup-password" type="password" minlength="8" autocomplete="new-password" placeholder="Créer un mot de passe (8 caractères minimum)" class="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm"/>
       <input id="auth-signup-confirm" type="password" minlength="8" autocomplete="new-password" placeholder="Confirmer le mot de passe" class="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm"/>
       <button id="auth-signup-submit" class="w-full rounded-xl bg-indigo-600 p-3 text-white font-bold">Créer mon compte</button>
+       <button id="auth-resend-confirmation" class="w-full text-sm text-indigo-700 font-semibold">Renvoyer le mail de confirmation</button>
       <button id="auth-back-login" class="w-full text-sm text-indigo-700 font-semibold">Retour à la connexion</button>
     </div>
     <div id="auth-reset-panel" class="hidden space-y-3">
@@ -1507,19 +1508,49 @@
           await startAuthenticatedApp();authMessage('');
         }catch(err){await supabaseClient.auth.signOut();currentUser=null;authMessage(err.message||'Connexion impossible.',true);}
       });
-      document.getElementById('auth-signup-submit')?.addEventListener('click',async()=>{
+      const signupButton=document.getElementById('auth-signup-submit');
+      const savePendingSignup=()=>{
+        const name=document.getElementById('auth-signup-name').value.trim(),username=document.getElementById('auth-signup-username').value.trim().replace(/^@/,''),code=document.getElementById('auth-signup-code').value.trim();
+        localStorage.setItem('1ce_pending_class_code',code);localStorage.setItem('1ce_pending_display_name',name);localStorage.setItem('1ce_pending_username',username);
+      };
+      signupButton?.addEventListener('click',async()=>{
+        if(signupButton.disabled)return;
         const name=document.getElementById('auth-signup-name').value.trim(),username=document.getElementById('auth-signup-username').value.trim().replace(/^@/,''),email=document.getElementById('auth-signup-email').value.trim(),code=document.getElementById('auth-signup-code').value.trim(),password=document.getElementById('auth-signup-password').value,confirmPassword=document.getElementById('auth-signup-confirm').value;
         if(!name||!username||!email||!code||!password){authMessage('Complète tous les champs, y compris le nom officiel et le nom de profil.',true);return;}
         if(password.length<8){authMessage('Le mot de passe doit contenir au moins 8 caractères.',true);return;}
         if(password!==confirmPassword){authMessage('Les deux mots de passe ne correspondent pas.',true);return;}
         if(!/^[a-zA-Z0-9_.-]{3,30}$/.test(username)){authMessage('Le nom de profil doit contenir 3 à 30 caractères (lettres, chiffres, point, tiret ou underscore).',true);return;}
+        signupButton.disabled=true;signupButton.textContent='Création en cours…';
         try{
-          localStorage.setItem('1ce_pending_class_code',code);localStorage.setItem('1ce_pending_display_name',name);localStorage.setItem('1ce_pending_username',username);
           const {data,error}=await supabaseClient.auth.signUp({email,password,options:{data:{full_name:name,username},emailRedirectTo:`${location.origin}/1CE/`}});
           if(error)throw error;
+          savePendingSignup();
           if(data.session){currentUser=data.user;await redeemPendingInvite();await startAuthenticatedApp();authMessage('Compte créé et accès à la classe activé.');}
           else{authMessage('Compte créé. Vérifie ton e-mail, confirme ton adresse puis reviens sur cette page pour terminer ton inscription.');}
-        }catch(err){authMessage(err.message||'Création du compte impossible.',true);}
+        }catch(err){
+          const message=err?.message||'Création du compte impossible.';
+          if(err?.status===429||err?.code==='over_email_send_rate_limit'){authMessage('Trop de demandes de confirmation ont été envoyées. Attends avant de réessayer, puis utilise « Renvoyer le mail de confirmation ».',true);}
+          else if(err?.code==='email_exists'||err?.code==='user_already_exists'||/already registered|already exists|duplicate key/i.test(message)){savePendingSignup();authMessage('Cette adresse possède déjà un compte. Si tu n’as pas confirmé ton e-mail, utilise « Renvoyer le mail de confirmation ». Sinon, retourne à la connexion.',true);}
+          else{authMessage(message,true);}
+        }finally{signupButton.disabled=false;signupButton.textContent='Créer mon compte';}
+      });
+      document.getElementById('auth-resend-confirmation')?.addEventListener('click',async(event)=>{
+        const button=event.currentTarget;
+        if(button.disabled)return;
+        const email=document.getElementById('auth-signup-email').value.trim();
+        if(!email){authMessage('Saisis d’abord ton adresse e-mail.',true);return;}
+        const name=document.getElementById('auth-signup-name').value.trim(),username=document.getElementById('auth-signup-username').value.trim().replace(/^@/,''),code=document.getElementById('auth-signup-code').value.trim();
+        if(!name||!username||!code){authMessage('Complète aussi ton nom, ton pseudo et le code de classe pour terminer automatiquement ton inscription.',true);return;}
+        savePendingSignup();
+        button.disabled=true;button.textContent='Envoi en cours…';
+        try{
+          const {error}=await supabaseClient.auth.resend({type:'signup',email,options:{emailRedirectTo:`${location.origin}/1CE/`}});
+          if(error)throw error;
+          authMessage('Nouveau mail envoyé. Confirme ton adresse puis reviens sur cette page.');
+        }catch(err){
+          if(err?.status===429||err?.code==='over_email_send_rate_limit'){authMessage('Le service limite temporairement les e-mails. Attends un peu avant de demander un nouvel envoi.',true);}
+          else{authMessage(err?.message||'Impossible de renvoyer le mail. Si ton adresse est déjà confirmée, connecte-toi directement.',true);}
+        }finally{button.disabled=false;button.textContent='Renvoyer le mail de confirmation';}
       });
       document.getElementById('auth-reset-send')?.addEventListener('click',async()=>{
         const email=document.getElementById('auth-reset-email').value.trim();if(!email){authMessage('Saisis ton adresse e-mail.',true);return;}
