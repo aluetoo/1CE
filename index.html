@@ -1126,11 +1126,15 @@
         }
 
         const authorIds = [...new Set(data.map(msg => msg.author_id).filter(Boolean))];
-        const { data: profiles, error: profilesError } = authorIds.length
-          ? await supabaseClient.from('profiles').select('id, avatar_url').in('id', authorIds)
-          : { data: [], error: null };
-        if (profilesError) throw profilesError;
-        const profileById = new Map((profiles || []).map(profile => [profile.id, profile]));
+        // Le chargement des avatars ne doit jamais empêcher l'affichage des messages.
+        let profiles = [];
+        if (authorIds.length) {
+          const { data: profileRows, error: profilesError } = await supabaseClient
+            .from('profiles').select('id, avatar_url').in('id', authorIds);
+          if (profilesError) console.warn('Avatars indisponibles, affichage des messages sans photo :', profilesError.message);
+          else profiles = profileRows || [];
+        }
+        const profileById = new Map(profiles.map(profile => [profile.id, profile]));
         container.innerHTML = data.map(msg => {
           const authorName = msg.author_name || 'Élève 1CE';
           const isAI = authorName === 'Aluetoo AI';
