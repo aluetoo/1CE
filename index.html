@@ -370,7 +370,18 @@
       <input id="auth-signup-confirm" type="password" minlength="8" autocomplete="new-password" placeholder="Confirmer le mot de passe" class="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm"/>
       <button id="auth-signup-submit" class="w-full rounded-xl bg-indigo-600 p-3 text-white font-bold">Créer mon compte</button>
        <button id="auth-resend-confirmation" class="w-full text-sm text-indigo-700 font-semibold">Renvoyer le mail de confirmation</button>
+      <button id="auth-show-special" class="w-full rounded-xl border border-indigo-200 bg-indigo-50 p-3 text-sm font-bold text-indigo-700">Option spéciale — sans e-mail</button>
       <button id="auth-back-login" class="w-full text-sm text-indigo-700 font-semibold">Retour à la connexion</button>
+    </div>
+    <div id="auth-special-panel" class="hidden space-y-3">
+      <h2 class="font-bold text-slate-900">Compte spécial temporaire</h2>
+      <p class="text-sm text-slate-600">Inscris-toi sans adresse e-mail avec ton nom, ton pseudo et le code spécial.</p>
+      <input id="auth-special-name" type="text" maxlength="60" autocomplete="name" placeholder="Prénom et nom" class="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm"/>
+      <input id="auth-special-username" type="text" maxlength="30" autocomplete="nickname" placeholder="Pseudo" class="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm"/>
+      <input id="auth-special-code" type="password" autocomplete="off" placeholder="Code spécial" class="w-full rounded-xl border border-slate-200 bg-slate-50 p-3 text-sm"/>
+      <p class="rounded-xl bg-amber-50 p-3 text-xs text-amber-800">Attention : à la déconnexion, ce compte et tous les contenus créés avec lui seront supprimés définitivement. Il sera impossible de récupérer ce compte.</p>
+      <button id="auth-special-submit" class="w-full rounded-xl bg-indigo-600 p-3 text-white font-bold">Créer le compte temporaire</button>
+      <button id="auth-special-back" class="w-full text-sm text-indigo-700 font-semibold">Retour</button>
     </div>
     <div id="auth-reset-panel" class="hidden space-y-3">
       <h2 class="font-bold text-slate-900">Réinitialiser le mot de passe</h2>
@@ -954,7 +965,7 @@
       if(el){el.textContent=message;el.className='min-h-5 text-center text-sm '+(isError?'text-red-600':'text-slate-600');}
     }
     function showAuthPanel(name) {
-      ['login','signup','reset'].forEach(key=>document.getElementById('auth-'+key+'-panel')?.classList.toggle('hidden',key!==name));
+      ['login','signup','special','reset'].forEach(key=>document.getElementById('auth-'+key+'-panel')?.classList.toggle('hidden',key!==name));
       authMessage('');
     }
     async function redeemPendingInvite() {
@@ -1022,7 +1033,7 @@
       window.initCallInbox?.();
       await loadOwnProfile();
       startClassPresence();
-      const emailLabel=document.getElementById('settings-account-email'); if(emailLabel) emailLabel.textContent=currentUser.email||'';
+      const emailLabel=document.getElementById('settings-account-email'); if(emailLabel) emailLabel.textContent=currentUser.app_metadata?.account_type==='special_guest'?'Compte spécial temporaire (sans e-mail)':(currentUser.email||'');
       loadGeneralMessages(); subscribeToGeneralMessages(); loadClassmates(); loadPlanningSessions(); loadPosts();
     }
     async function activateAuthenticatedApp(user) {
@@ -1065,6 +1076,7 @@
     }
     async function deleteOwnAccount() {
       if(!currentUser) return;
+      if(currentUser.app_metadata?.account_type==='special_guest'){await signOut();return;}
       const typed=prompt('Pour confirmer la suppression définitive, saisis ton adresse e-mail :');
       if(typed===null) return;
       if(typed.trim().toLowerCase()!==(currentUser.email||'').toLowerCase()){alert('Adresse e-mail incorrecte. Aucun compte n’a été supprimé.');return;}
@@ -1085,8 +1097,17 @@
       const button=document.getElementById('settings-signout');
       if(button){button.disabled=true;button.textContent='Déconnexion…';}
       try {
-        const { error } = await supabaseClient.auth.signOut();
-        if (error) throw error;
+        if(currentUser?.app_metadata?.account_type==='special_guest'){
+          const confirmed=confirm('Déconnexion définitive : ton compte spécial et tous ses messages, publications, commentaires, photos et données seront supprimés. Cette action est irréversible. Continuer ?');
+          if(!confirmed){if(button){button.disabled=false;button.textContent='Se déconnecter';}return;}
+          const {data,error}=await supabaseClient.functions.invoke('special-account',{body:{action:'delete'}});
+          if(error||!data?.success)throw new Error(data?.error||error?.message||'Suppression du compte temporaire impossible.');
+          const {error:signOutError}=await supabaseClient.auth.signOut({scope:'local'});
+          if(signOutError)throw signOutError;
+        }else{
+          const { error } = await supabaseClient.auth.signOut();
+          if (error) throw error;
+        }
         currentUser = null;
         location.reload();
       } catch (err) {
@@ -1532,6 +1553,8 @@
       if(user) await activateAuthenticatedApp(user);
       else document.getElementById('auth-gate')?.classList.remove('hidden');
       document.getElementById('auth-show-signup')?.addEventListener('click',()=>showAuthPanel('signup'));
+      document.getElementById('auth-show-special')?.addEventListener('click',()=>showAuthPanel('special'));
+      document.getElementById('auth-special-back')?.addEventListener('click',()=>showAuthPanel('signup'));
       document.getElementById('auth-back-login')?.addEventListener('click',()=>showAuthPanel('login'));
       document.getElementById('auth-reset-back')?.addEventListener('click',()=>showAuthPanel('login'));
       document.getElementById('auth-show-reset')?.addEventListener('click',beginPasswordRecovery);
@@ -1582,6 +1605,38 @@
           else if(err?.code==='email_exists'||err?.code==='user_already_exists'||/already registered|already exists|duplicate key/i.test(message)){savePendingSignup();authMessage('Cette adresse possède déjà un compte. Si tu n’as pas confirmé ton e-mail, utilise « Renvoyer le mail de confirmation ». Sinon, retourne à la connexion.',true);}
           else{authMessage(message,true);}
         }finally{signupButton.disabled=false;signupButton.textContent='Créer mon compte';}
+      });
+      document.getElementById('auth-special-submit')?.addEventListener('click',async()=>{
+        const button=document.getElementById('auth-special-submit');
+        if(button.disabled)return;
+        const name=document.getElementById('auth-special-name').value.trim();
+        const username=document.getElementById('auth-special-username').value.trim().replace(/^@/,'');
+        const code=document.getElementById('auth-special-code').value.trim();
+        if(name.length<2||name.length>60){authMessage('Saisis un nom de 2 à 60 caractères.',true);return;}
+        if(!/^[a-zA-Z0-9_.-]{3,30}$/.test(username)){authMessage('Le pseudo doit contenir 3 à 30 caractères : lettres, chiffres, point, tiret ou underscore.',true);return;}
+        if(!code){authMessage('Saisis le code spécial.',true);return;}
+        button.disabled=true;button.textContent='Création en cours…';
+        let anonymousSessionCreated=false;
+        try{
+          const {data:anonymousData,error:anonymousError}=await supabaseClient.auth.signInAnonymously();
+          if(anonymousError||!anonymousData?.user)throw new Error(anonymousError?.message||'Impossible de créer la session temporaire.');
+          anonymousSessionCreated=true;
+          currentUser=anonymousData.user;
+          const {data,error}=await supabaseClient.functions.invoke('special-account',{body:{action:'enroll',special_code:code,full_name:name,username}});
+          if(error||!data?.success)throw new Error(data?.error||error?.message||'Inscription spéciale impossible.');
+          const {data:userData,error:userError}=await supabaseClient.auth.getUser();
+          if(userError||!userData?.user)throw new Error('La session temporaire n’a pas pu être confirmée.');
+          currentUser=userData.user;
+          await startAuthenticatedApp();
+          authMessage('Compte spécial créé. Pense à te déconnecter pour supprimer définitivement ce compte et ses contenus.');
+        }catch(err){
+          if(anonymousSessionCreated){
+            try{await supabaseClient.functions.invoke('special-account',{body:{action:'discard'}});}catch(_){}
+            try{await supabaseClient.auth.signOut({scope:'local'});}catch(_){}
+            currentUser=null;
+          }
+          authMessage(err?.message||'Création du compte temporaire impossible.',true);
+        }finally{button.disabled=false;button.textContent='Créer le compte temporaire';}
       });
       document.getElementById('auth-resend-confirmation')?.addEventListener('click',async(event)=>{
         const button=event.currentTarget;
