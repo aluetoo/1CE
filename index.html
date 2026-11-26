@@ -1132,11 +1132,15 @@
         const profileById = new Map((profiles || []).map(profile => [profile.id, profile]));
         container.innerHTML = data.map(msg => {
           const authorName = msg.author_name || 'Élève 1CE';
-          const isMe = msg.author_id === currentUser?.id;
+          const isAI = authorName === 'Aluetoo AI';
+          const isMe = msg.author_id === currentUser?.id && !isAI;
+          const avatar = isAI
+            ? '<div class="w-8 h-8 rounded-full bg-indigo-600 text-white grid place-items-center text-[10px] font-extrabold shrink-0">AI</div>'
+            : profileAvatarMarkup(profileById.get(msg.author_id), authorName, 'w-8 h-8');
           const time = new Date(msg.created_at).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
           return `
             <div class="wa-message-row ${isMe ? 'wa-message-out' : 'wa-message-in'}">
-              ${isMe ? '' : profileAvatarMarkup(profileById.get(msg.author_id), authorName, 'w-8 h-8')}
+              ${isMe ? '' : avatar}
               <div class="wa-bubble ${isMe ? 'wa-bubble-out' : 'wa-bubble-in'}">
                 ${isMe ? '' : `<div class="wa-author">${escapeMessageHtml(authorName)}</div>`}
                 <p class="whitespace-pre-wrap break-words">${escapeMessageHtml(msg.content || '')}</p>
@@ -1168,13 +1172,28 @@
         .subscribe();
     }
 
+    async function askClassAI(prompt) {
+      if (!currentUser) throw new Error('Connecte-toi pour utiliser l’IA.');
+      const { data, error } = await supabaseClient.functions.invoke('class-ai-chat', { body: { prompt } });
+      if (error || !data?.action) throw new Error(data?.error || error?.message || 'L’IA est indisponible pour le moment.');
+      return data;
+    }
+
     async function handleSendGeneralMessage() {
       const input = document.getElementById('general-message-input');
       const button = document.getElementById('general-send-btn');
       const value = input?.value.trim(); if (!value) return;
       if (button) button.disabled = true;
-      try { await sendGeneralMessage(value); input.value=''; input.style.height='auto'; await loadGeneralMessages(); }
-      catch(err) { alert(err.message || 'Envoi impossible.'); }
+      try {
+        if (value.startsWith('/')) {
+          const prompt = value.slice(1).trim();
+          if (!prompt) throw new Error('Écris une question après le /.');
+          await askClassAI(prompt);
+        } else {
+          await sendGeneralMessage(value);
+        }
+        input.value=''; input.style.height='auto'; await loadGeneralMessages();
+      } catch(err) { alert(err.message || 'Envoi impossible.'); }
       finally { if(button) button.disabled = !input?.value.trim(); }
     }
 
