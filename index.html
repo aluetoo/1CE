@@ -1189,6 +1189,9 @@
         if (value.startsWith('/')) {
           const prompt = value.slice(1).trim();
           if (!prompt) throw new Error('Écris une question après le /.');
+          // Publie d’abord la question dans le salon (avec la modération habituelle),
+          // puis demande à l’IA de publier sa réponse dans le même salon.
+          await sendGeneralMessage(prompt);
           await askClassAI(prompt);
         } else {
           await sendGeneralMessage(value);
