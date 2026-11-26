@@ -866,6 +866,11 @@
     const SUPABASE_URL = 'https://fbqxuqkbywqvvynektqb.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_VC3uEiNgvTX_2-L4DcKmVw_LwAVJuB8';
     const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    // Migre les informations d'inscription encore stockées dans l'onglet d'origine.
+    ['1ce_pending_class_code','1ce_pending_display_name','1ce_pending_username'].forEach(key=>{
+      const pendingValue=sessionStorage.getItem(key);
+      if(pendingValue && !localStorage.getItem(key)) localStorage.setItem(key,pendingValue);
+    });
 
     let currentUser = null;
     let activeDmUserId = null;
