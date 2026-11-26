@@ -927,9 +927,9 @@
       authMessage('');
     }
     async function redeemPendingInvite() {
-      const pending = sessionStorage.getItem('1ce_pending_class_code');
-      const displayName = sessionStorage.getItem('1ce_pending_display_name') || currentUser?.user_metadata?.full_name || currentUser?.email?.split('@')[0] || 'Élève 1CE';
-      const profileName = sessionStorage.getItem('1ce_pending_username') || currentUser?.user_metadata?.username || '';
+      const pending = localStorage.getItem('1ce_pending_class_code');
+      const displayName = localStorage.getItem('1ce_pending_display_name') || currentUser?.user_metadata?.full_name || currentUser?.email?.split('@')[0] || 'Élève 1CE';
+      const profileName = localStorage.getItem('1ce_pending_username') || currentUser?.user_metadata?.username || '';
       if(!pending || !currentUser) return false;
       const {data,error}=await supabaseClient.functions.invoke('redeem-class-invite',{body:{class_code:pending,display_name:displayName}});
       if(error || !data?.success) throw new Error(data?.error || error?.message || 'Activation de la classe impossible.');
@@ -937,9 +937,9 @@
         const {error:profileError}=await supabaseClient.functions.invoke('update-own-profile',{body:{full_name:displayName,username:profileName.replace(/^@/,'')}});
         if(profileError) throw new Error(profileError.message || 'Enregistrement du nom de profil impossible.');
       }
-      sessionStorage.removeItem('1ce_pending_class_code');
-      sessionStorage.removeItem('1ce_pending_display_name');
-      sessionStorage.removeItem('1ce_pending_username');
+      localStorage.removeItem('1ce_pending_class_code');
+      localStorage.removeItem('1ce_pending_display_name');
+      localStorage.removeItem('1ce_pending_username');
       return true;
     }
     async function startClassPresence() {
@@ -1487,7 +1487,7 @@
         if(password!==confirmPassword){authMessage('Les deux mots de passe ne correspondent pas.',true);return;}
         if(!/^[a-zA-Z0-9_.-]{3,30}$/.test(username)){authMessage('Le nom de profil doit contenir 3 à 30 caractères (lettres, chiffres, point, tiret ou underscore).',true);return;}
         try{
-          sessionStorage.setItem('1ce_pending_class_code',code);sessionStorage.setItem('1ce_pending_display_name',name);sessionStorage.setItem('1ce_pending_username',username);
+          localStorage.setItem('1ce_pending_class_code',code);localStorage.setItem('1ce_pending_display_name',name);localStorage.setItem('1ce_pending_username',username);
           const {data,error}=await supabaseClient.auth.signUp({email,password,options:{data:{full_name:name,username},emailRedirectTo:`${location.origin}/1CE/`}});
           if(error)throw error;
           if(data.session){currentUser=data.user;await redeemPendingInvite();await startAuthenticatedApp();authMessage('Compte créé et accès à la classe activé.');}
