@@ -1488,7 +1488,7 @@
         if(!/^[a-zA-Z0-9_.-]{3,30}$/.test(username)){authMessage('Le nom de profil doit contenir 3 à 30 caractères (lettres, chiffres, point, tiret ou underscore).',true);return;}
         try{
           sessionStorage.setItem('1ce_pending_class_code',code);sessionStorage.setItem('1ce_pending_display_name',name);sessionStorage.setItem('1ce_pending_username',username);
-          const {data,error}=await supabaseClient.auth.signUp({email,password,options:{data:{full_name:name,username},emailRedirectTo:location.origin}});
+          const {data,error}=await supabaseClient.auth.signUp({email,password,options:{data:{full_name:name,username},emailRedirectTo:`${location.origin}/1CE/`}});
           if(error)throw error;
           if(data.session){currentUser=data.user;await redeemPendingInvite();await startAuthenticatedApp();authMessage('Compte créé et accès à la classe activé.');}
           else{authMessage('Compte créé. Vérifie ton e-mail, confirme ton adresse puis reviens sur cette page pour terminer ton inscription.');}
