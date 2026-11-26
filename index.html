@@ -898,6 +898,8 @@
     let currentUser = null;
     let activeDmUserId = null;
     let classPresenceChannel = null;
+    let authenticatedAppPromise = null;
+    let authenticatedAppUserId = null;
 
     // =========================================================================
     // 2. NAVIGATION ENTRE ONGLETS
@@ -1021,6 +1023,29 @@
       startClassPresence();
       const emailLabel=document.getElementById('settings-account-email'); if(emailLabel) emailLabel.textContent=currentUser.email||'';
       loadGeneralMessages(); subscribeToGeneralMessages(); loadClassmates(); loadPlanningSessions(); loadPosts();
+    }
+    async function activateAuthenticatedApp(user) {
+      if(!user) return false;
+      if(authenticatedAppUserId===user.id) return true;
+      if(authenticatedAppPromise) return authenticatedAppPromise;
+      authenticatedAppPromise=(async()=>{
+        currentUser=user;
+        try {
+          await redeemPendingInvite();
+          await startAuthenticatedApp();
+          authenticatedAppUserId=user.id;
+          return true;
+        } catch(err) {
+          await supabaseClient.auth.signOut();
+          currentUser=null;
+          document.getElementById('auth-gate')?.classList.remove('hidden');
+          authMessage(err.message || 'Connexion impossible.',true);
+          return false;
+        } finally {
+          authenticatedAppPromise=null;
+        }
+      })();
+      return authenticatedAppPromise;
     }
     async function sendRecoveryCode(email) {
       const {error}=await supabaseClient.auth.resetPasswordForEmail(email,{redirectTo:location.origin});
@@ -1470,23 +1495,15 @@
           document.getElementById('auth-reset-token')?.classList.add('hidden');
           document.getElementById('auth-reset-verify')?.classList.remove('hidden');
           authMessage('Choisis ton nouveau mot de passe pour terminer la récupération.');
+        } else if(event==='SIGNED_IN' && session && /(?:access_token|refresh_token|code)=/.test(location.hash+location.search)) {
+          Promise.resolve().then(()=>activateAuthenticatedApp(session.user));
         }
       });
 
-      await getCurrentUser();
-      if(currentUser) {
-        try {
-          await redeemPendingInvite();
-          await startAuthenticatedApp();
-        } catch(err) {
-          await supabaseClient.auth.signOut();
-          currentUser=null;
-          document.getElementById('auth-gate')?.classList.remove('hidden');
-          authMessage(err.message || 'Connexion impossible.',true);
-        }
-      } else {
-        document.getElementById('auth-gate')?.classList.remove('hidden');
-      }
+      const {data:{session}}=await supabaseClient.auth.getSession();
+      const user=session?.user || await getCurrentUser();
+      if(user) await activateAuthenticatedApp(user);
+      else document.getElementById('auth-gate')?.classList.remove('hidden');
       document.getElementById('auth-show-signup')?.addEventListener('click',()=>showAuthPanel('signup'));
       document.getElementById('auth-back-login')?.addEventListener('click',()=>showAuthPanel('login'));
       document.getElementById('auth-reset-back')?.addEventListener('click',()=>showAuthPanel('login'));
