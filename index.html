@@ -1115,6 +1115,7 @@
       startClassPresence();
       startDmRealtime();
       initDmMessageInteractions();
+      initGeneralMessageInteractions();
       const emailLabel=document.getElementById('settings-account-email'); if(emailLabel) emailLabel.textContent=currentUser.app_metadata?.account_type==='special_guest'?'Compte spécial temporaire (sans e-mail)':(currentUser.email||'');
       loadGeneralMessages(); subscribeToGeneralMessages(); loadClassmates(); loadPlanningSessions(); loadPosts();
     }
@@ -1249,7 +1250,7 @@
           return `
             <div class="wa-message-row ${isMe ? 'wa-message-out' : 'wa-message-in'}">
               ${isMe ? '' : avatar}
-              <div class="wa-bubble ${isMe ? 'wa-bubble-out' : 'wa-bubble-in'}">
+              <div class="wa-bubble ${isMe ? 'wa-bubble-out' : 'wa-bubble-in'}" ${isMe ? `data-general-message-id="${escapeMessageHtml(msg.id)}" data-own-general-message="true"` : ''}>
                 ${isMe ? '' : `<div class="wa-author">${escapeMessageHtml(authorName)}</div>`}
                 <p class="whitespace-pre-wrap break-words">${escapeMessageHtml(msg.content || '')}</p>
                 <span class="wa-time">${time} ${isMe ? '<span aria-label="Envoyé">✓✓</span>' : ''}</span>
@@ -1466,7 +1467,7 @@
       document.querySelector('.wa-message-actions-overlay')?.remove();
     }
 
-    function showDmMessageActions(messageId) {
+    function showDmMessageActions(messageId, messageType = 'dm') {
       closeDmMessageActions();
       const overlay = document.createElement('div');
       overlay.className = 'wa-message-actions-overlay';
@@ -1489,12 +1490,15 @@
         remove.disabled = true;
         remove.textContent = 'Suppression…';
         try {
-          const { data, error } = await supabaseClient.from('direct_messages').delete()
-            .eq('id', messageId).eq('sender_id', currentUser.id).select('id');
+          const table = messageType === 'general' ? 'messages' : 'direct_messages';
+          const ownerColumn = messageType === 'general' ? 'author_id' : 'sender_id';
+          const { data, error } = await supabaseClient.from(table).delete()
+            .eq('id', messageId).eq(ownerColumn, currentUser.id).select('id');
           if (error) throw error;
           if (!data?.length) throw new Error('Ce message ne peut pas être supprimé.');
           closeDmMessageActions();
-          if (activeDmUserId) await loadDirectMessages(activeDmUserId);
+          if (messageType === 'general') await loadGeneralMessages();
+          else if (activeDmUserId) await loadDirectMessages(activeDmUserId);
         } catch (err) {
           closeDmMessageActions();
           alert(err.message || 'Impossible de supprimer ce message.');
@@ -1508,18 +1512,20 @@
       cancel.focus();
     }
 
-    function initDmMessageInteractions() {
-      const container = document.getElementById('dm-messages-list');
-      if (!container || dmMessageInteractionsReady) return;
-      dmMessageInteractionsReady = true;
+    function bindMessageLongPress(container, selector, messageType) {
+      if (!container || container.dataset.longPressReady === 'true') return;
+      container.dataset.longPressReady = 'true';
       const clearPress = () => { if (dmMessagePressTimer) clearTimeout(dmMessagePressTimer); dmMessagePressTimer = null; dmMessagePressOrigin = null; };
+      const showFor = bubble => {
+        const messageId = messageType === 'general' ? bubble.dataset.generalMessageId : bubble.dataset.dmMessageId;
+        if (messageId) showDmMessageActions(messageId, messageType);
+      };
       container.addEventListener('pointerdown', event => {
-        const bubble = event.target.closest('[data-dm-message-id][data-own-message="true"]');
+        const bubble = event.target.closest(selector);
         if (!bubble || event.button > 0) return;
         clearPress();
         dmMessagePressOrigin = { x: event.clientX, y: event.clientY };
-        const messageId = bubble.dataset.dmMessageId;
-        dmMessagePressTimer = setTimeout(() => { dmMessagePressTimer = null; showDmMessageActions(messageId); }, 550);
+        dmMessagePressTimer = setTimeout(() => { dmMessagePressTimer = null; showFor(bubble); }, 550);
       });
       container.addEventListener('pointerup', clearPress);
       container.addEventListener('pointercancel', clearPress);
@@ -1529,12 +1535,20 @@
         if (Math.hypot(event.clientX - dmMessagePressOrigin.x, event.clientY - dmMessagePressOrigin.y) > 12) clearPress();
       });
       container.addEventListener('contextmenu', event => {
-        const bubble = event.target.closest('[data-dm-message-id][data-own-message="true"]');
+        const bubble = event.target.closest(selector);
         if (!bubble) return;
         event.preventDefault();
-        showDmMessageActions(bubble.dataset.dmMessageId);
+        showFor(bubble);
       });
       document.addEventListener('keydown', event => { if (event.key === 'Escape') closeDmMessageActions(); });
+    }
+
+    function initDmMessageInteractions() {
+      bindMessageLongPress(document.getElementById('dm-messages-list'), '[data-dm-message-id][data-own-message="true"]', 'dm');
+    }
+
+    function initGeneralMessageInteractions() {
+      bindMessageLongPress(document.getElementById('general-messages-list'), '[data-general-message-id][data-own-general-message="true"]', 'general');
     }
 
     async function sendDirectMessage(recipientId, content) {
