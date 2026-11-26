@@ -955,7 +955,7 @@
       authMessage('');
     }
     async function redeemPendingInvite() {
-      const pending = localStorage.getItem('1ce_pending_class_code');
+      const pending = localStorage.getItem('1ce_pending_class_code') || currentUser?.user_metadata?.pending_class_code || '';
       const displayName = localStorage.getItem('1ce_pending_display_name') || currentUser?.user_metadata?.full_name || currentUser?.email?.split('@')[0] || 'Élève 1CE';
       const profileName = localStorage.getItem('1ce_pending_username') || currentUser?.user_metadata?.username || '';
       if(!pending || !currentUser) return false;
@@ -968,6 +968,11 @@
       localStorage.removeItem('1ce_pending_class_code');
       localStorage.removeItem('1ce_pending_display_name');
       localStorage.removeItem('1ce_pending_username');
+      if(currentUser?.user_metadata?.pending_class_code){
+        const {error:metadataError}=await supabaseClient.auth.updateUser({data:{pending_class_code:null}});
+        if(metadataError) console.warn('Code temporaire non effacé des métadonnées:',metadataError.message);
+        else currentUser=(await supabaseClient.auth.getUser()).data.user || currentUser;
+      }
       return true;
     }
     async function startClassPresence() {
@@ -1522,7 +1527,7 @@
         if(!/^[a-zA-Z0-9_.-]{3,30}$/.test(username)){authMessage('Le nom de profil doit contenir 3 à 30 caractères (lettres, chiffres, point, tiret ou underscore).',true);return;}
         signupButton.disabled=true;signupButton.textContent='Création en cours…';
         try{
-          const {data,error}=await supabaseClient.auth.signUp({email,password,options:{data:{full_name:name,username},emailRedirectTo:`${location.origin}/1CE/`}});
+          const {data,error}=await supabaseClient.auth.signUp({email,password,options:{data:{full_name:name,username,pending_class_code:code},emailRedirectTo:`${location.origin}/1CE/`}});
           if(error)throw error;
           savePendingSignup();
           if(data.session){currentUser=data.user;await redeemPendingInvite();await startAuthenticatedApp();authMessage('Compte créé et accès à la classe activé.');}
