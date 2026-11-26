@@ -932,7 +932,7 @@
       const targetTab = document.getElementById('tab-' + tabId);
       if (targetTab) {
         targetTab.classList.remove('hidden');
-        if (tabId === 'dms') targetTab.classList.remove('dm-conversation-open');
+        if (tabId === 'dms') setDmMobileView(false);
       }
 
       const buttons = document.querySelectorAll('.nav-btn');
@@ -1257,20 +1257,43 @@
         }
 
         document.getElementById('dm-users-count').textContent = `${data.length} élève(s)`;
-        dmList.innerHTML = data.map(user => {
+        dmList.replaceChildren();
+        data.forEach(user => {
           const officialName = user.display_name || 'Élève 1CE';
-          const safeId = String(user.user_id).replace(/[^a-zA-Z0-9-]/g, '');
-          return `
-            <button type="button" onclick="selectDmUser('${safeId}', ${JSON.stringify(officialName).replace(/</g, '\\u003c')})" class="w-full text-left p-3.5 hover:bg-slate-50 flex items-center gap-3 cursor-pointer">
-              <div class="w-11 h-11 rounded-full bg-indigo-100 flex items-center justify-center font-bold text-indigo-700">1C</div>
-              <div class="flex-1 min-w-0">
-                <h4 class="font-bold text-slate-900 text-xs truncate">${officialName}</h4>
-              </div>
-            </button>
-          `;
-        }).join('');
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'w-full text-left p-3.5 hover:bg-slate-50 flex items-center gap-3 cursor-pointer';
+          const avatar = document.createElement('div');
+          avatar.className = 'w-11 h-11 rounded-full bg-indigo-100 flex items-center justify-center font-bold text-indigo-700';
+          avatar.textContent = '1C';
+          const nameWrap = document.createElement('div');
+          nameWrap.className = 'flex-1 min-w-0';
+          const name = document.createElement('h4');
+          name.className = 'font-bold text-slate-900 text-xs truncate';
+          name.textContent = officialName;
+          nameWrap.appendChild(name);
+          button.append(avatar, nameWrap);
+          button.addEventListener('click', () => selectDmUser(String(user.user_id), officialName));
+          dmList.appendChild(button);
+        });
       } catch (err) {
         console.error('Erreur loadClassmates:', err.message);
+      }
+    }
+
+    function setDmMobileView(showConversation) {
+      const tab = document.getElementById('tab-dms');
+      if (!tab) return;
+      const people = tab.children[0];
+      const conversation = tab.children[1];
+      const mobile = window.matchMedia('(max-width: 767px)').matches;
+      tab.classList.toggle('dm-conversation-open', !!showConversation);
+      if (mobile) {
+        people.style.setProperty('display', showConversation ? 'none' : 'flex', 'important');
+        conversation.style.setProperty('display', showConversation ? 'flex' : 'none', 'important');
+      } else {
+        people.style.removeProperty('display');
+        conversation.style.removeProperty('display');
       }
     }
 
@@ -1278,12 +1301,12 @@
       activeDmUserId = userId;
       document.getElementById('dm-active-user-name').textContent = fullName;
       document.getElementById('dm-active-user-status').textContent = 'Conversation privée';
-      document.getElementById('tab-dms')?.classList.add('dm-conversation-open');
+      setDmMobileView(true);
       loadDirectMessages(userId);
     }
 
     function closeDmConversation() {
-      document.getElementById('tab-dms')?.classList.remove('dm-conversation-open');
+      setDmMobileView(false);
       document.getElementById('dm-search-input')?.blur();
     }
 
