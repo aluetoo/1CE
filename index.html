@@ -47,6 +47,29 @@
 
 @media(max-width:767px){
  :root{--mobile-safe-top:max(env(safe-area-inset-top,0px),28px)}
+ html,body{height:100%!important;min-height:0!important;overflow:hidden!important}
+ body{height:100dvh!important;max-height:100dvh!important}
+ body>header{flex:0 0 calc(60px + var(--mobile-safe-top))!important}
+ body>.flex-1.flex.overflow-hidden{flex:1 1 0!important;min-height:0!important;height:auto!important;overflow:hidden!important}
+ body>.flex-1.flex.overflow-hidden>main{flex:1 1 0!important;min-height:0!important;height:100%!important;overflow:hidden!important}
+ main>.tab-content{flex:1 1 0!important;min-height:0!important;height:100%!important;max-height:100%!important;overflow:hidden!important}
+ #tab-planning>div:first-child,#tab-posts>div:first-child,#tab-settings>div:first-child{
+   flex:1 1 0!important;min-height:0!important;height:100%!important;max-height:100%!important;
+   overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior-y:contain;
+   padding-bottom:calc(32px + env(safe-area-inset-bottom,0px))!important;
+   -webkit-overflow-scrolling:touch;
+ }
+ #tab-planning>div:first-child>.max-w-6xl,#tab-posts>div:first-child>.max-w-4xl,
+ #tab-settings>div:first-child>.max-w-4xl{padding-bottom:12px}
+ #tab-dms>div:first-child,#tab-dms>div:last-child{
+   flex:1 1 0!important;min-height:0!important;height:100%!important;max-height:100%!important;
+   overflow:hidden!important;
+ }
+ #tab-dms>div:first-child{display:flex!important;flex-direction:column!important}
+ #tab-dms>div:first-child #dm-users-list{flex:1 1 0!important;min-height:0!important;overflow-y:auto!important;overflow-x:hidden!important;-webkit-overflow-scrolling:touch;padding-bottom:calc(24px + env(safe-area-inset-bottom,0px))}
+ #tab-dms>div:last-child{overflow-y:auto!important;overflow-x:hidden!important;-webkit-overflow-scrolling:touch}
+ #tab-general>div:first-child{min-height:0!important;overscroll-behavior-y:contain;-webkit-overflow-scrolling:touch}
+ #tab-general .max-w-4xl{padding-bottom:calc(18px + env(safe-area-inset-bottom,0px))}
  header{touch-action:manipulation;-webkit-tap-highlight-color:transparent;height:calc(60px + var(--mobile-safe-top))!important;min-height:calc(60px + var(--mobile-safe-top))!important;box-sizing:border-box!important;padding-top:var(--mobile-safe-top)!important;padding-left:10px!important;padding-right:10px!important;gap:8px}
  header>div:last-child{gap:8px!important}
  #mobile-menu-button{display:grid!important}
