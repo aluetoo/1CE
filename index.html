@@ -130,7 +130,15 @@
       #tab-general .max-w-4xl>div:first-child>div:last-child button svg{width:18px;height:18px}
       #general-messages-list,#dm-messages-list{padding:12px 9px!important}
       .wa-bubble{max-width:84%;font-size:13px}
-      #tab-dms>div:first-child{width:38%!important;min-width:118px!important}
+      #tab-dms{position:relative;min-width:0}
+      #tab-dms>div:first-child{display:flex!important;width:100%!important;min-width:0!important;max-width:none!important;height:100%;border-right:0!important}
+      #tab-dms>div:last-child{display:none!important;width:100%;height:100%;min-width:0!important}
+      #tab-dms.dm-conversation-open>div:first-child{display:none!important}
+      #tab-dms.dm-conversation-open>div:last-child{display:flex!important}
+      #tab-dms>div:first-child>div:first-child{padding:14px 16px!important}
+      #dm-users-list{min-height:0;overscroll-behavior:contain}
+      #dm-users-list button{min-height:68px!important;padding:12px 16px!important}
+      #dm-back-to-people{display:flex!important;flex:0 0 auto}
       #tab-dms>div:last-child>.max-w-4xl{padding:0!important}
       #dm-active-user-header{padding:10px!important;flex-direction:row!important;align-items:center!important}
       #tab-dms #dm-active-user-header>div:last-child{width:auto!important}
@@ -624,6 +632,7 @@
 <div class="max-w-4xl w-full mx-auto space-y-6">
 <!-- Friend bar with Audio & Video Call Buttons -->
 <div class="flex items-center justify-between bg-white p-4 rounded-2xl border border-slate-200 shadow-sm" id="dm-active-user-header">
+<button id="dm-back-to-people" class="hidden items-center justify-center w-9 h-9 rounded-full bg-slate-100 text-slate-700" type="button" onclick="closeDmConversation()" aria-label="Retour à la liste des camarades" title="Retour à la liste"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg></button>
 <div class="flex items-center gap-3">
 <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
@@ -923,6 +932,7 @@
       const targetTab = document.getElementById('tab-' + tabId);
       if (targetTab) {
         targetTab.classList.remove('hidden');
+        if (tabId === 'dms') targetTab.classList.remove('dm-conversation-open');
       }
 
       const buttons = document.querySelectorAll('.nav-btn');
@@ -1268,7 +1278,13 @@
       activeDmUserId = userId;
       document.getElementById('dm-active-user-name').textContent = fullName;
       document.getElementById('dm-active-user-status').textContent = 'Conversation privée';
+      document.getElementById('tab-dms')?.classList.add('dm-conversation-open');
       loadDirectMessages(userId);
+    }
+
+    function closeDmConversation() {
+      document.getElementById('tab-dms')?.classList.remove('dm-conversation-open');
+      document.getElementById('dm-search-input')?.blur();
     }
 
     async function loadDirectMessages(recipientId) {
