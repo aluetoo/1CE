@@ -46,15 +46,16 @@
     @media(prefers-reduced-motion:reduce){.call-fullscreen{animation:none!important}.call-fullscreen .grid>div{animation:none!important}}
 
 @media(max-width:767px){
- header{height:calc(60px + env(safe-area-inset-top,0px))!important;min-height:calc(60px + env(safe-area-inset-top,0px))!important;box-sizing:border-box!important;padding-top:env(safe-area-inset-top,0px)!important;padding-left:10px!important;padding-right:10px!important;gap:8px}
+ :root{--mobile-safe-top:max(env(safe-area-inset-top,0px),28px)}
+ header{height:calc(60px + var(--mobile-safe-top))!important;min-height:calc(60px + var(--mobile-safe-top))!important;box-sizing:border-box!important;padding-top:var(--mobile-safe-top)!important;padding-left:10px!important;padding-right:10px!important;gap:8px}
  header>div:last-child{gap:8px!important}
  #mobile-menu-button{display:grid!important}
  #global-search-input{display:none}
  header button[onclick*="startClassCall"]{padding:9px!important;min-width:40px;justify-content:center}
  header button[onclick*="startClassCall"] span{display:none}
  header>div:last-child>div[onclick*="switchTab"]{padding-left:8px!important}
- #mobile-sidebar-backdrop{display:block;position:fixed;top:calc(60px + env(safe-area-inset-top,0px));right:0;bottom:0;left:0;background:rgba(2,6,23,.62);z-index:45;opacity:0;pointer-events:none;transition:opacity .22s ease}
- aside.mobile-nav-drawer{position:fixed!important;top:calc(60px + env(safe-area-inset-top,0px));bottom:0;left:0;width:min(84vw,320px)!important;height:auto;z-index:50!important;transform:translateX(-105%);transition:transform .24s cubic-bezier(.2,.8,.2,1);box-shadow:16px 0 40px rgba(0,0,0,.28);padding-bottom:env(safe-area-inset-bottom)}
+ #mobile-sidebar-backdrop{display:block;position:fixed;top:calc(60px + var(--mobile-safe-top));right:0;bottom:0;left:0;background:rgba(2,6,23,.62);z-index:45;opacity:0;pointer-events:none;transition:opacity .22s ease}
+ aside.mobile-nav-drawer{position:fixed!important;top:calc(60px + var(--mobile-safe-top));bottom:0;left:0;width:min(84vw,320px)!important;height:auto;z-index:50!important;transform:translateX(-105%);transition:transform .24s cubic-bezier(.2,.8,.2,1);box-shadow:16px 0 40px rgba(0,0,0,.28);padding-bottom:env(safe-area-inset-bottom)}
  body.mobile-sidebar-open aside.mobile-nav-drawer{transform:translateX(0)}
  body.mobile-sidebar-open #mobile-sidebar-backdrop{opacity:1;pointer-events:auto}
  body.mobile-sidebar-open{overflow:hidden}
