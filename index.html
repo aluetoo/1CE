@@ -1386,6 +1386,10 @@
       const container = document.getElementById('dm-messages-list');
       if (!currentUser || !recipientId || !container) return;
       try {
+        const wasNearBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 100;
+        const dmTab = document.getElementById('tab-dms');
+        const isViewingConversation = !!dmTab && !dmTab.classList.contains('hidden') &&
+          (!window.matchMedia('(max-width: 767px)').matches || dmTab.classList.contains('dm-conversation-open'));
         const { data, error } = await supabaseClient
           .from('direct_messages')
           .select('id, sender_id, receiver_id, content, created_at, read_at')
@@ -1393,7 +1397,9 @@
           .order('created_at', { ascending: true });
         if (error) throw error;
 
-        const unreadIds = (data || []).filter(msg => msg.receiver_id === currentUser.id && !msg.read_at).map(msg => msg.id);
+        const unreadIds = isViewingConversation
+          ? (data || []).filter(msg => msg.receiver_id === currentUser.id && !msg.read_at).map(msg => msg.id)
+          : [];
         if (unreadIds.length) {
           const readAt = new Date().toISOString();
           const { error: readError } = await supabaseClient.from('direct_messages')
@@ -1420,7 +1426,7 @@
           const receipt = isMe
             ? (msg.read_at
               ? '<span class="dm-read-receipt is-read" aria-label="Lu" title="Lu">✓✓</span>'
-              : '<span class="dm-read-receipt" aria-label="Envoyé" title="Envoyé">✓✓</span>')
+              : '<span class="dm-read-receipt" aria-label="Envoyé" title="Envoyé">✓</span>')
             : '';
           return `
             <div class="wa-message-row ${isMe ? 'wa-message-out' : 'wa-message-in'}">
@@ -1434,7 +1440,7 @@
             </div>
           `;
         }).join('');
-        container.scrollTop = container.scrollHeight;
+        if (wasNearBottom) container.scrollTop = container.scrollHeight;
       } catch (err) {
         console.error('Erreur loadDirectMessages:', err.message);
         container.innerHTML = '<div class="bg-white p-5 rounded-2xl text-center text-sm text-rose-600">Impossible de charger les messages. Vérifie ta connexion puis réessaie.</div>';
@@ -1447,8 +1453,10 @@
       const channel = supabaseClient.channel('dm-messages-' + currentUser.id)
         .on('postgres_changes', { event: '*', schema: 'public', table: 'direct_messages' }, payload => {
           const row = payload.new || payload.old;
-          if (!row || !activeDmUserId) return;
-          if (row.sender_id === activeDmUserId || row.receiver_id === activeDmUserId) loadDirectMessages(activeDmUserId);
+          if (!activeDmUserId) return;
+          if (payload.eventType === 'DELETE' || (row && (row.sender_id === activeDmUserId || row.receiver_id === activeDmUserId))) {
+            loadDirectMessages(activeDmUserId);
+          }
         })
         .subscribe();
       dmRealtimeChannel = channel;
