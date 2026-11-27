@@ -1403,6 +1403,8 @@
       const container = document.getElementById('dm-messages-list');
       if (!currentUser || !recipientId || !container) return;
       try {
+        const isNewConversation = container.dataset.activeRecipientId !== recipientId;
+        container.dataset.activeRecipientId = recipientId;
         const wasNearBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 100;
         const dmTab = document.getElementById('tab-dms');
         const isViewingConversation = !!dmTab && !dmTab.classList.contains('hidden') &&
@@ -1457,7 +1459,7 @@
             </div>
           `;
         }).join('');
-        if (wasNearBottom || !container.querySelector('.wa-message-row')) scrollMessageListToLastStart(container);
+        if (wasNearBottom || isNewConversation || !container.querySelector('.wa-message-row')) scrollMessageListToLastStart(container);
       } catch (err) {
         console.error('Erreur loadDirectMessages:', err.message);
         container.innerHTML = '<div class="bg-white p-5 rounded-2xl text-center text-sm text-rose-600">Impossible de charger les messages. Vérifie ta connexion puis réessaie.</div>';
