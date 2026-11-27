@@ -420,7 +420,15 @@
     .wa-message-delete{background:#fee2e2;color:#b91c1c}
     .wa-message-cancel{background:#f1f5f9;color:#334155}
 
-  </style>
+  
+    /* Correctif de défilement des salons : seul le flux des messages défile */
+    #tab-general{min-height:0!important;height:100%!important;overflow:hidden!important}
+    #tab-general>div:first-child{display:flex!important;flex:1 1 0!important;flex-direction:column!important;min-height:0!important;height:100%!important;overflow:hidden!important}
+    #tab-general .max-w-4xl{display:flex!important;flex:1 1 0!important;flex-direction:column!important;min-height:0!important;height:100%!important;overflow:hidden!important}
+    #general-messages-list,#dm-messages-list{flex:1 1 0!important;min-height:0!important;max-height:none!important;overflow-y:auto!important;overflow-x:hidden!important;-webkit-overflow-scrolling:touch!important;scroll-padding-block:12px!important}
+    #tab-general .alu-composer-wrap,#tab-dms .alu-composer-wrap{flex:0 0 auto!important}
+    #general-messages-list>.wa-message-row:last-child,#dm-messages-list>.wa-message-row:last-child{scroll-margin-top:12px;scroll-margin-bottom:12px}
+</style>
 </head>
 <body class="bg-[#f8f9ff] text-slate-800 antialiased h-screen flex flex-col overflow-hidden">
 <!-- Authentification obligatoire -->
@@ -1210,6 +1218,17 @@
         : `<div aria-label="Avatar de ${escapeMessageHtml(label || 'participant')}" class="${sizeClass} rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-xs shrink-0">${escapeMessageHtml(initials)}</div>`;
     }
 
+    function scrollMessageListToLastStart(container) {
+      if (!container) return;
+      const scrollToLast = () => {
+        const lastMessage = container.querySelector('.wa-message-row:last-child');
+        if (!lastMessage) return;
+        const top = lastMessage.getBoundingClientRect().top - container.getBoundingClientRect().top + container.scrollTop;
+        container.scrollTo({ top: Math.max(0, top - 10), behavior: 'auto' });
+      };
+      requestAnimationFrame(() => requestAnimationFrame(scrollToLast));
+    }
+
     async function loadGeneralMessages() {
       const container = document.getElementById('general-messages-list');
       try {
@@ -1255,6 +1274,7 @@
             </div>
           `;
         }).join('');
+        scrollMessageListToLastStart(container);
       } catch (err) {
         console.error('Erreur loadGeneralMessages:', err.message);
         container.innerHTML = '<div class="bg-white p-8 rounded-2xl border border-slate-200 text-center text-sm text-slate-500">Aucun message pour le moment.</div>';
@@ -1437,7 +1457,7 @@
             </div>
           `;
         }).join('');
-        if (wasNearBottom) container.scrollTop = container.scrollHeight;
+        if (wasNearBottom || !container.querySelector('.wa-message-row')) scrollMessageListToLastStart(container);
       } catch (err) {
         console.error('Erreur loadDirectMessages:', err.message);
         container.innerHTML = '<div class="bg-white p-5 rounded-2xl text-center text-sm text-rose-600">Impossible de charger les messages. Vérifie ta connexion puis réessaie.</div>';
